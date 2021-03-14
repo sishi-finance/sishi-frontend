@@ -27,6 +27,9 @@ export const fetchPoolsAllowance = async (account) => {
   }))
 
   const allowances = await multicall(erc20ABI, calls)
+
+  console.log({ allowances })
+
   return nonBnbPools.reduce(
     (acc, pool, index) => ({ ...acc, [pool.sousId]: new BigNumber(allowances[index]).toJSON() }),
     {},
@@ -93,7 +96,7 @@ export const fetchUserPendingRewards = async (account) => {
   )
 
   // Cake / Cake pool
-  const pendingReward = await masterChefContract.methods.pendingEgg('0', account).call()
+  const pendingReward = await masterChefContract.methods.pendingTokenZ('0', account).call()
 
   return { ...pendingRewards, 0: new BigNumber(pendingReward).toJSON() }
 }
