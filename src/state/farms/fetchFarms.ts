@@ -48,8 +48,6 @@ const fetchFarms = async () => {
         },
       ]
 
-      // console.log(erc20, calls)
-
       const [
         tokenBalanceLP,
         quoteTokenBlanceLP,
@@ -93,8 +91,6 @@ const fetchFarms = async () => {
         }
       }
 
-      console.log(farmConfig)
-
       const [info, totalAllocPoint, eggPerBlock] = await multicall(masterchefABI, [
         {
           address: getMasterChefAddress(),
@@ -107,11 +103,9 @@ const fetchFarms = async () => {
         },
         {
           address: getMasterChefAddress(),
-          name: 'tokenZPerBlock',
+          name: 'sishiPerBlock',
         },
       ])
-
-      console.log({ farmConfig, info, totalAllocPoint, eggPerBlock })
 
       const allocPoint = new BigNumber(info.allocPoint._hex)
       const poolWeight = allocPoint.div(new BigNumber(totalAllocPoint))
