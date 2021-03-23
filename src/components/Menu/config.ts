@@ -12,11 +12,11 @@ const config: MenuEntry[] = [
     items: [
       {
         label: 'Exchange',
-        href: 'https://exchange.pancakeswap.finance/',
+        href: 'https://exchange.pancakeswap.finance/#/add/0xe9e7cea3dedca5984780bafc599bd69add087d56/0x8E8538c75f273aB2dF6AdEEcD3622A9c314fcCf3',
       },
       {
         label: 'Liquidity',
-        href: 'https://exchange.pancakeswap.finance/#/pool',
+        href: 'https://exchange.pancakeswap.finance/#/add/0xe9e7cea3dedca5984780bafc599bd69add087d56/0x8E8538c75f273aB2dF6AdEEcD3622A9c314fcCf3',
       },
     ],
   },
@@ -53,17 +53,9 @@ const config: MenuEntry[] = [
         label: 'PancakeSwap',
         href: 'https://pancakeswap.info/token/0xF952Fc3ca7325Cc27D15885d37117676d25BfdA6',
       },
-      {
-        label: 'CoinGecko',
-        href: 'https://www.coingecko.com/en/coins/goose-finance',
-      },
       // {
-      //   label: 'CoinMarketCap',
-      //   href: 'https://coinmarketcap.com/currencies/goose-finance/',
-      // },
-      // {
-      //   label: 'AstroTools',
-      //   href: 'https://app.astrotools.io/pancake-pair-explorer/0x19e7cbecdd23a16dfa5573df54d98f7caae03019',
+      //   label: 'CoinGecko',
+      //   href: 'https://www.coingecko.com/en/coins/goose-finance',
       // },
     ],
   },
@@ -71,17 +63,17 @@ const config: MenuEntry[] = [
     label: 'More',
     icon: 'MoreIcon',
     items: [
-      {
-        label: 'Github',
-        href: 'https://github.com/sashimi-farm/',
-      },
+      // {
+      //   label: 'Github',
+      //   href: 'https://github.com/sashimi-farm/',
+      // },
       {
         label: 'Docs',
-        href: 'https://0xsashimi.gitbook.io/sashimi-farm/',
+        href: 'https://docs.sishi.finance',
       },
       {
         label: 'Blog',
-        href: 'https://goosefinance.medium.com/',
+        href: 'https://0xsishi.medium.com/',
       },
     ],
   },

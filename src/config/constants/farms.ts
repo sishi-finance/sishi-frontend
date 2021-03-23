@@ -46,10 +46,10 @@ const farms: FarmConfig[] = [
     tokenSymbol: 'SISHI',
     tokenAddresses: {
       97: '',
-      56: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+      56: '0x8E8538c75f273aB2dF6AdEEcD3622A9c314fcCf3',
     },
-    quoteTokenSymbol: QuoteToken.BUSD,
-    quoteTokenAdresses: contracts.busd,
+    quoteTokenSymbol: QuoteToken.BNB,
+    quoteTokenAdresses: contracts.wbnb,
   },
   {
     pid: 3,
