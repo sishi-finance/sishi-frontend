@@ -41,12 +41,12 @@ const farms: FarmConfig[] = [
     lpSymbol: 'SISHI-WBNB LP',
     lpAddresses: {
       97: '',
-      56: '0xD5F575fCFaE274B4fC65069B3c7E43212812F7E6',
+      56: '0xd5f575fcfae274b4fc65069b3c7e43212812f7e6',
     },
     tokenSymbol: 'SISHI',
     tokenAddresses: {
       97: '',
-      56: '0x19e7cbecdd23a16dfa5573df54d98f7caae03019',
+      56: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
     },
     quoteTokenSymbol: QuoteToken.BUSD,
     quoteTokenAdresses: contracts.busd,
