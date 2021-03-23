@@ -1,10 +1,14 @@
 export default {
-  cake: {
-    56: '0xF952Fc3ca7325Cc27D15885d37117676d25BfdA6',
+  sishi: {
+    56: '0x8E8538c75f273aB2dF6AdEEcD3622A9c314fcCf3',
     97: '',
   },
+  // cake: {
+  //   56: '0x8e8538c75f273ab2df6adeecd3622a9c314fccf3',
+  //   97: '',
+  // },
   masterChef: {
-    56: '0xe70E9185F5ea7Ba3C5d63705784D8563017f2E57',
+    56: '0x2D9d427962EDACF5207a727c41Ce5Cb90C449F4b',
     97: '',
   },
   wbnb: {
