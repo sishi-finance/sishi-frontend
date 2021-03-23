@@ -53,10 +53,10 @@ const config: MenuEntry[] = [
         label: 'PancakeSwap',
         href: 'https://pancakeswap.info/token/0xF952Fc3ca7325Cc27D15885d37117676d25BfdA6',
       },
-      // {
-      //   label: 'CoinGecko',
-      //   href: 'https://www.coingecko.com/en/coins/goose-finance',
-      // },
+      {
+        label: 'CoinGecko',
+        href: 'https://www.coingecko.com/en/coins/sishi-finance',
+      },
     ],
   },
   {
