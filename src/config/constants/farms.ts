@@ -38,7 +38,7 @@ const farms: FarmConfig[] = [
   {
     pid: 2,
     risk: 5,
-    lpSymbol: 'SISHI-WBNB LP',
+    lpSymbol: 'SISHI-BNB LP',
     lpAddresses: {
       97: '',
       56: '0xd5f575fcfae274b4fc65069b3c7e43212812f7e6',
