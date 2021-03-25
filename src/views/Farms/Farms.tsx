@@ -13,6 +13,7 @@ import useRefresh from 'hooks/useRefresh'
 import { fetchFarmUserDataAsync } from 'state/actions'
 import { QuoteToken } from 'config/constants/types'
 import useI18n from 'hooks/useI18n'
+import StyledCountdown from 'components/Countdown'
 import FarmCard, { FarmWithStakedValue } from './components/FarmCard/FarmCard'
 import FarmTabButtons from './components/FarmTabButtons'
 import Divider from './components/Divider'
@@ -98,6 +99,9 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
           ? TranslateString(10002, 'Stake tokens to earn SISHI')
           : TranslateString(320, 'Stake LP tokens to earn SISHI')}
       </Heading>
+
+      <StyledCountdown />
+
       <Heading as="h2" color="secondary" mb="50px" style={{ textAlign: 'center' }}>
         {TranslateString(10000, 'Deposit Fee will be used to yield optimization and  buyback SISHI')}
       </Heading>
@@ -114,7 +118,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
         </FlexLayout>
       </div>
       <Image src="/images/egg/8.png" alt="illustration" width={1352} height={587} responsive />
-    </Page>
+    </Page >
   )
 }
 
