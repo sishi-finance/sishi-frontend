@@ -16,11 +16,11 @@ const CountdownRender: React.FC<{
   return !completed && <>
     <div style={{ textAlign: 'center', paddingBottom: "2em" }}>
       <Heading as="h3" >
-        Farming start on
+        Farming start on 
         {days > 0 && <> {days} day{days > 1 ? "s" : ""} </>}
-        <>{String(hours).padStart(2, "0")} hour{hours > 1 ? "s" : ""} </>
-        <>{String(minutes).padStart(2, "0")} minute{minutes > 1 ? "s" : ""} </>
-        <>{String(seconds).padStart(2, "0")} second{seconds > 1 ? "s" : ""} </>
+        <> {String(hours).padStart(2, "0")} hour{hours > 1 ? "s" : ""} </>
+        <> {String(minutes).padStart(2, "0")} minute{minutes > 1 ? "s" : ""} </>
+        <> {String(seconds).padStart(2, "0")} second{seconds > 1 ? "s" : ""} </>
       </Heading>
       <br />
       <LinkExternal marginX="auto" href="https://bscscan.com/tx/0x70d7c96693ad5cb4b404f85b0615746527d071a743d2073a761ebde84e1ff056" target="_blank" rel="noreferrer noopener">
