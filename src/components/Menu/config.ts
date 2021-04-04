@@ -70,11 +70,11 @@ const config: MenuEntry[] = [
         href: 'https://exchange.pancakeswap.finance/#/swap?inputCurrency=BNB&outputCurrency=0x8e8538c75f273ab2df6adeecd3622a9c314fccf3',
         newTab: true,
       },
-      {
-        label: 'Resfinex',
-        href: 'https://trade.resfinex.com/trade/SISHI_USDT',
-        newTab: true,
-      },
+      // {
+      //   label: 'Resfinex',
+      //   href: 'https://trade.resfinex.com/trade/SISHI_USDT',
+      //   newTab: true,
+      // },
       {
         label: 'CoinGecko',
         href: 'https://www.coingecko.com/en/coins/sishi-finance',
