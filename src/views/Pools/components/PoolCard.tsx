@@ -88,11 +88,11 @@ const PoolCard: React.FC<HarvestProps> = ({ pool }) => {
   )
 
   const [onPresentCompound] = useModal(
-    <CompoundModal earnings={earnings} onConfirm={onStake} tokenName={stakingTokenName} />,
+    <CompoundModal earnings={earnings} onConfirm={onStake} tokenName={stakingTokenName} tokenDecimal={tokenDecimals}/>,
   )
 
   const [onPresentWithdraw] = useModal(
-    <WithdrawModal max={stakedBalance} onConfirm={onUnstake} tokenName={stakingTokenName} />,
+    <WithdrawModal max={stakedBalance} onConfirm={onUnstake} tokenName={stakingTokenName}  tokenDecimal={tokenDecimals} />,
   )
 
   const handleApprove = useCallback(async () => {
@@ -195,7 +195,7 @@ const PoolCard: React.FC<HarvestProps> = ({ pool }) => {
             </span>
             {TranslateString(384, 'Your Stake')}:
           </div>
-          <Balance fontSize="14px" isDisabled={isFinished} value={getBalanceNumber(stakedBalance)} />
+          <Balance fontSize="14px" isDisabled={isFinished} value={getBalanceNumber(stakedBalance, tokenDecimals)} />
         </StyledDetails>
       </div>
       <CardFooter

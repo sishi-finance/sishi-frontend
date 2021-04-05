@@ -8,20 +8,21 @@ import {
   updateUserPendingReward,
 } from 'state/actions'
 import { unstake, sousUnstake, sousEmegencyUnstake } from 'utils/callHelpers'
+import { useFarmFromPid } from 'state/hooks'
 import { useMasterchef, useSousChef } from './useContract'
 
 const useUnstake = (pid: number) => {
   const dispatch = useDispatch()
   const { account } = useWallet()
   const masterChefContract = useMasterchef()
-
+  const { isTokenOnly, tokenDecimal } = useFarmFromPid(pid)
   const handleUnstake = useCallback(
     async (amount: string) => {
-      const txHash = await unstake(masterChefContract, pid, amount, account)
+      const txHash = await unstake(masterChefContract, pid, amount, account, isTokenOnly ? tokenDecimal : 18)
       dispatch(fetchFarmUserDataAsync(account))
       console.info(txHash)
     },
-    [account, dispatch, masterChefContract, pid],
+    [account, dispatch, masterChefContract, pid, isTokenOnly, tokenDecimal],
   )
 
   return { onUnstake: handleUnstake }

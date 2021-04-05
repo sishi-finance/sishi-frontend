@@ -13,20 +13,21 @@ interface BuyTicketModalProps {
   onConfirm?: (amount: string, numbers: Array<number>) => void
   onDismiss?: () => void
   tokenName?: string
+  tokenDecimal?: number
 }
 
-const BuyTicketModal: React.FC<BuyTicketModalProps> = ({ max, onDismiss }) => {
+const BuyTicketModal: React.FC<BuyTicketModalProps> = ({ max, onDismiss, tokenDecimal }) => {
   const [val, setVal] = useState('1')
   const [pendingTx, setPendingTx] = useState(false)
   const [, setRequestedBuy] = useState(false)
   const TranslateString = useI18n()
   const fullBalance = useMemo(() => {
-    return getFullDisplayBalance(max)
-  }, [max])
+    return getFullDisplayBalance(max, tokenDecimal)
+  }, [max, tokenDecimal])
 
   const maxTickets = useMemo(() => {
-    return parseInt(getFullDisplayBalance(max.div(new BigNumber(10))))
-  }, [max])
+    return parseInt(getFullDisplayBalance(max.div(new BigNumber(10)), tokenDecimal))
+  }, [max, tokenDecimal])
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => setVal(e.currentTarget.value)
 

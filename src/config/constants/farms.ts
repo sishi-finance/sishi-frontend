@@ -298,6 +298,7 @@ const farms: FarmConfig[] = [
       56: '0x406a30CbeB5D52182BB320e268ad6250B24Ff29d',
     },
     tokenSymbol: 'DITTO',
+    tokenDecimal: 9,
     tokenAddresses: {
       97: '',
       56: '0x233d91A0713155003fc4DcE0AFa871b508B3B715',
@@ -366,6 +367,7 @@ const farms: FarmConfig[] = [
       56: '0x37d1D3c7611C5Be8aE137735eD28c61c965CADCB',
     },
     tokenSymbol: 'CTK',
+    tokenDecimal: 6,
     tokenAddresses: {
       97: '',
       56: '0xA8c2B8eec3d368C0253ad3dae65a5F2BBB89c929',
@@ -460,4 +462,8 @@ const farms: FarmConfig[] = [
   }
 ]
 
-export default farms
+export default farms.map(e => ({
+  tokenDecimal: 18,
+  quoteTokenDecimal: 18,
+  ...e,
+}))

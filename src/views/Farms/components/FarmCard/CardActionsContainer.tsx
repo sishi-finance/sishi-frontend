@@ -28,8 +28,8 @@ interface FarmCardActionsProps {
 const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account }) => {
   const TranslateString = useI18n()
   const [requestedApproval, setRequestedApproval] = useState(false)
-  const { pid, lpAddresses, tokenAddresses, isTokenOnly, depositFeeBP } = useFarmFromPid(farm.pid)
-  const { allowance, tokenBalance, stakedBalance, earnings } = useFarmUser(pid)
+  const { pid, lpAddresses, tokenAddresses, isTokenOnly, depositFeeBP, tokenDecimal } = useFarmFromPid(farm.pid)
+  const { allowance, tokenBalance, stakedBalance, earnings, } = useFarmUser(pid)
   const lpAddress = lpAddresses[process.env.REACT_APP_CHAIN_ID]
   const tokenAddress = tokenAddresses[process.env.REACT_APP_CHAIN_ID]
   const lpName = farm.lpSymbol.toUpperCase()
@@ -60,6 +60,7 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account }
         stakedBalance={stakedBalance}
         tokenBalance={tokenBalance}
         tokenName={lpName}
+        tokenDecimal={tokenDecimal}
         pid={pid}
         depositFeeBP={depositFeeBP}
       />

@@ -12,14 +12,15 @@ interface DepositModalProps {
   onConfirm: (amount: string) => void
   onDismiss?: () => void
   tokenName?: string
+  tokenDecimal?: number
 }
 
-const CompoundModal: React.FC<DepositModalProps> = ({ earnings, onConfirm, onDismiss, tokenName = '' }) => {
+const CompoundModal: React.FC<DepositModalProps> = ({ earnings, onConfirm, onDismiss, tokenName = '', tokenDecimal = 18 }) => {
   const [pendingTx, setPendingTx] = useState(false)
   const TranslateString = useI18n()
   const fullBalance = useMemo(() => {
-    return getFullDisplayBalance(earnings)
-  }, [earnings])
+    return getFullDisplayBalance(earnings, tokenDecimal)
+  }, [earnings, tokenDecimal])
 
   return (
     <Modal

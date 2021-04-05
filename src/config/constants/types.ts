@@ -46,8 +46,10 @@ export interface FarmConfig {
   lpAddresses: Address
   tokenSymbol: string
   tokenAddresses: Address
+  tokenDecimal?: number
   quoteTokenSymbol: QuoteToken
   quoteTokenAdresses: Address
+  quoteTokenDecimal?: number
   multiplier?: string
   isTokenOnly?: boolean
   isCommunity?: boolean

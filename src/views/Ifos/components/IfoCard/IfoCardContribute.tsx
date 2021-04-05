@@ -101,7 +101,7 @@ const IfoCardContribute: React.FC<Props> = ({
             ? userInfo.claimed
               ? 'Claimed'
               : getBalanceNumber(offeringTokenBalance, tokenDecimals).toFixed(4)
-            : getBalanceNumber(new BigNumber(userInfo.amount)).toFixed(4)
+            : getBalanceNumber(new BigNumber(userInfo.amount), tokenDecimals).toFixed(4)
         }
         onClick={isFinished ? claim : onPresentContributeModal}
       />
