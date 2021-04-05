@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { Timeline } from 'react-twitter-widgets'
 import { getBalanceNumber } from 'utils/formatBalance'
 import { useTotalSupply, useBurnedBalance } from 'hooks/useTokenBalance'
+import useTheme from 'hooks/useTheme'
 import useI18n from 'hooks/useI18n'
 import { getCakeAddress } from 'utils/addressHelpers'
 import CardValue from './CardValue'
@@ -25,7 +26,7 @@ const Row = styled.div`
 
 const TwitterCard = () => {
   const TranslateString = useI18n()
-
+  const { isDark, toggleTheme } = useTheme()
   return (
     <StyledTwitterCard>
       <CardBody>
@@ -41,6 +42,7 @@ const TwitterCard = () => {
             height: '300',
             chrome: 'noheader, nofooter',
             width: '400',
+            ...isDark ? {theme: "dark"} : {},
           }}
         />
       </CardBody>
