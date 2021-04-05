@@ -288,23 +288,23 @@ const farms: FarmConfig[] = [
     quoteTokenSymbol: QuoteToken.BUSD,
     quoteTokenAdresses: contracts.busd,
   },
-  // {
-  //   pid: 17,
-  //   risk: 1,
-  //   isTokenOnly: true,
-  //   lpSymbol: 'DITTO',
-  //   lpAddresses: {
-  //     97: '',
-  //     56: '0x406a30CbeB5D52182BB320e268ad6250B24Ff29d',
-  //   },
-  //   tokenSymbol: 'DITTO',
-  //   tokenAddresses: {
-  //     97: '',
-  //     56: '0x233d91A0713155003fc4DcE0AFa871b508B3B715',
-  //   },
-  //   quoteTokenSymbol: QuoteToken.BUSD,
-  //   quoteTokenAdresses: contracts.busd,
-  // },
+  {
+    pid: 17,
+    risk: 1,
+    isTokenOnly: true,
+    lpSymbol: 'DITTO',
+    lpAddresses: {
+      97: '',
+      56: '0x406a30CbeB5D52182BB320e268ad6250B24Ff29d',
+    },
+    tokenSymbol: 'DITTO',
+    tokenAddresses: {
+      97: '',
+      56: '0x233d91A0713155003fc4DcE0AFa871b508B3B715',
+    },
+    quoteTokenSymbol: QuoteToken.BUSD,
+    quoteTokenAdresses: contracts.busd,
+  },
   {
     pid: 18,
     risk: 1,
@@ -356,23 +356,23 @@ const farms: FarmConfig[] = [
     quoteTokenSymbol: QuoteToken.BUSD,
     quoteTokenAdresses: contracts.busd,
   },
-  // {
-  //   pid: 21,
-  //   risk: 1,
-  //   isTokenOnly: true,
-  //   lpSymbol: 'CTK',
-  //   lpAddresses: {
-  //     97: '',
-  //     56: '0x37d1D3c7611C5Be8aE137735eD28c61c965CADCB',
-  //   },
-  //   tokenSymbol: 'CTK',
-  //   tokenAddresses: {
-  //     97: '',
-  //     56: '0xA8c2B8eec3d368C0253ad3dae65a5F2BBB89c929',
-  //   },
-  //   quoteTokenSymbol: QuoteToken.BUSD,
-  //   quoteTokenAdresses: contracts.busd,
-  // },
+  {
+    pid: 21,
+    risk: 1,
+    isTokenOnly: true,
+    lpSymbol: 'CTK',
+    lpAddresses: {
+      97: '',
+      56: '0x37d1D3c7611C5Be8aE137735eD28c61c965CADCB',
+    },
+    tokenSymbol: 'CTK',
+    tokenAddresses: {
+      97: '',
+      56: '0xA8c2B8eec3d368C0253ad3dae65a5F2BBB89c929',
+    },
+    quoteTokenSymbol: QuoteToken.BUSD,
+    quoteTokenAdresses: contracts.busd,
+  },
   {
     pid: 22,
     risk: 1,
