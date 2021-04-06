@@ -65,7 +65,7 @@ const Home: React.FC = () => {
         </Heading>
         <StyledCountdown />
 
-        <Text>{TranslateString(578, 'The Next-Gen Yield Farming on BSC- Maximum Total Supply 21 Millions SISHI')}</Text>
+        <Text>{TranslateString(578, 'Inspired by Bitcoin, 21 million SISHI designed to be the first Yield-of-Value asset based on Binance Smart Chain.')}</Text>
       </Hero>
       <div>
         <Cards>
