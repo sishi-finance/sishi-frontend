@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Heading, Text, BaseLayout } from '@pancakeswap-libs/uikit'
+import { Heading, Text, BaseLayout, Link } from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
 import Page from 'components/layout/Page'
 import StyledCountdown from 'components/Countdown'
@@ -66,7 +66,10 @@ const Home: React.FC = () => {
         </Heading>
         <StyledCountdown />
 
-        <Heading as="h3" color="secondary">{TranslateString(578, 'Inspired by Bitcoin, 21 million SISHI designed to be the first Yield-of-Value asset based on Binance Smart Chain.')}</Heading>
+        <Heading as="h3" color="secondary">
+          Inspired by  <a href="https://bitcoin.org/bitcoin.pdf" target="_blank" rel="noreferrer">Bitcoin</a>, 
+          21 million SISHI designed to be the first Yield-of-Value asset based on Binance Smart Chain.
+        </Heading>
       </Hero>
       <div>
         <Cards>
