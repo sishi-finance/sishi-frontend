@@ -13,7 +13,7 @@ const StyledCakeStats = styled(Card)`
 const Row = styled.div`
   align-items: center;
   display: flex;
-  font-size: 14px;
+  font-size: 13px;
   justify-content: space-between;
   margin-bottom: 8px;
 `
@@ -24,6 +24,14 @@ const Table = styled('table')`
     padding 0.5em 0.3em;
     text-align right;
     white-space nowrap;
+    font-family monospace;
+    font-weight bold;
+  }
+
+  th, td {
+    &:first-child {
+      text-align left;
+    }
   }
   thead {
     tr {
@@ -92,7 +100,7 @@ const BurningStats = () => {
                 <th>Amount</th>
                 <th>Price</th>
                 <th>Total</th>
-                <th className="time">Time</th>
+                <th className="time">Date</th>
                 <th> </th>
               </tr>
             </thead>
@@ -107,7 +115,7 @@ const BurningStats = () => {
                       <td>{amount.toFixed(2)}</td>
                       <td>${price.toFixed(2)}</td>
                       <td>${(price * amount).toFixed(2)}</td>
-                      <td className="time">{new Date(timestamps).toLocaleString()}</td>
+                      <td className="time">{new Date(timestamps).toLocaleDateString()}</td>
                       <td className="link1">
                         <LinkExternal color="primary" fontSize="10" small href={`https://bscscan.com/tx/${transactionHash}`} />
                       </td>
