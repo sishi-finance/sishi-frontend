@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Card, CardBody, Heading, LinkExternal, } from '@pancakeswap-libs/uikit'
-import BigNumber from 'bignumber.js/bignumber'
+import { Card, CardBody, Heading, LinkExternal, Button, Flex } from '@pancakeswap-libs/uikit'
 import styled from 'styled-components'
-import { getBalanceNumber } from 'utils/formatBalance'
-import { useTotalSupply, useBurnedBalance } from 'hooks/useTokenBalance'
 import useI18n from 'hooks/useI18n'
-import { getCakeAddress } from 'utils/addressHelpers'
-import { useCake } from 'hooks/useContract'
-import CardValue from './CardValue'
-import { useFarms, usePriceCakeBusd } from '../../../state/hooks'
+import usePagination from 'hooks/usePagination'
+
 
 const StyledCakeStats = styled(Card)`
   margin-left: auto;
@@ -58,7 +53,10 @@ const BurningStats = () => {
   const TranslateString = useI18n()
   const [burningData, setBurningData] = useState([])
   const [isLoadBurningData, setLoadBurningData] = useState(false)
-
+  const {
+    offset, perPage, nextPageEnable, prevPageEnable,
+    jumpTo, nextPage, prevPage, setDocCount, setPerPage
+  } = usePagination({ perPageDefault: 5 })
 
   useEffect(() => {
     setLoadBurningData(true)
@@ -67,6 +65,15 @@ const BurningStats = () => {
       .then(e => setBurningData((e.result || []).reverse()))
       .finally(() => setLoadBurningData(false))
   }, []);
+
+  useEffect(() => {
+    setDocCount(burningData.length)
+  }, [burningData, setDocCount])
+
+  console.log({
+    offset, perPage, nextPageEnable, prevPageEnable,
+    datas: burningData.slice(offset, perPage)
+  })
 
 
   return (
@@ -91,7 +98,7 @@ const BurningStats = () => {
             </thead>
             <tbody>
               {
-                burningData.slice(0,5).map(
+                burningData.slice(offset, offset + perPage).map(
                   (
                     { blockNumber, address, transactionHash, timestamps, amount, price, }) => <tr>
                       <td>{blockNumber}</td>
@@ -102,16 +109,19 @@ const BurningStats = () => {
                       <td>${(price * amount).toFixed(2)}</td>
                       <td className="time">{new Date(timestamps).toLocaleString()}</td>
                       <td className="link1">
-                        <LinkExternal color="primary" fontSize="10" small href={`https://bscscan.com/tx/${transactionHash}`}> </LinkExternal>
+                        <LinkExternal color="primary" fontSize="10" small href={`https://bscscan.com/tx/${transactionHash}`} />
                       </td>
                     </tr>
                 )
               }
-
             </tbody>
           </Table>
-        </Row>
 
+        </Row>
+        <Row style={{ justifyContent: "flex-end" }}>
+          <Button size="sm" variant="tertiary" margin="0.2em" onClick={prevPage} disabled={!prevPageEnable} >Prev</Button>
+          <Button size="sm" variant="tertiary" margin="0.2em" onClick={nextPage} disabled={!nextPageEnable} >Next</Button>
+        </Row>
       </CardBody>
     </StyledCakeStats>
   )
