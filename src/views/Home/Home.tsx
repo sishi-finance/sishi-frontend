@@ -66,7 +66,7 @@ const Home: React.FC = () => {
         </Heading>
         <StyledCountdown />
 
-        <Text>{TranslateString(578, 'Inspired by Bitcoin, 21 million SISHI designed to be the first Yield-of-Value asset based on Binance Smart Chain.')}</Text>
+        <Heading as="h3" color="secondary">{TranslateString(578, 'Inspired by Bitcoin, 21 million SISHI designed to be the first Yield-of-Value asset based on Binance Smart Chain.')}</Heading>
       </Hero>
       <div>
         <Cards>
@@ -74,7 +74,7 @@ const Home: React.FC = () => {
           <BurningStats />
           <CakeStats />
           <TotalValueLockedCard />
-          <TwitterCard />
+          {/* <TwitterCard /> */}
         </Cards>
       </div>
     </Page>
