@@ -15,19 +15,21 @@ const CountdownRender: React.FC<{
 }> = ({ days, hours, minutes, seconds, completed }) => {
   return !completed && <>
     <div style={{ textAlign: 'center', paddingBottom: "2em" }}>
-      <Heading as="h3" >
-        Farming start on 
+      <Text>
+        SISHI Block Reward 
+        <a href="https://docs.sishi.finance/sishi-token/sishi-halving" target="_blank" rel="noreferrer"> Halving </a>
+        Countdown in 
         {days > 0 && <> {days} day{days > 1 ? "s" : ""} </>}
         <> {String(hours).padStart(2, "0")} hour{hours > 1 ? "s" : ""} </>
         <> {String(minutes).padStart(2, "0")} minute{minutes > 1 ? "s" : ""} </>
         <> {String(seconds).padStart(2, "0")} second{seconds > 1 ? "s" : ""} </>
-      </Heading>
+      </Text>
       <br />
-      <LinkExternal marginX="auto" href="https://bscscan.com/tx/0x70d7c96693ad5cb4b404f85b0615746527d071a743d2073a761ebde84e1ff056" target="_blank" rel="noreferrer noopener">
+      {/* <LinkExternal marginX="auto" href="https://docs.sishi.finance/sishi-token/sishi-halving" target="_blank" rel="noreferrer noopener">
         <div style={{ overflow: "hidden", maxWidth: "calc(100vw - 8em)", textOverflow: "ellipsis" }} >
-          0x70d7c96693ad5cb4b404f85b0615746527d071a743d2073a761ebde84e1ff056
+        https://docs.sishi.finance/sishi-token/sishi-halving
         </div>
-      </LinkExternal>
+      </LinkExternal> */}
 
     </div>
 
@@ -35,7 +37,7 @@ const CountdownRender: React.FC<{
 }
 const CountdownComponent: React.FC = () => {
 
-  return <Countdown date={Date.parse('3/27/2021, 10:00:00 AM')} renderer={CountdownRender} />
+  return <Countdown date={Date.parse('6/13/2021, 10:00:00 AM')} renderer={CountdownRender} />
 }
 
 export default styled(CountdownComponent)`
