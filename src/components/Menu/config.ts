@@ -66,10 +66,15 @@ const config: MenuEntry[] = [
     icon: 'LayerIcon',
     items: [
       {
-        label: 'PancakeSwap',
-        href: 'https://exchange.pancakeswap.finance/#/swap?inputCurrency=BNB&outputCurrency=0x8e8538c75f273ab2df6adeecd3622a9c314fccf3',
+        label: 'DappRadar',
+        href: 'https://dappradar.com/binance-smart-chain/defi/sishi-finance',
         newTab: true,
       },
+      // {
+      //   label: 'PancakeSwap',
+      //   href: 'https://exchange.pancakeswap.finance/#/swap?inputCurrency=BNB&outputCurrency=0x8e8538c75f273ab2df6adeecd3622a9c314fccf3',
+      //   newTab: true,
+      // },
       // {
       //   label: 'Resfinex',
       //   href: 'https://trade.resfinex.com/trade/SISHI_USDT',
