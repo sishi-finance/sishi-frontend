@@ -83,7 +83,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   align-items: center;
   background: ${(props) => (!props.disabled ? props.theme.card.background : `#ddd`)};
   border: 0;
-  border-radius: 12px;
+  border-radius: 0px;
   color: ${(props) => (!props.disabled ? `#32cad7` : `#acaaaf`)};
   cursor: pointer;
   display: flex;

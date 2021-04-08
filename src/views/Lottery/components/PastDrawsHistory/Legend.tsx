@@ -17,7 +17,7 @@ const LegendItem = styled.div`
 const Circle = styled.div<{ isPoolSize?: boolean }>`
   width: 20px;
   height: 20px;
-  border-radius: 10px;
+  border-radius: 0px;
   background-color: ${({ isPoolSize, theme }) => theme.colors[isPoolSize ? 'textSubtle' : 'primary']};
   margin-right: 6px;
 `

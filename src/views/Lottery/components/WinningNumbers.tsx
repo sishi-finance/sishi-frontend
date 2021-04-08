@@ -184,7 +184,7 @@ const CenteredTextWithPadding = styled.div`
 
 const TicketNumberBox = styled.div`
   padding: 10px;
-  border-radius: 12px;
+  border-radius: 0px;
   background: linear-gradient(180deg, #54dade 0%, #24c7d6 76.22%);
   color: white;
   font-size: 20px;
@@ -202,7 +202,7 @@ const TicketNumberBox = styled.div`
 
 const RabbitBox = styled.div`
   /* padding: 10px; */
-  border-radius: 12px;
+  border-radius: 0px;
   margin: 16px 20px;
   width: 60px;
 `
@@ -210,7 +210,7 @@ const RabbitBox = styled.div`
 const RabbitBoxSmall = styled.div`
   padding-top: 10px;
   padding-left: 10px;
-  border-radius: 12px;
+  border-radius: 0px;
   margin: 20px;
   width: 20px;
 `
