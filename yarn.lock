@@ -1828,9 +1828,9 @@
     eslint-plugin-react "^7.21.5"
     eslint-plugin-react-hooks "^4.0.0"
 
-"@pancakeswap-libs/uikit@sishifinance/sishifinance-uikit#cec16f80b275":
+"@pancakeswap-libs/uikit@sishifinance/sishifinance-uikit#c13bc2c40ac1a020":
   version "0.10.2"
-  resolved "https://codeload.github.com/sishifinance/sishifinance-uikit/tar.gz/cec16f80b2756741edd0f5a1d4298b436d083021"
+  resolved "https://codeload.github.com/sishifinance/sishifinance-uikit/tar.gz/c13bc2c40ac1a0209b5a62c3ffccdd8c25165120"
   dependencies:
     "@types/lodash" "^4.14.162"
     "@types/styled-system" "^5.1.10"
