@@ -33,6 +33,10 @@ const Table = styled('table')`
       text-align left;
     }
   }
+  .highlight {
+    // background-color: ${({ theme }) => theme.colors.backgroundDisabled};
+    color: ${({ theme }) => theme.colors.primary};
+  }
   thead {
     tr {
       background-color: ${({ theme }) => theme.colors.background};
@@ -65,6 +69,7 @@ const BurningStats = () => {
     offset, perPage, nextPageEnable, prevPageEnable,
     jumpTo, nextPage, prevPage, setDocCount, setPerPage
   } = usePagination({ perPageDefault: 5 })
+  const dateNow = Date.now()
 
   useEffect(() => {
     setLoadBurningData(true)
@@ -108,7 +113,7 @@ const BurningStats = () => {
               {
                 burningData.slice(offset, offset + perPage).map(
                   (
-                    { blockNumber, address, transactionHash, timestamps, amount, price, }) => <tr>
+                    { blockNumber, address, transactionHash, timestamps, amount, price, }) => <tr className={(dateNow - timestamps) < 24 * 3600000 ? 'highlight' : ''}>
                       <td>{blockNumber}</td>
                       {/* <td>{address.slice(0,6)}...</td> */}
                       {/* <td>{transactionHash.slice(0,6)}...</td> */}
