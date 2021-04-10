@@ -88,7 +88,7 @@ const BurningStats = () => {
     <StyledCakeStats>
       <CardBody>
         <Heading size="xl" mb="24px">
-          {TranslateString(100534, 'Burning Stats')}
+          {TranslateString(100534, 'Burning Records')}
         </Heading>
         <Row>
           <Table>

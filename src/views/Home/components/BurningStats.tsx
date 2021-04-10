@@ -13,7 +13,7 @@ const StyledCakeStats = styled(Card)`
 const Row = styled.div`
   align-items: center;
   display: flex;
-  font-size: 13px;
+  font-size: 12px;
   justify-content: space-between;
   margin-bottom: 8px;
 `
@@ -72,7 +72,7 @@ const BurningStats = () => {
   const {
     offset, perPage, nextPageEnable, prevPageEnable,
     jumpTo, nextPage, prevPage, setDocCount, setPerPage
-  } = usePagination({ perPageDefault: 5 })
+  } = usePagination({ perPageDefault: 15 })
   const dateNow = Date.now()
 
   useEffect(() => {
@@ -89,17 +89,17 @@ const BurningStats = () => {
 
 
 
-  console.log({
-    offset, perPage, nextPageEnable, prevPageEnable,
-    datas: burningData.slice(offset, perPage)
-  })
+  // console.log({
+  //   offset, perPage, nextPageEnable, prevPageEnable,
+  //   datas: burningData.slice(offset, perPage)
+  // })
 
 
   return (
     <StyledCakeStats>
       <CardBody>
         <Heading size="xl" mb="24px">
-          {TranslateString(100534, 'Burning Stats')}
+          {TranslateString(100534, 'Burning Records')}
         </Heading>
         <Row>
           <Table>
