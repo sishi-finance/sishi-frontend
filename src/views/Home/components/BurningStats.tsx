@@ -102,7 +102,7 @@ const BurningStats = () => {
         <Heading size="xl" mb="24px">
           {TranslateString(100534, 'Burning Records')}
         </Heading>
-        <Row>
+        <Row style={{ overflow: "auto" }}>
           <Table>
             <thead>
               <tr>

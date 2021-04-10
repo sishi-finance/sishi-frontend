@@ -51,7 +51,7 @@ const CakeStats = () => {
         <Heading size="xl" mb="24px">
           <HeadRow>
             <div>TVL</div>
-            <CardValue value={totalValue.toNumber()} decimals={0} prefix="$" />
+            <CardValue value={totalValue.toNumber()} decimals={0} prefix="$" fontSize="inherit"/>
           </HeadRow>
         </Heading>
         <Row>
