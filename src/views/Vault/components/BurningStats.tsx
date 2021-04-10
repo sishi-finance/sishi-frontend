@@ -95,7 +95,7 @@ const BurningStats = () => {
             <thead>
               <tr>
                 <th>Block</th>
-                {/* <th>Address</th> */}
+                <th>From</th>
                 {/* <th>Tx</th> */}
                 <th>Amount</th>
                 <th>Price</th>
@@ -110,7 +110,7 @@ const BurningStats = () => {
                   (
                     { blockNumber, address, transactionHash, timestamps, amount, price, }) => <tr>
                       <td>{blockNumber}</td>
-                      {/* <td>{address.slice(0,6)}...</td> */}
+                      <td>{address.slice(0,6)}...</td>
                       {/* <td>{transactionHash.slice(0,6)}...</td> */}
                       <td>{amount.toFixed(2)}</td>
                       <td>${price.toFixed(2)}</td>

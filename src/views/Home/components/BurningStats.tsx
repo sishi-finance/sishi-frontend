@@ -29,7 +29,7 @@ const Table = styled('table')`
   }
 
   th, td {
-    &:first-child {
+    &:first-child,&:nth-child(2)  {
       text-align left;
     }
   }
@@ -61,6 +61,10 @@ const Table = styled('table')`
   }
 `
 
+const workerTable = {
+  "0xa5751bbc51c0df729d93ffb9afe173d777b1785b": "Worker1",
+}
+
 const BurningStats = () => {
   const TranslateString = useI18n()
   const [burningData, setBurningData] = useState([])
@@ -83,6 +87,8 @@ const BurningStats = () => {
     setDocCount(burningData.length)
   }, [burningData, setDocCount])
 
+
+
   console.log({
     offset, perPage, nextPageEnable, prevPageEnable,
     datas: burningData.slice(offset, perPage)
@@ -99,8 +105,8 @@ const BurningStats = () => {
           <Table>
             <thead>
               <tr>
+                <th>From</th>
                 <th>Block</th>
-                {/* <th>Address</th> */}
                 {/* <th>Tx</th> */}
                 <th>Amount</th>
                 <th>Price</th>
@@ -114,8 +120,15 @@ const BurningStats = () => {
                 burningData.slice(offset, offset + perPage).map(
                   (
                     { blockNumber, address, transactionHash, timestamps, amount, price, }) => <tr className={(dateNow - timestamps) < 24 * 3600000 ? 'highlight' : ''}>
+                      <td>
+                        <a href={`https://bscscan.com/address/${address}`} target="_blank" rel="noreferrer" >
+                          {workerTable[address]
+                            ? <>{workerTable[address]}</>
+                            : <>{address.slice(0, 6)}..</>
+                          }
+                        </a>
+                      </td>
                       <td>{blockNumber}</td>
-                      {/* <td>{address.slice(0,6)}...</td> */}
                       {/* <td>{transactionHash.slice(0,6)}...</td> */}
                       <td>{amount.toFixed(2)}</td>
                       <td>${price.toFixed(2)}</td>
