@@ -16,7 +16,7 @@ const CountdownRender: React.FC<{
   return !completed && <>
     <div style={{ textAlign: 'center', marginBottom: "1em" }}>
       <Text>
-        The multiplier of the #SISHI staking pool will change from 15x to 25x  
+        The multiplier of the #SISHI staking pool will change from <b>15x</b> to <b>25x</b>  
         {/* <a href="https://docs.sishi.finance/sishi-token/sishi-halving" target="_blank" rel="noreferrer"> Halving </a> */}
         <> in </>
         {days > 0 && <> {days} day{days > 1 ? "s" : ""} </>}
