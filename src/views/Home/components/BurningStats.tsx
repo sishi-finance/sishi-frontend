@@ -73,7 +73,7 @@ const BurningStats = () => {
   const {
     offset, perPage, nextPageEnable, prevPageEnable,
     jumpTo, nextPage, prevPage, setDocCount, setPerPage
-  } = usePagination({ perPageDefault: 15 })
+  } = usePagination({ perPageDefault: 14 })
   const dateNow = Date.now()
 
   useEffect(() => {
