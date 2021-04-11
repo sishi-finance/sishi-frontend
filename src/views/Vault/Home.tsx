@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { Heading, Text, BaseLayout, Link } from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
 import Page from 'components/layout/Page'
-import StyledCountdown from 'components/Countdown'
 
 
 const Hero = styled.div`

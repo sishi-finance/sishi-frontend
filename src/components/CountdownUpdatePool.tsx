@@ -16,9 +16,9 @@ const CountdownRender: React.FC<{
   return !completed && <>
     <div style={{ textAlign: 'center', marginBottom: "1em" }}>
       <Text>
-        SISHI Block Reward 
-        <a href="https://docs.sishi.finance/sishi-token/sishi-halving" target="_blank" rel="noreferrer"> Halving </a>
-        Countdown in 
+        The multiplier of the #SISHI staking pool will change from 15x to 25x  
+        {/* <a href="https://docs.sishi.finance/sishi-token/sishi-halving" target="_blank" rel="noreferrer"> Halving </a> */}
+        <> in </>
         {days > 0 && <> {days} day{days > 1 ? "s" : ""} </>}
         <> {String(hours).padStart(2, "0")} hour{hours > 1 ? "s" : ""} </>
         <> {String(minutes).padStart(2, "0")} minute{minutes > 1 ? "s" : ""} </>
@@ -37,7 +37,7 @@ const CountdownRender: React.FC<{
 }
 const CountdownComponent: React.FC = () => {
 
-  return <Countdown date={Date.parse('6/13/2021, 10:00:00 AM')} renderer={CountdownRender} />
+  return <Countdown date={Date.parse('4/12/2021, 7:00:00 PM')} renderer={CountdownRender} />
 }
 
 export default styled(CountdownComponent)`
