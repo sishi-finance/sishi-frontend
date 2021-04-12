@@ -37,7 +37,7 @@ const CountdownRender: React.FC<{
 }
 const CountdownComponent: React.FC = () => {
 
-  return <Countdown date={Date.parse('6/13/2021, 10:00:00 AM')} renderer={CountdownRender} />
+  return <Countdown date={Date.parse('6/13/2021, 10:00:00 AM GMT+7')} renderer={CountdownRender} />
 }
 
 export default styled(CountdownComponent)`
