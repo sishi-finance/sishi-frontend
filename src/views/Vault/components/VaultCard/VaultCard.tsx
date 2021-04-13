@@ -64,7 +64,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
           {Number(tvl).toFixed(2)}
         </td>
         <td>
-          {Number(balance).toFixed(2)}
+          {Number(walletBalance).toFixed(2)}
         </td>
       </tr>
       {expand && <tr style={{ borderBottom: !expand ? 'none' : `solid 2px #8884` }}>
