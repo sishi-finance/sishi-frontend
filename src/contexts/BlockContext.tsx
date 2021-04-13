@@ -9,13 +9,20 @@ const BlockContextProvider = ({ children }) => {
 
   useEffect(() => {
     const web3 = getWeb3()
-    const interval = setInterval(async () => {
+    const isConnected = web3.eth.net
+      .isListening()
+      
+    const update = async () => {
+
       const blockNumber = await web3.eth.getBlockNumber()
       if (blockNumber !== previousBlock.current) {
         previousBlock.current = blockNumber
         setBlock(blockNumber)
       }
-    }, 6000)
+    }
+    const interval = setInterval(update, 6000)
+    
+    isConnected.then(e => !!e && update())
 
     return () => clearInterval(interval)
   }, [])

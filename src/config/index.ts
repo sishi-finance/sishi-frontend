@@ -7,6 +7,8 @@ BigNumber.config({
 
 export const CAKE_PER_BLOCK = new BigNumber(1)
 export const BLOCKS_PER_YEAR = new BigNumber(10512000)
+export const BLOCKS_PER_DAY = new BigNumber(28800)
+export const BLOCKS_PER_HOUR = new BigNumber(1200)
 export const BSC_BLOCK_TIME = 3
 
 export const CAKE_POOL_PID = 0
