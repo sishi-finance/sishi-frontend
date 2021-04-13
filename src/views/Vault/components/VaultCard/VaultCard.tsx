@@ -45,7 +45,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
       <tr style={{ borderBottom: expand ? 'none' : `solid 2px #8884` }} onClick={() => setExpand(!expand)}>
         <td style={{ width: "200px" }}>
           <Flex flexDirection="row" alignItems="center" >
-            <Image src={`/images/farms/${farmImage}.png`} width={40} height={40} />
+            <Image src={`/images/farms/${farmImage}.png`} width={40} height={40} marginRight="2"/>
             <span style={{ fontSize: '20px' }}>{tokenSymbol}</span>
           </Flex>
         </td>
