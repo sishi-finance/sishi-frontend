@@ -31,14 +31,14 @@ const IconButtonWrapper = styled.div`
 
 const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, depositBalance, tokenBalance, tokenName, depositFeeBP, tokenDecimal = 18 }) => {
   const TranslateString = useI18n()
-  const { onDeposit } = useVaultDeposit(vault)
-  const { onWithdrawal } = useVaultWithdrawal(vault)
+  const { onDeposit } = useVaultDeposit(vault, vault.reloadToken)
+  const { onWithdrawal } = useVaultWithdrawal(vault, vault.reloadToken)
   const rawStakedBalance = getBalanceNumber(depositBalance, tokenDecimal)
   const rawTokenBalance = getBalanceNumber(tokenBalance, tokenDecimal)
   const displayBalance = rawStakedBalance.toLocaleString()
   const [requestedApproval, setRequestedApproval] = useState(false)
   const tokenContract = useERC20(vault.tokenAddress)
-  const { onApprove } = useVaultApprove(vault)
+  const { onApprove } = useVaultApprove(vault, vault.reloadToken)
 
   const handleApprove = useCallback(async () => {
     try {

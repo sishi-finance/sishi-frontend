@@ -33,9 +33,10 @@ const config: MenuEntry[] = [
     href: '/nests',
   },
   {
-    label: 'Vault',
+    label: 'Vault - Beta',
     icon: 'VaultIcon',
     href: '/vaults',
+
   },
   // {
   //   label: 'Pools',

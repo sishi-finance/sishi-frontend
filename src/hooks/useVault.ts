@@ -49,7 +49,7 @@ const useAllowance = ({ tokenAddress, allowanceAddress, account }) => {
 }
 
 const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) => {
-
+  const [updateToken, setUpdateToken] = useState(0)
   const vaultContract = useVault(tokenSymbol)
   const agoVaultContract = useVault(tokenSymbol)
   const [[pricePerFullShare, loaded1], setPricePerFullShare] = useState([new BigNumber(0), false])
@@ -66,7 +66,10 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
   const currentBlock = useBlock()
   const prevBlock = currentBlock - deltaBlock
 
+  const reloadToken = () => setUpdateToken(updateToken + 1)
+
   useEffect(() => {
+    String(updateToken);
     vaultContract.methods
       .balance()
       .call()
@@ -75,12 +78,13 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
         setVaultTVL(Number(balance) / (10 ** 18))
       })
       .catch(e => console.error(e));
-  }, [vaultContract, setVaultTVL]);
+  }, [vaultContract, setVaultTVL, updateToken]);
 
 
 
 
   useEffect(() => {
+    String(updateToken);
     if (account) {
       vaultContract.methods
         .balanceOf(account)
@@ -90,9 +94,10 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
         })
         .catch(e => console.error(e));
     }
-  }, [vaultContract, setVaultShare, account,]);
+  }, [vaultContract, setVaultShare, account, updateToken]);
 
   useEffect(() => {
+    String(updateToken);
     vaultContract.methods
       .balance()
       .call()
@@ -101,7 +106,7 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
         setVaultTVL(Number(balance) / (10 ** 18))
       })
       .catch(e => console.error(e));
-  }, [vaultContract, setVaultTVL]);
+  }, [vaultContract, setVaultTVL, updateToken]);
 
   useEffect(() => {
 
@@ -156,7 +161,8 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
       balance: vaultShare * pricePerFullShare.toNumber() / 1e18,
       walletBalance: Number(walletBalance).toFixed(10),
       vaultApproved,
-    }
+    },
+    reloadToken,
   }
 }
 

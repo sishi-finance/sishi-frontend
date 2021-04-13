@@ -13,7 +13,7 @@ export interface Vault {
 
 export interface VaultWithData extends Vault {
   roiLoaded: boolean,
-
+  reloadToken: () => void,
   calc?: {
     roiHour: number,
     roiDay: number,
