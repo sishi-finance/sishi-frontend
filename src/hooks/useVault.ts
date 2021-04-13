@@ -29,11 +29,12 @@ const useBalance = ({ tokenAddress, account, updateToken }) => {
   return walletBalance
 }
 
-const useAllowance = ({ tokenAddress, allowanceAddress, account }) => {
+const useAllowance = ({ tokenAddress, allowanceAddress, account, updateToken }) => {
   const [walletApprove, setWalletApprove] = useState(false)
   const tokenContract = useERC20(tokenAddress)
 
   useEffect(() => {
+    String(updateToken);
     if (account) {
       tokenContract.methods
         .allowance(account, allowanceAddress)
@@ -43,7 +44,7 @@ const useAllowance = ({ tokenAddress, allowanceAddress, account }) => {
         })
         .catch(e => console.error(e));
     }
-  }, [account, allowanceAddress, tokenContract, setWalletApprove]);
+  }, [account, allowanceAddress, tokenContract, setWalletApprove, updateToken]);
 
 
   return walletApprove
@@ -60,7 +61,7 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
   const [vaultShare, setVaultShare] = useState(0)
 
   const walletBalance = useBalance({ tokenAddress, account, updateToken })
-  const vaultApproved = useAllowance({ tokenAddress, allowanceAddress: vaultAddress, account })
+  const vaultApproved = useAllowance({ tokenAddress, allowanceAddress: vaultAddress, account, updateToken })
 
   const deltaBlock = 100
   // const deltaBlock = Number(BLOCKS_PER_DAY) * 3
