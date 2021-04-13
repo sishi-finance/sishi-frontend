@@ -6,13 +6,14 @@ export interface Vault {
   farmPid: number,
   isTokenOnly: boolean,
   tokenAddress: string,
+  vault?: string,
+  strategy?: string,
 }
 
 
 export interface VaultWithData extends Vault {
   roiLoaded: boolean,
-  vault?: string,
-  strategy?: string,
+
   calc?: {
     roiHour: number,
     roiDay: number,
@@ -24,14 +25,15 @@ export interface VaultWithData extends Vault {
     tvl: number,
     balance: number,
     walletBalance: number,
+    vaultApproved: boolean,
   }
 }
 
 export default <Record<string, { vault, strategy }>>{
   BUSD: {
-    vault: "0x532d5775ce71cb967b78acbc290f80df80a9baa5",
+    // vault: "0x532d5775ce71cb967b78acbc290f80df80a9baa5",
     // strategy: "0x7f21fa61e0919c6d0970de835d4c575b54ed1071"
-    // vault: "0x93bc288e000b843bcb463e04b558f20c0b2d5719",
+    vault: "0x93bc288e000b843bcb463e04b558f20c0b2d5719",
     strategy: "0x7f21fa61e0919c6d0970de835d4c575b54ed1071"
   }
 }
@@ -44,5 +46,7 @@ export const vaultLists: Vault[] = [
     tokenAddress: contracts.busd[56],
     tag: ["venus", "stable coin"],
     farmPid: 10,
+    vault: "0x93bc288e000b843bcb463e04b558f20c0b2d5719",
+    strategy: "0x7f21fa61e0919c6d0970de835d4c575b54ed1071"
   }
 ]

@@ -2,24 +2,64 @@ import { useEffect, useState } from 'react'
 import { BLOCKS_PER_DAY, BLOCKS_PER_HOUR } from 'config'
 import BigNumber from 'bignumber.js/bignumber'
 import { Vault, vaultLists, VaultWithData } from 'config/constants/vaults'
-import { provider } from 'web3-core'
+import { provider, } from 'web3-core'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import useBlock from './useBlock'
 import useContract, { useERC20, useVault } from './useContract'
 
 
 
-const useVaultAPY = ({ tokenSymbol, tokenAddress }: Vault) => {
+const useBalance = ({ tokenAddress, account }) => {
+  const [walletBalance, setWalletBalance] = useState(0)
+  const tokenContract = useERC20(tokenAddress)
+
+  useEffect(() => {
+    if (account) {
+      tokenContract.methods
+        .balanceOf(account,)
+        .call()
+        .then(balance => {
+          setWalletBalance(Number(balance) / (10 ** 18))
+        })
+        .catch(e => console.error(e));
+    }
+  }, [account, tokenContract, setWalletBalance]);
+
+  return walletBalance
+}
+
+const useAllowance = ({ tokenAddress, allowanceAddress, account }) => {
+  const [walletApprove, setWalletApprove] = useState(false)
+  const tokenContract = useERC20(tokenAddress)
+
+  useEffect(() => {
+    if (account) {
+      tokenContract.methods
+        .allowance(account, allowanceAddress)
+        .call()
+        .then(allowed => {
+          setWalletApprove(Number(allowed) / (10 ** 18) >= 100000000)
+        })
+        .catch(e => console.error(e));
+    }
+  }, [account, allowanceAddress, tokenContract, setWalletApprove]);
+
+
+  return walletApprove
+}
+
+const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) => {
 
   const vaultContract = useVault(tokenSymbol)
   const agoVaultContract = useVault(tokenSymbol)
-  const tokenContract = useERC20(tokenAddress)
   const [[pricePerFullShare, loaded1], setPricePerFullShare] = useState([new BigNumber(0), false])
   const [[oldPricePerFullShare, loaded2], setOldPricePerFullShare] = useState([new BigNumber(0), false])
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
   const [vaultTVL, setVaultTVL] = useState(0)
   const [vaultShare, setVaultShare] = useState(0)
-  const [walletBalance, setWalletBalance] = useState(0)
+
+  const walletBalance = useBalance({ tokenAddress, account })
+  const vaultApproved = useAllowance({ tokenAddress, allowanceAddress: vaultAddress, account })
 
   const deltaBlock = 200
   // const deltaBlock = Number(BLOCKS_PER_DAY) * 3
@@ -37,17 +77,8 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress }: Vault) => {
       .catch(e => console.error(e));
   }, [vaultContract, setVaultTVL]);
 
-  useEffect(() => {
-    if (account) {
-      tokenContract.methods
-        .balanceOf(account)
-        .call()
-        .then(balance => {
-          setWalletBalance(Number(balance) / (10 ** 18))
-        })
-        .catch(e => console.error(e));
-    }
-  }, [account, tokenContract, setWalletBalance]);
+
+
 
   useEffect(() => {
     if (account) {
@@ -126,6 +157,7 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress }: Vault) => {
       share: vaultShare.toFixed(10),
       balance: vaultShare * pricePerFullShare.toNumber() / 1e18,
       walletBalance: Number(walletBalance).toFixed(10),
+      vaultApproved,
     }
   }
 }

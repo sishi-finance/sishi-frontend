@@ -32,7 +32,7 @@ const Hero = styled.div`
 const Table = styled.table`
   width: 100%;
   vertical-align: middle;
-  
+  line-height: 1.5;
   tr, td {
     padding: 8px 5px;
     vertical-align: middle;
@@ -59,10 +59,11 @@ const Home: React.FC = () => {
         </Heading>
         <br />
         <br />
-        <br />
-        <Heading as="h3" color="secondary">
-          Coming Soon
+        <Heading as="h4" color="secondary">
+          Prototype Version
         </Heading>
+        <br />
+        <br />
         <br />
         <div style={{ width: "100%" }}>
           <Table>

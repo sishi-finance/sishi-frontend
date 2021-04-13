@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js'
+import { Vault } from 'config/constants/vaults'
 import { ethers } from 'ethers'
 
 export const approve = async (lpContract, masterChefContract, account) => {
@@ -10,6 +11,24 @@ export const approve = async (lpContract, masterChefContract, account) => {
 export const stake = async (masterChefContract, pid, amount, account, decimal = 18) => {
   return masterChefContract.methods
     .deposit(pid, new BigNumber(amount).times(new BigNumber(10).pow(decimal)).toString())
+    .send({ from: account })
+    .on('transactionHash', (tx) => {
+      return tx.transactionHash
+    })
+}
+
+export const vaultDeposit = async (vaultContract, amount, account, decimal = 18) => {
+  return vaultContract.methods
+    .deposit(new BigNumber(amount).times(new BigNumber(10).pow(decimal)).toString())
+    .send({ from: account })
+    .on('transactionHash', (tx) => {
+      return tx.transactionHash
+    })
+}
+
+export const vaultWithdrawal = async (vaultContract, amount, account, decimal = 18) => {
+  return vaultContract.methods
+    .withdraw(new BigNumber(amount).times(new BigNumber(10).pow(decimal)).toString())
     .send({ from: account })
     .on('transactionHash', (tx) => {
       return tx.transactionHash

@@ -5,10 +5,8 @@ import { Flex, Text, Skeleton, Image, Tag, Button } from '@pancakeswap-libs/uiki
 import { Farm } from 'state/types'
 import { provider } from 'web3-core'
 import useI18n from 'hooks/useI18n'
-import ExpandableSectionButton from 'components/ExpandableSectionButton'
-
 import { VaultWithData } from 'config/constants/vaults'
-
+import VaultAction from "./VaultAction"
 
 
 const Row = styled.div`
@@ -51,7 +49,10 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
           </Flex>
         </td>
         <td>
-          {tag.map(e => <Tag margin={2} >{e}</Tag>)}
+          {tag.map(e => <>
+            <Tag >{e}</Tag>
+            {" "}
+          </>)}
         </td>
         <td>
           {(farmAPY * 100).toFixed(2)}%
@@ -94,7 +95,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
               </Row>
             </div>
             <div>
-              <Button>Deposit</Button>
+              <VaultAction vault={vault} tokenBalance={new BigNumber(walletBalance * 1e18)} depositBalance={new BigNumber(balance * 1e18)} />
             </div>
           </Row>
         </td>
