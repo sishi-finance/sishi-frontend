@@ -9,11 +9,12 @@ import useContract, { useERC20, useVault } from './useContract'
 
 
 
-const useBalance = ({ tokenAddress, account }) => {
+const useBalance = ({ tokenAddress, account, updateToken }) => {
   const [walletBalance, setWalletBalance] = useState(0)
   const tokenContract = useERC20(tokenAddress)
 
   useEffect(() => {
+    String(updateToken);
     if (account) {
       tokenContract.methods
         .balanceOf(account,)
@@ -23,7 +24,7 @@ const useBalance = ({ tokenAddress, account }) => {
         })
         .catch(e => console.error(e));
     }
-  }, [account, tokenContract, setWalletBalance]);
+  }, [account, tokenContract, setWalletBalance, updateToken]);
 
   return walletBalance
 }
@@ -58,7 +59,7 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
   const [vaultTVL, setVaultTVL] = useState(0)
   const [vaultShare, setVaultShare] = useState(0)
 
-  const walletBalance = useBalance({ tokenAddress, account })
+  const walletBalance = useBalance({ tokenAddress, account, updateToken })
   const vaultApproved = useAllowance({ tokenAddress, allowanceAddress: vaultAddress, account })
 
   const deltaBlock = 100
