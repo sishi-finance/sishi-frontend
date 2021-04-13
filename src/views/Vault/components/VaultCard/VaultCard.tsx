@@ -27,7 +27,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
 
   const [expand, setExpand] = useState(false)
 
-  const farmImage = vault.tokenSymbol.toLowerCase()
+  const farmImage = vault.tokenSymbol.toLowerCase().replace(" lp","")
 
   const lpLabel = vault.tokenSymbol
   const earnLabel = 'SISHI'
@@ -62,10 +62,10 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
           {(roiDay * 100).toFixed(2)}%
         </td>
         <td>
-          {Number(tvl).toFixed(2)}
+          {Number(tvl).toFixed(4)}
         </td>
         <td>
-          {Number(walletBalance).toFixed(2)}
+          {Number(walletBalance).toFixed(4)}
         </td>
       </tr>
       {expand && <tr style={{ borderBottom: !expand ? 'none' : `solid 2px #8884` }}>
@@ -88,11 +88,11 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
             <div style={{ flex: 1 }}>
               <Row>
                 <div style={{ width: "10em", textAlign: "left" }}>Wallet:</div>
-                <div>{Number(walletBalance).toFixed(2)}</div>
+                <div>{Number(walletBalance).toFixed(4)}</div>
               </Row>
               <Row>
                 <div style={{ width: "10em", textAlign: "left" }}>Vault:</div>
-                <div>{Number(balance).toFixed(2)}</div>
+                <div>{Number(balance).toFixed(4)}</div>
               </Row>
             </div>
             <div>
