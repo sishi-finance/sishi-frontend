@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import styled, { keyframes } from 'styled-components'
-import { Flex, Text, Skeleton, Image, Tag, Button } from '@pancakeswap-libs/uikit'
+import { Flex, Text, Skeleton, Image, Tag, Button, LinkExternal } from '@pancakeswap-libs/uikit'
 import { Farm } from 'state/types'
 import { provider } from 'web3-core'
 import useI18n from 'hooks/useI18n'
 import { VaultWithData } from 'config/constants/vaults'
+import { ExternalLink } from 'react-feather'
 import VaultAction from "./VaultAction"
 
 
@@ -42,13 +43,13 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
   return (
     <>
       <tr style={{ borderBottom: expand ? 'none' : `solid 2px #8884` }} onClick={() => setExpand(!expand)}>
-        <td style={{ width: "100px" }}>
-          <Flex flexDirection="row" alignItems="center" justifyContent="space-between">
+        <td style={{ width: "200px" }}>
+          <Flex flexDirection="row" alignItems="center" >
             <Image src={`/images/farms/${farmImage}.png`} width={40} height={40} />
             <span style={{ fontSize: '20px' }}>{tokenSymbol}</span>
           </Flex>
         </td>
-        <td>
+        <td style={{ textAlign: "left" }}>
           {tag.map(e => <>
             <Tag >{e}</Tag>
             {" "}
@@ -98,6 +99,12 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
               <VaultAction vault={vault} tokenBalance={new BigNumber(walletBalance * 1e18)} depositBalance={new BigNumber(balance * 1e18)} />
             </div>
           </Row>
+
+          <Row style={{ justifyContent: "stretch", marginTop: "1em" }}>
+            <LinkExternal href={`https://bscscan.com/address/${vault.vault}`} fontSize="12" marginRight="3">Vault contract</LinkExternal>
+            <LinkExternal href={`https://bscscan.com/address/${vault.strategy}`} fontSize="12" marginRight="3">Strategy contract</LinkExternal>
+          </Row>
+
         </td>
       </tr>}
     </>

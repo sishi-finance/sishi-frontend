@@ -61,7 +61,7 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
   const walletBalance = useBalance({ tokenAddress, account })
   const vaultApproved = useAllowance({ tokenAddress, allowanceAddress: vaultAddress, account })
 
-  const deltaBlock = 200
+  const deltaBlock = 100
   // const deltaBlock = Number(BLOCKS_PER_DAY) * 3
   const currentBlock = useBlock()
   const prevBlock = currentBlock - deltaBlock
@@ -143,8 +143,6 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
 
   return {
     roiLoaded: loaded1 && loaded2,
-    vault: "",
-    strategy: "",
     calc: {
       roiHour: (roiHour).toFixed(10),
       roiDay: (roiDay).toFixed(10),

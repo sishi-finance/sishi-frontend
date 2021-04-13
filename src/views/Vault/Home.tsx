@@ -33,7 +33,7 @@ const Table = styled.table`
   width: 100%;
   vertical-align: middle;
   line-height: 1.5;
-  tr, td {
+  td, th {
     padding: 8px 5px;
     vertical-align: middle;
   }
@@ -52,16 +52,16 @@ const Home: React.FC = () => {
         <Heading as="h1" size="xl" mb="24px" color="secondary">
           Sishi Vault
         </Heading>
-        <br />
-        <br />
         <Heading as="h3" color="secondary">
           Yield Optimization on Binance Smart Chain
         </Heading>
         <br />
         <br />
-        <Heading as="h4" color="secondary">
-          Prototype Version
-        </Heading>
+        <br />
+        <Text color="red" fontSize="12px">
+          Risk Warning: Sishi Vault is in beta testing, it is unaudited and smart contracts were forked from  
+          <a href="https://yearn.finance/" target="_blank" rel="noreferrer"> Yearn Finance</a>.
+        </Text>
         <br />
         <br />
         <br />
@@ -69,7 +69,7 @@ const Home: React.FC = () => {
           <Table>
             <thead>
               <th> </th>
-              <th> </th>
+              <th style={{textAlign:"left"}}> Farm </th>
               <th> APY </th>
               <th> Daily</th>
               <th> TVL</th>
