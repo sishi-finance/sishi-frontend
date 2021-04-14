@@ -75,7 +75,7 @@ class Pool {
   }
 
   private async executePool() {
-    console.log("[Pool] executePool")
+    // console.log("[Pool] executePool")
 
     const queue = this.queue
     const abi = this.abi
@@ -86,7 +86,7 @@ class Pool {
     this.processing += queue.length
     this.pending -= queue.length
 
-    console.log("[Pool] ABI", { queue, abi })
+    // console.log("[Pool] ABI", { queue, abi })
 
     console.time(`[Pool] ${poolRunId}`)
 
@@ -118,7 +118,7 @@ class Pool {
   _timeout: any
 
   private throttleExecutePool() {
-    console.log("[Pool] throttleExecutePool")
+    // console.log("[Pool] throttleExecutePool")
 
     clearTimeout(this._timeout)
     this._timeout = setTimeout(

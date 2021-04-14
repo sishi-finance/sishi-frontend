@@ -87,7 +87,7 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
       [],
     )
       .then(balance => {
-        console.log("balance", { balance })
+        // console.log("balance", { balance })
         setVaultTVL(Number(balance) / (10 ** 18))
       })
       .catch(e => console.error(e));
@@ -113,7 +113,7 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
   }, [vaultAddress, vaultABI, setVaultShare, account, updateToken]);
 
   useEffect(() => {
-    console.log({ currentBlock, prevBlock })
+    // console.log({ currentBlock, prevBlock })
     if (Number.isFinite(currentBlock) && currentBlock > 1) {
       callMethodWithPool(
         vaultAddress,
@@ -122,7 +122,7 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
         [],
       )
         .then(price => {
-          console.log("1", { price })
+          // console.log("1", { price })
           setPricePerFullShare([new BigNumber(price), true])
         })
         .catch(e => console.error(e));
@@ -132,7 +132,7 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
         .getPricePerFullShare()
         .call()
         .then(price => {
-          console.log("2", { price })
+          // console.log("2", { price })
           setOldPricePerFullShare([new BigNumber(price), true])
         })
         .catch(e => console.error(e))
