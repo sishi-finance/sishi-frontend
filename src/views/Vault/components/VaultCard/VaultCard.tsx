@@ -96,7 +96,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
               </Row>
             </div>
             <div>
-              <VaultAction vault={vault} tokenBalance={new BigNumber(walletBalance * 1e18)} depositBalance={new BigNumber(balance * 1e18)} />
+              <VaultAction vault={vault} account={account} tokenBalance={new BigNumber(walletBalance * 1e18)} depositBalance={new BigNumber(balance * 1e18)} />
             </div>
           </Row>
 

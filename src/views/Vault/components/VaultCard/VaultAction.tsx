@@ -19,7 +19,8 @@ interface VaultCardActionsProps {
   tokenName?: string,
   tokenDecimal?: number,
   pid?: number
-  depositFeeBP?: number
+  depositFeeBP?: number,
+  account?: string,
 }
 
 const IconButtonWrapper = styled.div`
@@ -29,7 +30,7 @@ const IconButtonWrapper = styled.div`
   }
 `
 
-const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, depositBalance, tokenBalance, tokenName, depositFeeBP, tokenDecimal = 18 }) => {
+const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, account, depositBalance, tokenBalance, tokenName, depositFeeBP, tokenDecimal = 18 }) => {
   const TranslateString = useI18n()
   const { onDeposit } = useVaultDeposit(vault, vault.reloadToken)
   const { onWithdrawal } = useVaultWithdrawal(vault, vault.reloadToken)
@@ -39,7 +40,6 @@ const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, depositBalance, t
   const [requestedApproval, setRequestedApproval] = useState(false)
   const tokenContract = useERC20(vault.tokenAddress)
   const { onApprove } = useVaultApprove(vault, vault.reloadToken)
-
   const handleApprove = useCallback(async () => {
     try {
       setRequestedApproval(true)
@@ -73,8 +73,13 @@ const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, depositBalance, t
 
   return (
     <Flex justifyContent="space-between" alignItems="center">
-      <Heading color={rawStakedBalance === 0 ? 'textDisabled' : 'text'} mr="6px">{displayBalance}</Heading>
-      {renderStakingButtons()}
+      {!account
+        ? <UnlockButton mt="8px" fullWidth size="sm"/>
+        : <>
+          <Heading color={rawStakedBalance === 0 ? 'textDisabled' : 'text'} mr="6px">{displayBalance}</Heading>
+          {renderStakingButtons()}
+        </>
+      }
     </Flex>
   )
 }

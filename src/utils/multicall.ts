@@ -10,13 +10,13 @@ interface Call {
   params?: any[] // Function params
 }
 
-const multicall = async (abi: any[], calls: Call[]) => {
+const multicall = async (abi: any[], calls: Call[], ...callOptions) => {
   const web3 = getWeb3()
   const multi = new web3.eth.Contract((MultiCallAbi as unknown) as AbiItem, getMulticallAddress())
   const itf = new Interface(abi)
 
   const calldata = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)])
-  const { returnData } = await multi.methods.aggregate(calldata).call()
+  const { returnData } = await multi.methods.aggregate(calldata).call(...callOptions)
   const res = returnData.map((call, i) => itf.decodeFunctionResult(calls[i].name, call))
 
   return res
