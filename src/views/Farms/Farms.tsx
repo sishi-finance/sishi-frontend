@@ -14,7 +14,7 @@ import { fetchFarmUserDataAsync } from 'state/actions'
 import { QuoteToken } from 'config/constants/types'
 import useI18n from 'hooks/useI18n'
 import StyledCountdown from 'components/Countdown'
-import CountdownUpdatePool from 'components/CountdownUpdatePool'
+import CountdownUpdateTimelock from 'components/CountdownUpdateTimelock'
 import FarmCard, { FarmWithStakedValue } from './components/FarmCard/FarmCard'
 import FarmTabButtons from './components/FarmTabButtons'
 import Divider from './components/Divider'
@@ -102,7 +102,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
       </Heading>
 
       <StyledCountdown />
-      <CountdownUpdatePool />
+      <CountdownUpdateTimelock />
 
       <Heading as="h2" color="secondary" mb="50px" style={{ textAlign: 'center' }}>
         {TranslateString(10000, 'Deposit Fee will be used to yield optimization and  buyback SISHI')}

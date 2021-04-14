@@ -4,7 +4,7 @@ import { Heading, Text, BaseLayout, Link } from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
 import Page from 'components/layout/Page'
 import StyledCountdown from 'components/Countdown'
-import CountdownUpdatePool from 'components/CountdownUpdatePool'
+import CountdownUpdateTimelock from 'components/CountdownUpdateTimelock'
 import FarmStakingCard from './components/FarmStakingCard'
 import LotteryCard from './components/LotteryCard'
 import CakeStats from './components/CakeStats'
@@ -66,7 +66,7 @@ const Home: React.FC = () => {
           {TranslateString(576, 'Sishi Finance')}
         </Heading>
         <StyledCountdown />
-        <CountdownUpdatePool />
+        <CountdownUpdateTimelock />
 
         <Heading as="h3" color="secondary">
           Inspired by  <a href="https://bitcoin.org/bitcoin.pdf" target="_blank" rel="noreferrer">Bitcoin</a>,
