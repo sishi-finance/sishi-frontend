@@ -42,6 +42,18 @@ export default <Record<string, { vault, strategy }>>{
     vault: "0x30cd4c7fC04dd15072047918e79CdD23Dae4Cc39",
     strategy: "0xF37111949b12D86229c63B2d1Ad0df3880C9a884"
   },
+  XVS: {
+    vault: "0x451C79bcDa7608D7824394e384160EfFf47Fe8b8",
+    strategy: "0x6B23B55B576657D0E7D0963aEb21b528396DBDac"
+  },
+  VAI: {
+    vault: "0x0f4B0c695418893A8eEfB3eD8D18880147Ef8B18",
+    strategy: "0xf7C30769e700d3af6b3347b36Ac663797588b3fD"
+  },
+  SXP: {
+    vault: "0xf8f10825C54A54A8d07D9330c7F96563D57252E2",
+    strategy: "0xAB9c148C08cAB3e56Bb8ca2Cd0B240384184E26d"
+  },
 }
 
 
@@ -73,4 +85,31 @@ export const vaultLists: Vault[] = [
   //   vault: "0x30cd4c7fC04dd15072047918e79CdD23Dae4Cc39",
   //   strategy: "0xF37111949b12D86229c63B2d1Ad0df3880C9a884"
   // },
+  // {
+  //   tokenSymbol: "XVS",
+  //   isTokenOnly: true,
+  //   tokenAddress: "0xcf6bb5389c92bdda8a3747ddb454cb7a64626c63",
+  //   tag: ["Venus"],
+  //   farmPid: 12,
+  //   vault: "0x451C79bcDa7608D7824394e384160EfFf47Fe8b8",
+  //   strategy: "0x6B23B55B576657D0E7D0963aEb21b528396DBDac"
+  // },
+  {
+    tokenSymbol: "VAI",
+    isTokenOnly: true,
+    tokenAddress: "0x4bd17003473389a42daf6a0a729f6fdb328bbbd7",
+    tag: ["Venus"],
+    farmPid: 12,
+    vault: "0x0f4B0c695418893A8eEfB3eD8D18880147Ef8B18",
+    strategy: "0xf7C30769e700d3af6b3347b36Ac663797588b3fD"
+  },
+  {
+    tokenSymbol: "SXP",
+    isTokenOnly: true,
+    tokenAddress: "0x47bead2563dcbf3bf2c9407fea4dc236faba485a",
+    tag: ["Venus"],
+    farmPid: 12,
+    vault: "0xf8f10825C54A54A8d07D9330c7F96563D57252E2",
+    strategy: "0xAB9c148C08cAB3e56Bb8ca2Cd0B240384184E26d"
+  },
 ]
