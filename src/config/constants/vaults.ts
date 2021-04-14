@@ -64,13 +64,13 @@ export const vaultLists: Vault[] = [
     vault: "0xFD3d66E7ed01761e0B83a632736Da5F2F68acde8",
     strategy: "0x4581bdb0c086bDC5AFE17D27F50Fc011a144Deac"
   },
-  {
-    tokenSymbol: "ETH-BNB LP",
-    isTokenOnly: false,
-    tokenAddress: "0x70d8929d04b60af4fb9b58713ebcf18765ade422",
-    tag: ["Pancake"],
-    farmPid: 11,
-    vault: "0x30cd4c7fC04dd15072047918e79CdD23Dae4Cc39",
-    strategy: "0xF37111949b12D86229c63B2d1Ad0df3880C9a884"
-  },
+  // {
+  //   tokenSymbol: "ETH-BNB LP",
+  //   isTokenOnly: false,
+  //   tokenAddress: "0x70d8929d04b60af4fb9b58713ebcf18765ade422",
+  //   tag: ["Pancake"],
+  //   farmPid: 11,
+  //   vault: "0x30cd4c7fC04dd15072047918e79CdD23Dae4Cc39",
+  //   strategy: "0xF37111949b12D86229c63B2d1Ad0df3880C9a884"
+  // },
 ]

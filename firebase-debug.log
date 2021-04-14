@@ -1,0 +1,14 @@
+[debug] [2021-04-14T14:27:31.582Z] ----------------------------------------------------------------------
+[debug] [2021-04-14T14:27:31.583Z] Command:       /Users/datvo/.fnm/node-versions/v12.18.0/installation/bin/node /usr/local/bin/firebase deploy --only hosting:sishi-finance --project resolution-253604
+[debug] [2021-04-14T14:27:31.583Z] CLI Version:   7.6.2
+[debug] [2021-04-14T14:27:31.583Z] Platform:      darwin
+[debug] [2021-04-14T14:27:31.583Z] Node Version:  v12.18.0
+[debug] [2021-04-14T14:27:31.584Z] Time:          Wed Apr 14 2021 21:27:31 GMT+0700 (Indochina Time)
+[debug] [2021-04-14T14:27:31.584Z] ----------------------------------------------------------------------
+[debug] [2021-04-14T14:27:31.584Z] 
+[debug] [2021-04-14T14:27:31.591Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-04-14T14:27:31.591Z] > authorizing via signed-in user
+[debug] [2021-04-14T14:27:31.591Z] [iam] checking project resolution-253604 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-04-14T14:27:31.592Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-04-14T14:27:31.593Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>

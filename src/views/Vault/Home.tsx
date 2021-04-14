@@ -29,12 +29,19 @@ const Hero = styled.div`
   }
 `
 
+const TableContainer = styled.div`
+  width: 100%;
+`
+
 const Table = styled.table`
   width: 100%;
   vertical-align: middle;
   line-height: 1.5;
+  color: ${({ theme }) => theme.colors.text};
+  // background: ${(props) => props.theme.card.background};
+
   td, th {
-    padding: 8px 5px;
+    padding: 10px 5px;
     vertical-align: middle;
   }
 `
@@ -65,7 +72,7 @@ const Home: React.FC = () => {
         <br />
         <br />
         <br />
-        <div style={{ width: "100%" }}>
+        <TableContainer>
           <Table>
             <thead>
               <th> </th>
@@ -83,7 +90,7 @@ const Home: React.FC = () => {
             </tbody>
           </Table>
 
-        </div>
+        </TableContainer>
       </Hero>
     </Page>
   )
