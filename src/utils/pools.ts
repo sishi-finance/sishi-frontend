@@ -25,7 +25,7 @@ interface Request {
   reject: (e) => any,
 }
 
-
+let poolCount = 0
 
 class Pool {
   private queue: Request[] = []
@@ -79,13 +79,16 @@ class Pool {
 
     const queue = this.queue
     const abi = this.abi
+    const poolRunId = poolCount++
 
     this.queue = []
     this.abiMap = {}
     this.processing += queue.length
     this.pending -= queue.length
 
-    console.log("[Pool] ABI",{ queue, abi })
+    console.log("[Pool] ABI", { queue, abi })
+
+    console.time(`[Pool] ${poolRunId}`)
 
     const allResult = await multicall(
       abi,
@@ -95,6 +98,8 @@ class Pool {
         params: e.params,
       }))
     )
+
+    console.timeEnd(`[Pool] ${poolRunId}`)
 
 
     queue.forEach((call, index) => {
@@ -118,7 +123,7 @@ class Pool {
     clearTimeout(this._timeout)
     this._timeout = setTimeout(
       this.executePool.bind(this),
-      200,
+      50,
     )
   }
 }
