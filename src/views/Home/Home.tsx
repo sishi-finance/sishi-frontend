@@ -67,7 +67,6 @@ const Home: React.FC = () => {
         </Heading>
         <StyledCountdown />
         <CountdownUpdateTimelock />
-
         <Heading as="h3" color="secondary">
           Inspired by  <a href="https://bitcoin.org/bitcoin.pdf" target="_blank" rel="noreferrer">Bitcoin</a>,
           21 million SISHI designed to be the first Yield-of-Value asset based on Binance Smart Chain.

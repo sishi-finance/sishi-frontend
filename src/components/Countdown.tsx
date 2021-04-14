@@ -24,7 +24,7 @@ const CountdownRender: React.FC<{
         <> {String(minutes).padStart(2, "0")} minute{minutes > 1 ? "s" : ""} </>
         <> {String(seconds).padStart(2, "0")} second{seconds > 1 ? "s" : ""} </>
       </Text>
-      <br />
+      {/* <br /> */}
       {/* <LinkExternal marginX="auto" href="https://docs.sishi.finance/sishi-token/sishi-halving" target="_blank" rel="noreferrer noopener">
         <div style={{ overflow: "hidden", maxWidth: "calc(100vw - 8em)", textOverflow: "ellipsis" }} >
         https://docs.sishi.finance/sishi-token/sishi-halving
@@ -41,5 +41,5 @@ const CountdownComponent: React.FC = () => {
 }
 
 export default styled(CountdownComponent)`
-  margin: 3em;
+  margin: 2em;
 `
