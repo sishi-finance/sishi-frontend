@@ -16,44 +16,55 @@ interface CallDefine {
   outputs?: { name: string, type: DataType }[],
 }
 
-class Request {
-  constructor(
-    public address: string,
-    public method: string,
-    public params: any[],
-    public callDefine: CallDefine,
-    public resolve: (e) => any,
-    public reject: (e) => any,
-  ) { }
+interface Request {
+  address: string,
+  method: string,
+  params: any[],
+  callDefine: CallDefine,
+  resolve: (e) => any,
+  reject: (e) => any,
 }
+
+
 
 class Pool {
   private queue: Request[] = []
+
   private abiMap: Record<string, CallDefine> = {}
 
   public counter = 0
+
   public processing = 0
+
   public pending = 0
+
   public success = 0
 
   get abi() {
-    return Object.entries(this.abiMap)
+    return Object.values(this.abiMap)
   }
 
   private addToABI(req: Request): boolean {
-    if (this.abiMap[req.method]) {
+    if (!this.abiMap[req.method]) {
+      // console.log("[Pool] addToABI", req.method, req.callDefine)
+
       this.abiMap[req.method] = req.callDefine
       return true
-    } else if (equal(this.abiMap[req.method], req.callDefine)) {
+    }
+    if (equal(this.abiMap[req.method], req.callDefine)) {
       return true
     }
+    return false
   }
 
   private addToRequestPools(req: Request) {
+    // console.log("[Pool] addToRequestPools", req)
     this.queue.push(req)
+    this.throttleExecutePool()
   }
 
   addToPool(req: Request): boolean {
+    // console.log("[Pool] addToPool", req)
     if (this.addToABI(req)) {
       this.addToRequestPools(req)
       this.counter++;
@@ -64,6 +75,8 @@ class Pool {
   }
 
   private async executePool() {
+    console.log("[Pool] executePool")
+
     const queue = this.queue
     const abi = this.abi
 
@@ -72,6 +85,7 @@ class Pool {
     this.processing += queue.length
     this.pending -= queue.length
 
+    console.log("[Pool] ABI",{ queue, abi })
 
     const allResult = await multicall(
       abi,
@@ -82,7 +96,6 @@ class Pool {
       }))
     )
 
-    console.log({ queue, allResult })
 
     queue.forEach((call, index) => {
       try {
@@ -98,7 +111,10 @@ class Pool {
   }
 
   _timeout: any
+
   private throttleExecutePool() {
+    console.log("[Pool] throttleExecutePool")
+
     clearTimeout(this._timeout)
     this._timeout = setTimeout(
       this.executePool.bind(this),
@@ -108,32 +124,32 @@ class Pool {
 }
 
 
-let pools: Pool[] = []
+const pools: Pool[] = []
 
-export function callMethodWithPool(
+export default function callMethodWithPool(
   address: string,
   abi: any[],
   method: string,
-  params: []
+  params: any[]
 ): Promise<any> {
-  let callDefine: CallDefine = abi.find(e => e.type == "function" && e.name == method)
+  const callDefine: CallDefine = abi.find(e => e.type === "function" && e.name === method)
 
   return new Promise((resolve, reject) => {
-    let request = new Request(
+    const request: Request = {
       address,
       method,
       params,
       callDefine,
       resolve,
       reject
-    )
-
-    for (let pool of pools) {
-      if (pool.addToPool(request))
-        return
     }
-    let pool = new Pool()
-    pool.addToPool(request)
+
+    if (!pools.some(pool => pool.addToPool(request))) {
+      const pool = new Pool()
+      pools.push(pool)
+      pool.addToPool(request)
+    }
+
   })
 
 }

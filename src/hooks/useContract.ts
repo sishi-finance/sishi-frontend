@@ -76,6 +76,16 @@ export const useVault = (token: string) => {
   return useContract(abi, getVaultAddress(token))
 }
 
+export const useVaultABI = () => {
+  const abi = (sishivault as unknown) as AbiItem
+  return abi
+}
+
+export const useERC20ABI = () => {
+  const abi = (erc20 as unknown) as AbiItem
+  return abi
+}
+
 export const useStrategy = (token: string) => {
   const abi = (sishistrategy as unknown) as AbiItem
   return useContract(abi, getStrategyAddress(token))

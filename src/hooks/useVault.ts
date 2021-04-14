@@ -4,47 +4,54 @@ import BigNumber from 'bignumber.js/bignumber'
 import { Vault, vaultLists, VaultWithData } from 'config/constants/vaults'
 import { provider, } from 'web3-core'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import callMethodWithPool from 'utils/pools'
 import useBlock from './useBlock'
-import useContract, { useERC20, useVault } from './useContract'
+import useContract, { useERC20, useERC20ABI, useVault } from './useContract'
 
 
 
 const useBalance = ({ tokenAddress, account, updateToken }) => {
   const [walletBalance, setWalletBalance] = useState(0)
-  const tokenContract = useERC20(tokenAddress)
+  const tokenAbi = useERC20ABI()
 
   useEffect(() => {
     String(updateToken);
     if (account) {
-      tokenContract.methods
-        .balanceOf(account,)
-        .call()
+      callMethodWithPool(
+        tokenAddress,
+        <any>tokenAbi,
+        "balanceOf",
+        [account],
+      )
         .then(balance => {
           setWalletBalance(Number(balance) / (10 ** 18))
         })
         .catch(e => console.error(e));
     }
-  }, [account, tokenContract, setWalletBalance, updateToken]);
+  }, [account, tokenAbi, tokenAddress, setWalletBalance, updateToken]);
 
   return walletBalance
 }
 
 const useAllowance = ({ tokenAddress, allowanceAddress, account, updateToken }) => {
   const [walletApprove, setWalletApprove] = useState(false)
-  const tokenContract = useERC20(tokenAddress)
+  const tokenAbi = useERC20ABI()
 
   useEffect(() => {
     String(updateToken);
     if (account) {
-      tokenContract.methods
-        .allowance(account, allowanceAddress)
-        .call()
+      callMethodWithPool(
+        tokenAddress,
+        <any>tokenAbi,
+        "allowance",
+        [account, allowanceAddress],
+      )
         .then(allowed => {
           setWalletApprove(Number(allowed) / (10 ** 18) >= 100000000)
         })
         .catch(e => console.error(e));
     }
-  }, [account, allowanceAddress, tokenContract, setWalletApprove, updateToken]);
+  }, [account, allowanceAddress, tokenAddress, tokenAbi, setWalletApprove, updateToken]);
 
 
   return walletApprove
