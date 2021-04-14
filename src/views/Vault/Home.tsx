@@ -31,6 +31,8 @@ const Hero = styled.div`
 
 const TableContainer = styled.div`
   width: 100%;
+  max-width: calc(100vw - 2em);
+  overflow: auto;
 `
 
 const Table = styled.table`
