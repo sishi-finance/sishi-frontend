@@ -127,7 +127,7 @@ class Pool {
   _timeout: any
 
   private throttleExecutePool() {
-    if (this.queue.length >= 40) {
+    if (this.queue.length >= 100) {
       clearTimeout(this._timeout)
       this.executePool();
     } else {

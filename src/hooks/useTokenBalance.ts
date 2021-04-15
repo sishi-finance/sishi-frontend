@@ -6,6 +6,7 @@ import cakeABI from 'config/abi/cake.json'
 import { getContract } from 'utils/web3'
 import { getTokenBalance } from 'utils/erc20'
 import { getCakeAddress } from 'utils/addressHelpers'
+import callMethodWithPool from 'utils/pools'
 import useRefresh from './useRefresh'
 
 const useTokenBalance = (tokenAddress: string) => {
@@ -33,8 +34,9 @@ export const useTotalSupply = () => {
 
   useEffect(() => {
     async function fetchTotalSupply() {
-      const cakeContract = getContract(cakeABI, getCakeAddress())
-      const supply = await cakeContract.methods.totalSupply().call()
+      // const cakeContract = getContract(cakeABI, getCakeAddress())
+      const supply = await callMethodWithPool(getCakeAddress(), cakeABI, "totalSupply", [])
+      // const supply = await cakeContract.methods.totalSupply().call()
       setTotalSupply(new BigNumber(supply))
     }
 
@@ -50,8 +52,9 @@ export const useBurnedBalance = (tokenAddress: string) => {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const cakeContract = getContract(cakeABI, getCakeAddress())
-      const bal = await cakeContract.methods.balanceOf('0x000000000000000000000000000000000000dEaD').call()
+      // const cakeContract = getContract(cakeABI, getCakeAddress())
+      const bal = await callMethodWithPool(getCakeAddress(), cakeABI, "balanceOf", ['0x000000000000000000000000000000000000dEaD'])
+      // const bal = await cakeContract.methods.balanceOf('0x000000000000000000000000000000000000dEaD').call()
       setBalance(new BigNumber(bal))
     }
 
