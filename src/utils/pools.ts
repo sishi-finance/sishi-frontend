@@ -1,7 +1,7 @@
 import { Contract } from "web3-eth-contract";
 import equal from "deep-equal"
+import { memoize } from "lodash"
 import multicall from "./multicall";
-
 
 type DataType = "address" | "uint256"
 
@@ -39,6 +39,8 @@ class Pool {
   public pending = 0
 
   public success = 0
+
+  public callParams = []
 
   get abi() {
     return Object.values(this.abiMap)
@@ -88,7 +90,9 @@ class Pool {
 
     // console.log("[Pool] ABI", { queue, abi })
 
-    console.time(`[Pool] ${poolRunId}`)
+    console.time(`[Pool] ${poolRunId}`);
+
+    console.log(`[Pool] callParams`, { callParams: this.callParams })
 
     const allResult = await multicall(
       abi,
@@ -96,7 +100,8 @@ class Pool {
         address: e.address,
         name: e.method,
         params: e.params,
-      }))
+      })),
+      ...this.callParams
     )
 
     console.timeEnd(`[Pool] ${poolRunId}`)
@@ -158,3 +163,39 @@ export default function callMethodWithPool(
   })
 
 }
+
+
+export const callMethodWithPoolFactory = memoize(
+  (blockNumber: number) => {
+    const customPools: Pool[] = []
+
+    return function (
+      address: string,
+      abi: any[],
+      method: string,
+      params: any[],
+    ): Promise<any> {
+      const callDefine: CallDefine = abi.find(e => e.type === "function" && e.name === method)
+
+      return new Promise((resolve, reject) => {
+        const request: Request = {
+          address,
+          method,
+          params,
+          callDefine,
+          resolve,
+          reject
+        }
+
+        if (!customPools.some(pool => pool.addToPool(request))) {
+          const pool = new Pool()
+          pool.callParams = [{}, blockNumber]
+          customPools.push(pool)
+          pool.addToPool(request)
+        }
+
+      })
+
+    }
+  },
+)

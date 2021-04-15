@@ -22,8 +22,7 @@ const GlobalStyle = createGlobalStyle`
       height: 100%;
       background-image: url('/bitcoin.png');
       background-size: cover;
-      opacity: 0.02;
-      filter: blur(2px);
+      opacity: 0.1;
     }
     img {
       height: auto;

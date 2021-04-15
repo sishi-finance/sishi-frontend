@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js/bignumber'
 import { Vault, vaultLists, VaultWithData } from 'config/constants/vaults'
 import { provider, } from 'web3-core'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import callMethodWithPool from 'utils/pools'
+import callMethodWithPool, { callMethodWithPoolFactory } from 'utils/pools'
 import useBlock from './useBlock'
 import useContract, { useERC20, useERC20ABI, useVault, useVaultABI } from './useContract'
 
@@ -71,11 +71,10 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
   const walletBalance = useBalance({ tokenAddress, account, updateToken })
   const vaultApproved = useAllowance({ tokenAddress, allowanceAddress: vaultAddress, account, updateToken })
 
-  const deltaBlock = 200
-  // const deltaBlock = Number(BLOCKS_PER_DAY) * 3
   const currentBlock = useBlock()
+  const deltaBlock = Number(BLOCKS_PER_HOUR) * 6
   const prevBlock = currentBlock - deltaBlock
-
+  const callMethodWithAgoPool = callMethodWithPoolFactory(prevBlock)
   const reloadToken = () => setUpdateToken(updateToken + 1)
 
   useEffect(() => {
@@ -127,19 +126,20 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
         })
         .catch(e => console.error(e));
 
-      agoVaultContract.defaultBlock = prevBlock
-      agoVaultContract.methods
-        .getPricePerFullShare()
-        .call()
+      callMethodWithAgoPool(
+        vaultAddress,
+        <any>vaultABI,
+        "getPricePerFullShare",
+        [],
+      )
         .then(price => {
-          // console.log("2", { price })
           setOldPricePerFullShare([new BigNumber(price), true])
         })
         .catch(e => console.error(e))
     }
 
 
-  }, [vaultAddress, vaultABI, agoVaultContract, currentBlock, prevBlock, setPricePerFullShare, setOldPricePerFullShare])
+  }, [vaultAddress, vaultABI, agoVaultContract, callMethodWithAgoPool, currentBlock, prevBlock, setPricePerFullShare, setOldPricePerFullShare])
 
   const roiDay = pricePerFullShare
     .div(oldPricePerFullShare)
