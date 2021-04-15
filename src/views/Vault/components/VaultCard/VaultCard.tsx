@@ -108,7 +108,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
             </div>
           </Row>
 
-          <Row style={{ justifyContent: "stretch", marginTop: "1em" }}>
+          <Row style={{ justifyContent: "stretch", marginTop: "1em", padding: "0em 0.5em"  }}>
             <LinkExternal href={`https://bscscan.com/address/${vaultData.vault}`} fontSize="12" marginRight="3">Vault contract</LinkExternal>
             <LinkExternal href={`https://bscscan.com/address/${vaultData.strategy}`} fontSize="12" marginRight="3">Strategy contract</LinkExternal>
           </Row>
