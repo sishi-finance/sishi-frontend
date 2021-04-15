@@ -123,13 +123,16 @@ class Pool {
   _timeout: any
 
   private throttleExecutePool() {
-    // console.log("[Pool] throttleExecutePool")
-
-    clearTimeout(this._timeout)
-    this._timeout = setTimeout(
-      this.executePool.bind(this),
-      50,
-    )
+    if(this.queue.length >= 40){
+      clearTimeout(this._timeout)
+      this.executePool();
+    }else {
+      clearTimeout(this._timeout)
+      this._timeout = setTimeout(
+        this.executePool.bind(this),
+        20,
+      )
+    }
   }
 }
 
