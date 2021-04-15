@@ -141,7 +141,7 @@ export const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: 
         })
         .catch(e => console.error(e))
     }
-  }, [vaultAddress, vaultABI, prevBlock, setPricePerFullShare, setOldPricePerFullShare])
+  }, [vaultAddress, vaultABI, prevBlock, setPricePerFullShare, setOldPricePerFullShare, callMethodWithAgoPool])
 
   const roiDay = pricePerFullShare
     .div(oldPricePerFullShare)
