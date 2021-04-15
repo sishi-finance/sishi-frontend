@@ -77,17 +77,19 @@ const Home: React.FC = () => {
         <TableContainer>
           <Table>
             <thead>
-              <th> </th>
-              <th style={{textAlign:"left"}}> Farm </th>
-              <th> APY </th>
-              <th> Daily</th>
-              <th> TVL</th>
-              <th> Balance</th>
-              <th> </th>
+              <tr>
+                <th> </th>
+                <th style={{textAlign:"left"}}> Farm </th>
+                <th> APY </th>
+                <th> Daily</th>
+                <th> TVL</th>
+                <th> Balance</th>
+                <th> </th>
+              </tr>
             </thead>
             <tbody>
               {
-                allVaults.map(vault => (<VaultCard {...{ vault, account, bnbPrice, cakePrice, ethereum }} />))
+                allVaults.map(vault => (<VaultCard key={vault.tokenSymbol} {...{ vault, account, bnbPrice, cakePrice, ethereum }} />))
               }
             </tbody>
           </Table>

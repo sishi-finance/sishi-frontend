@@ -57,7 +57,7 @@ const useAllowance = ({ tokenAddress, allowanceAddress, account, updateToken }) 
   return walletApprove
 }
 
-export const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) => {
+export const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress, fromBlock = 0 }: Vault) => {
   const [updateToken, setUpdateToken] = useState(0)
   const vaultABI = useVaultABI()
   // const vaultContract = useVault(tokenSymbol)
@@ -72,8 +72,8 @@ export const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: 
   const vaultApproved = useAllowance({ tokenAddress, allowanceAddress: vaultAddress, account, updateToken })
 
   const currentBlock = useBlock()
-  const deltaBlock = Number(BLOCKS_PER_HOUR) * 6
-  const prevBlock = currentBlock - deltaBlock
+  const deltaBlock = Number(BLOCKS_PER_HOUR) * 36
+  const prevBlock = Math.max(fromBlock + 1000, currentBlock - deltaBlock)
   const callMethodWithAgoPool = callMethodWithPoolFactory(prevBlock)
   const reloadToken = useCallback(() => setUpdateToken(updateToken + 1), [setUpdateToken, updateToken])
 
@@ -177,13 +177,6 @@ export const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: 
 
 export const useVaults = () => {
   return vaultLists
-  // const vaults = vaultLists
-  // const allVaultWithData = vaultLists.map(useVaultAPY)
-
-  // return vaults.map((e, i) => (<VaultWithData><any>{
-  //   ...e,
-  //   ...allVaultWithData[i]
-  // }))
 }
 
 
