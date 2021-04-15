@@ -20,6 +20,9 @@ export const getWbnbAddress = () => {
 export const getLotteryAddress = () => {
   return addresses.lottery[chainId]
 }
+export const getControllerAddress = () => {
+  return addresses.vaultController[chainId]
+}
 export const getLotteryTicketAddress = () => {
   return addresses.lotteryNFT[chainId]
 }

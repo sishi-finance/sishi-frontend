@@ -6,7 +6,7 @@ import { provider, } from 'web3-core'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import callMethodWithPool, { callMethodWithPoolFactory } from 'utils/pools'
 import useBlock from './useBlock'
-import useContract, { useERC20, useERC20ABI, useVault, useVaultABI } from './useContract'
+import useContract, { useERC20, useERC20ABI, useStrategy, useStrategyABI, useVault, useVaultABI } from './useContract'
 
 
 
@@ -173,6 +173,46 @@ export const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress, fr
   }
 }
 
+
+export const useVaultHarvestReward = (vault: Vault, account: string) => {
+  const strategyContract = useStrategy(vault.tokenSymbol)
+  const [reloadToken, reload] = useState(0)
+  const [strategyResult, setStrategyResult] = useState(null)
+  const [strategyRewardToken, setStrategyToken] = useState('')
+  const erc20ABI =  useERC20ABI()
+
+  useEffect(() => {
+    if (account) {
+      String(reloadToken);
+      strategyContract.methods
+        .harvest()
+        .call({ from: account })
+        .then(result => setStrategyResult(result))
+    }
+
+  }, [vault.strategy, strategyContract, setStrategyResult, account, reloadToken])
+
+  useEffect(() => {
+    callMethodWithPool(
+      strategyContract.options.address,
+      strategyContract.options.jsonInterface,
+      "want",
+      []
+    ).then(address => {
+      return callMethodWithPool(String(address),<any>erc20ABI,"symbol",[])
+    }).then(symbol => {
+      setStrategyToken(symbol);
+    })
+  }, [strategyContract, setStrategyToken, erc20ABI])
+
+
+
+  return {
+    reward: Number((Number(strategyResult) / (1e18)).toFixed(8)),
+    rewardToken: strategyRewardToken,
+    reloadToken: () => reload(Math.random())
+  }
+}
 
 
 export const useVaults = () => {

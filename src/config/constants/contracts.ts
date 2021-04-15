@@ -31,4 +31,8 @@ export default {
     56: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
     97: '',
   },
+  vaultController: {
+    56: '0x9bf4a4ff8c8505bf75aab566a9b5dd635a68f837',
+    97: '',
+  },
 }

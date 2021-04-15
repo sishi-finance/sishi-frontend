@@ -109,9 +109,9 @@ class Pool {
 
     queue.forEach((call, index) => {
       try {
-        if(allResult[index] instanceof Error){
+        if (allResult[index] instanceof Error) {
           call.reject(allResult[index])
-        }else {
+        } else {
           call.resolve(allResult[index])
         }
       } catch (error) {
@@ -127,10 +127,10 @@ class Pool {
   _timeout: any
 
   private throttleExecutePool() {
-    if(this.queue.length >= 40){
+    if (this.queue.length >= 40) {
       clearTimeout(this._timeout)
       this.executePool();
-    }else {
+    } else {
       clearTimeout(this._timeout)
       this._timeout = setTimeout(
         this.executePool.bind(this),
@@ -197,6 +197,43 @@ export const callMethodWithPoolFactory = memoize(
         if (!customPools.some(pool => pool.addToPool(request))) {
           const pool = new Pool()
           pool.callParams = [{}, blockNumber]
+          customPools.push(pool)
+          pool.addToPool(request)
+        }
+
+      })
+
+    }
+  },
+)
+
+
+export const callMethodWithAccountWithPoolFactory = memoize(
+  (account: string) => {
+    const customPools: Pool[] = []
+    return function (
+      address: string,
+      abi: any[],
+      method: string,
+      params: any[],
+    ): Promise<any> {
+      if (!account)
+        return Promise.reject(new Error("Account is requirered"))
+      const callDefine: CallDefine = abi.find(e => e.type === "function" && e.name === method)
+
+      return new Promise((resolve, reject) => {
+        const request: Request = {
+          address,
+          method,
+          params,
+          callDefine,
+          resolve,
+          reject
+        }
+
+        if (!customPools.some(pool => pool.addToPool(request))) {
+          const pool = new Pool()
+          pool.callParams = [{ from: account }]
           customPools.push(pool)
           pool.addToPool(request)
         }

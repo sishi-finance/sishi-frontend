@@ -17,6 +17,12 @@ export const stake = async (masterChefContract, pid, amount, account, decimal = 
     })
 }
 
+export const harvestVault = async (strategyContract, account) => {
+  return strategyContract.methods
+    .harvest()
+    .send({ from: account })
+}
+
 export const vaultDeposit = async (vaultContract, amount, account, decimal = 18) => {
   return vaultContract.methods
     .deposit(new BigNumber(amount).times(new BigNumber(10).pow(decimal)).toString())

@@ -36,7 +36,11 @@ const config: MenuEntry[] = [
     label: 'Vault - Beta',
     icon: 'VaultIcon',
     href: '/vaults',
-
+  },
+  {
+    label: 'Vault - Reward',
+    icon: 'VaultIcon',
+    href: '/vault-workers',
   },
   // {
   //   label: 'Pools',

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AbiItem } from 'web3-utils'
 import { ContractOptions } from 'web3-eth-contract'
 import useWeb3 from 'hooks/useWeb3'
-import { getMasterChefAddress, getCakeAddress, getLotteryAddress, getLotteryTicketAddress, getVaultAddress, getStrategyAddress } from 'utils/addressHelpers'
+import { getMasterChefAddress, getCakeAddress, getLotteryAddress, getLotteryTicketAddress, getVaultAddress, getStrategyAddress, getControllerAddress } from 'utils/addressHelpers'
 import { poolsConfig } from 'config/constants'
 import { PoolCategory } from 'config/constants/types'
 import ifo from 'config/abi/ifo.json'
@@ -16,6 +16,7 @@ import sousChef from 'config/abi/sousChef.json'
 import sousChefBnb from 'config/abi/sousChefBnb.json'
 import sishistrategy from 'config/abi/sishistrategy.json'
 import sishivault from 'config/abi/sishivault.json'
+import sishicontroller from 'config/abi/controller.json'
 
 const useContract = (abi: AbiItem, address: string, contractOptions?: ContractOptions) => {
   const web3 = useWeb3()
@@ -86,10 +87,22 @@ export const useERC20ABI = () => {
   return abi
 }
 
+export const useVaultController = () => {
+  const abi = (sishicontroller as unknown) as AbiItem
+  return useContract(abi, getControllerAddress())
+}
+
+
 export const useStrategy = (token: string) => {
   const abi = (sishistrategy as unknown) as AbiItem
   return useContract(abi, getStrategyAddress(token))
 }
+
+export const useStrategyABI = () => {
+  return <any>sishistrategy
+}
+
+
 
 
 export const useSousChef = (id) => {

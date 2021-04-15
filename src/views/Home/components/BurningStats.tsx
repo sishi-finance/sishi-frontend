@@ -3,6 +3,10 @@ import { Card, CardBody, Heading, LinkExternal, Button, Flex } from '@pancakeswa
 import styled from 'styled-components'
 import useI18n from 'hooks/useI18n'
 import usePagination from 'hooks/usePagination'
+import { useBurnedBalance } from 'hooks/useTokenBalance'
+import { getCakeAddress } from 'utils/addressHelpers'
+import { getBalanceNumber } from 'utils/formatBalance'
+import CardValue from './CardValue'
 
 
 const StyledCakeStats = styled(Card)`
@@ -61,6 +65,15 @@ const Table = styled('table')`
   }
 `
 
+
+const HeadRow = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+`
+
+
 const workerTable = {
   "0xa5751bbc51c0df729d93ffb9afe173d777b1785b": "Worker1",
   "0x8556d6841db1e41a128e42024dc5c9d5ddce3dcb": "FYO",
@@ -70,6 +83,8 @@ const BurningStats = () => {
   const TranslateString = useI18n()
   const [burningData, setBurningData] = useState([])
   const [isLoadBurningData, setLoadBurningData] = useState(false)
+  const burnedBalance = useBurnedBalance(getCakeAddress())
+
   const {
     offset, perPage, nextPageEnable, prevPageEnable,
     jumpTo, nextPage, prevPage, setDocCount, setPerPage
@@ -99,8 +114,11 @@ const BurningStats = () => {
   return (
     <StyledCakeStats>
       <CardBody>
-        <Heading size="xl" mb="24px">
-          {TranslateString(100534, 'Burning Records')}
+        <Heading size="lg" mb="24px">
+          <HeadRow>
+            <div>Total Burned</div>
+            <CardValue fontSize="inherit" value={getBalanceNumber(burnedBalance)} decimals={0} />
+          </HeadRow>
         </Heading>
         <Row style={{ overflow: "auto" }}>
           <Table>

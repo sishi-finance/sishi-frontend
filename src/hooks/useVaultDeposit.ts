@@ -1,9 +1,9 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useWallet } from '@binance-chain/bsc-use-wallet';
 import { useDispatch } from 'react-redux';
-import { approve, vaultDeposit, vaultWithdrawal } from 'utils/callHelpers';
+import { approve, vaultDeposit, vaultWithdrawal, harvestVault } from 'utils/callHelpers';
 import { Vault } from 'config/constants/vaults';
-import { useERC20, useVault } from './useContract';
+import { useERC20, useStrategy, useVault } from './useContract';
 
 export const useVaultDeposit = (vault: Vault, reloadToken) => {
   // const dispatch = useDispatch();
@@ -59,3 +59,30 @@ export const useVaultApprove = (vault: Vault, reloadToken) => {
 
   return { onApprove: handleApprove }
 }
+
+export const useVaultHarvest = (vault: Vault, reloadToken) => {
+  // const tokenContract = useERC20(vault.tokenAddress);
+  const strategyContract = useStrategy(vault.tokenSymbol);
+  const [loading, setLoading] = useState(false)
+
+  const { account }: { account: string } = useWallet()
+
+  const handleHarvest = useCallback(async () => {
+    try {
+      setLoading(true)
+      const tx = await harvestVault(strategyContract, account)
+      reloadToken?.();
+      return tx
+    } catch (e) {
+      return false
+    } finally {
+      setLoading(false)
+    }
+  }, [account, strategyContract, reloadToken, setLoading])
+
+  return {
+    onHarvest: handleHarvest,
+    loading,
+  }
+}
+
