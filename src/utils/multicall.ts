@@ -22,7 +22,7 @@ const multicall = async (abi: any[], calls: Call[], ...callOptions) => {
       return itf.decodeFunctionResult(calls[i].name, call)
     } catch (error) {
       console.error(calls[i].name, call)
-      return null
+      return new Error(String(error))
     }
   })
   return res

@@ -90,9 +90,9 @@ class Pool {
 
     // console.log("[Pool] ABI", { queue, abi })
 
-    console.time(`[Pool] [count:${queue.length}] ${poolRunId}`);
+    // console.time(`[Pool] [count:${queue.length}] ${poolRunId}`);
 
-    console.log(`[Pool] [count:${queue.length}] callParams`, { callParams: this.callParams })
+    // console.log(`[Pool] [count:${queue.length}] callParams`, { callParams: this.callParams })
 
     const allResult = await multicall(
       abi,
@@ -104,12 +104,16 @@ class Pool {
       ...this.callParams
     )
 
-    console.timeEnd(`[Pool] [count:${queue.length}] ${poolRunId}`)
+    // console.timeEnd(`[Pool] [count:${queue.length}] ${poolRunId}`)
 
 
     queue.forEach((call, index) => {
       try {
-        call.resolve(allResult[index])
+        if(allResult[index] instanceof Error){
+          call.reject(allResult[index])
+        }else {
+          call.resolve(allResult[index])
+        }
       } catch (error) {
         console.error(error)
       }
