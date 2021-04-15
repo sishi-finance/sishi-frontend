@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { BLOCKS_PER_DAY, BLOCKS_PER_HOUR } from 'config'
 import BigNumber from 'bignumber.js/bignumber'
 import { Vault, vaultLists, VaultWithData } from 'config/constants/vaults'
@@ -57,7 +57,7 @@ const useAllowance = ({ tokenAddress, allowanceAddress, account, updateToken }) 
   return walletApprove
 }
 
-const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) => {
+export const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) => {
   const [updateToken, setUpdateToken] = useState(0)
   const vaultABI = useVaultABI()
   // const vaultContract = useVault(tokenSymbol)
@@ -75,7 +75,7 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
   const deltaBlock = Number(BLOCKS_PER_HOUR) * 6
   const prevBlock = currentBlock - deltaBlock
   const callMethodWithAgoPool = callMethodWithPoolFactory(prevBlock)
-  const reloadToken = () => setUpdateToken(updateToken + 1)
+  const reloadToken = useCallback(() => setUpdateToken(updateToken + 1), [setUpdateToken, updateToken])
 
   useEffect(() => {
     String(updateToken);
@@ -91,8 +91,6 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
       })
       .catch(e => console.error(e));
   }, [vaultAddress, vaultABI, setVaultTVL, updateToken]);
-
-
 
 
   useEffect(() => {
@@ -125,7 +123,13 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
           setPricePerFullShare([new BigNumber(price), true])
         })
         .catch(e => console.error(e));
+    }
 
+
+  }, [vaultAddress, vaultABI, agoVaultContract, currentBlock, setPricePerFullShare])
+
+  useEffect(() => {
+    if (Number.isFinite(prevBlock) && prevBlock > 1) {
       callMethodWithAgoPool(
         vaultAddress,
         <any>vaultABI,
@@ -137,9 +141,7 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
         })
         .catch(e => console.error(e))
     }
-
-
-  }, [vaultAddress, vaultABI, agoVaultContract, callMethodWithAgoPool, currentBlock, prevBlock, setPricePerFullShare, setOldPricePerFullShare])
+  }, [vaultAddress, vaultABI, prevBlock, setPricePerFullShare, setOldPricePerFullShare])
 
   const roiDay = pricePerFullShare
     .div(oldPricePerFullShare)
@@ -154,17 +156,17 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
   return {
     roiLoaded,
     calc: {
-      roiHour: roiLoaded ? (roiHour).toFixed(10) : (0).toFixed(10),
-      roiDay: roiLoaded ? (roiDay).toFixed(10) : (0).toFixed(10),
-      roiWeek: roiLoaded ? (roiWeek).toFixed(10) : (0).toFixed(10),
-      roiMonth: roiLoaded ? (roiMonth).toFixed(10) : (0).toFixed(10),
-      roiYear: roiLoaded ? (roiYear).toFixed(10) : (0).toFixed(10),
-      apy: roiLoaded ? (roiYear).toFixed(10) : (0).toFixed(10),
-      apr: roiLoaded ? (roiDay.multipliedBy(365)).toFixed(10) : (0).toFixed(10),
-      tvl: vaultTVL.toFixed(10),
-      share: vaultShare.toFixed(10),
-      balance: vaultShare * pricePerFullShare.toNumber() / 1e18,
-      walletBalance: Number(walletBalance).toFixed(10),
+      roiHour: Number(roiLoaded ? (roiHour).toFixed(10) : (0).toFixed(10)),
+      roiDay: Number(roiLoaded ? (roiDay).toFixed(10) : (0).toFixed(10)),
+      roiWeek: Number(roiLoaded ? (roiWeek).toFixed(10) : (0).toFixed(10)),
+      roiMonth: Number(roiLoaded ? (roiMonth).toFixed(10) : (0).toFixed(10)),
+      roiYear: Number(roiLoaded ? (roiYear).toFixed(10) : (0).toFixed(10)),
+      apy: Number(roiLoaded ? (roiYear).toFixed(10) : (0).toFixed(10)),
+      apr: Number(roiLoaded ? (roiDay.multipliedBy(365)).toFixed(10) : (0).toFixed(10)),
+      tvl: Number(vaultTVL.toFixed(10)),
+      share: Number(vaultShare.toFixed(10)),
+      balance: Number(vaultShare * pricePerFullShare.toNumber() / 1e18),
+      walletBalance: Number(Number(walletBalance).toFixed(10)),
       vaultApproved,
     },
     reloadToken,
@@ -174,13 +176,14 @@ const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress }: Vault) 
 
 
 export const useVaults = () => {
-  const vaults = vaultLists
-  const allVaultWithData = vaultLists.map(useVaultAPY)
+  return vaultLists
+  // const vaults = vaultLists
+  // const allVaultWithData = vaultLists.map(useVaultAPY)
 
-  return vaults.map((e, i) => (<VaultWithData><any>{
-    ...e,
-    ...allVaultWithData[i]
-  }))
+  // return vaults.map((e, i) => (<VaultWithData><any>{
+  //   ...e,
+  //   ...allVaultWithData[i]
+  // }))
 }
 
 

@@ -17,7 +17,6 @@ const multicall = async (abi: any[], calls: Call[], ...callOptions) => {
 
   const calldata = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)])
   const { returnData, blockNumber } = await multi.methods.aggregate(calldata).call(...callOptions)
-  console.log("[multicall]", ...callOptions, { blockNumber })
   const res = returnData.map((call, i) => {
     try {
       return itf.decodeFunctionResult(calls[i].name, call)
