@@ -9,6 +9,7 @@ export interface Vault {
   vault?: string,
   strategy?: string,
   fromBlock?: number,
+  harvestReward?: string,
 }
 
 
@@ -68,6 +69,7 @@ export const vaultLists: Vault[] = [
     vault: "0x80C93DF954af9E61DaF72CEC19B51041c1C8fA09",
     strategy: "0xF81D859a4Ed3877F8e81a9090D5a6B1482c07181",
     fromBlock: 6531895,
+    harvestReward: "XVS",
   },
   {
     tokenSymbol: "CAKE",
@@ -78,7 +80,7 @@ export const vaultLists: Vault[] = [
     vault: "0xFD3d66E7ed01761e0B83a632736Da5F2F68acde8",
     strategy: "0x4581bdb0c086bDC5AFE17D27F50Fc011a144Deac",
     fromBlock: 6533850,
-
+    harvestReward: "CAKE",
   },
   // {
   //   tokenSymbol: "ETH-BNB LP",
@@ -107,6 +109,7 @@ export const vaultLists: Vault[] = [
     vault: "0x0f4B0c695418893A8eEfB3eD8D18880147Ef8B18",
     strategy: "0xf7C30769e700d3af6b3347b36Ac663797588b3fD",
     fromBlock: 6563549,
+    harvestReward: "XVS",
   },
   {
     tokenSymbol: "SXP",
@@ -117,5 +120,6 @@ export const vaultLists: Vault[] = [
     vault: "0xf8f10825C54A54A8d07D9330c7F96563D57252E2",
     strategy: "0xAB9c148C08cAB3e56Bb8ca2Cd0B240384184E26d",
     fromBlock: 6563997,
+    harvestReward: "XVS",
   },
 ]

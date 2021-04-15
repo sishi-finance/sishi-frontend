@@ -31,7 +31,7 @@ interface VaultCardProps {
 
 const VaultHarvestCard: React.FC<VaultCardProps> = ({ vault, ethereum, cakePrice, bnbPrice, account }) => {
   const TranslateString = useI18n()
-  const { reloadToken, reward, rewardToken, } = useVaultHarvestReward(vault, account)
+  const { reloadToken, reward, } = useVaultHarvestReward(vault, account)
   const { onHarvest, loading } = useVaultHarvest(vault, "")
 
   const farmImage = vault.tokenSymbol.toLowerCase().replace(" lp", "")
@@ -49,7 +49,7 @@ const VaultHarvestCard: React.FC<VaultCardProps> = ({ vault, ethereum, cakePrice
           <Flex>
             <CardValue value={Number(reward)} decimals={8} prefix="" fontSize="inherit"/>
             <Spacer/>
-            <b> {rewardToken}  </b>
+            <b> {vault.harvestReward || vault.tokenSymbol }  </b>
           </Flex>
           {/* {Number(reward).toFixed(8)} {rewardToken} */}
         </td>

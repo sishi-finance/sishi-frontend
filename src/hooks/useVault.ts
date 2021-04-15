@@ -178,8 +178,8 @@ export const useVaultHarvestReward = (vault: Vault, account: string) => {
   const strategyContract = useStrategy(vault.tokenSymbol)
   const [reloadToken, reload] = useState(0)
   const [strategyResult, setStrategyResult] = useState(null)
-  const [strategyRewardToken, setStrategyToken] = useState('')
-  const erc20ABI =  useERC20ABI()
+  // const [strategyRewardToken, setStrategyToken] = useState('')
+  // const erc20ABI =  useERC20ABI()
 
   useEffect(() => {
     if (account) {
@@ -192,24 +192,24 @@ export const useVaultHarvestReward = (vault: Vault, account: string) => {
 
   }, [vault.strategy, strategyContract, setStrategyResult, account, reloadToken])
 
-  useEffect(() => {
-    callMethodWithPool(
-      strategyContract.options.address,
-      strategyContract.options.jsonInterface,
-      "want",
-      []
-    ).then(address => {
-      return callMethodWithPool(String(address),<any>erc20ABI,"symbol",[])
-    }).then(symbol => {
-      setStrategyToken(symbol);
-    })
-  }, [strategyContract, setStrategyToken, erc20ABI])
+  // useEffect(() => {
+  //   callMethodWithPool(
+  //     strategyContract.options.address,
+  //     strategyContract.options.jsonInterface,
+  //     "want",
+  //     []
+  //   ).then(address => {
+  //     return callMethodWithPool(String(address),<any>erc20ABI,"symbol",[])
+  //   }).then(symbol => {
+  //     setStrategyToken(symbol);
+  //   })
+  // }, [strategyContract, setStrategyToken, erc20ABI])
 
 
 
   return {
     reward: Number((Number(strategyResult) / (1e18)).toFixed(8)),
-    rewardToken: strategyRewardToken,
+    // rewardToken: strategyRewardToken,
     reloadToken: () => reload(Math.random())
   }
 }
