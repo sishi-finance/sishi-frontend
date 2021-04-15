@@ -78,7 +78,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
       </VaultRow>
       {expand && <VaultRow style={{ borderBottom: !expand ? 'none' : `solid 2px #8884` }}>
         <td colSpan={6}>
-          <Row style={{ justifyContent: "stretch", alignItems: "flex-start" }}>
+          <Row style={{ justifyContent: "stretch", alignItems: "flex-start", padding: "0em 0.5em" }}>
             <div style={{ flex: 1 }}>
               <Row>
                 <div style={{ width: "10em", textAlign: "left" }}>Vault APY:</div>
