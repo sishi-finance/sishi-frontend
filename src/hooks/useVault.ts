@@ -7,6 +7,8 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import callMethodWithPool, { callMethodWithPoolFactory } from 'utils/pools'
 import masterChef from 'config/abi/masterchef.json'
 import { getMasterChefAddress, getVaultMasterChefAddress } from 'utils/addressHelpers'
+import contracts from 'config/constants/contracts'
+import erc20 from 'config/abi/erc20.json'
 import useBlock from './useBlock'
 import useContract, { useERC20, useERC20ABI, useMasterchef, useStrategy, useStrategyABI, useVault, useVaultABI } from './useContract'
 
@@ -103,6 +105,49 @@ const useFarmingBalance = ({ account, pid, updateToken }) => {
   }, [account, updateToken, setFarmingBalance, pid, masterChefAddress, masterChefABI]);
 
   return farmingBalance
+}
+
+export const useVaultFarmingShare = ({ pid, vaultAddress }) => {
+  const [[mulTotal, mulCurrent, allShare, sharePerBlock], setFarmingShare] = useState([0, 0, new BigNumber(0), new BigNumber(0)])
+  const masterChefAddress = getVaultMasterChefAddress()
+  const masterChefABI = masterChef
+
+  useEffect(() => {
+    setTimeout(async () => {
+
+      const [total, [lpAddress, point, ,], perBlock, totalShare] = await Promise.all([
+        callMethodWithPool(masterChefAddress, <any>masterChefABI, "totalAllocPoint", []),
+        callMethodWithPool(masterChefAddress, <any>masterChefABI, "poolInfo", [pid]),
+        callMethodWithPool(masterChefAddress, <any>masterChefABI, "sishiPerBlock", []),
+        callMethodWithPool(vaultAddress, <any>erc20, "balanceOf", [masterChefAddress]),
+      ])
+
+      setFarmingShare([total, point, totalShare, perBlock])
+    }, 0)
+
+
+  }, [pid, masterChefAddress, masterChefABI, vaultAddress]);
+
+  // console.log("---------------",
+  //   Number(
+  //     new BigNumber(Number(sharePerBlock))
+  //       .multipliedBy(new BigNumber(Number(mulCurrent)))
+  //       .dividedBy(new BigNumber(Number(mulTotal)))
+  //       .multipliedBy(1e18)
+  //       .div(new BigNumber(allShare))
+  //   )
+  // )
+
+  return {
+    mulTotal,
+    mulCurrent,
+    perShare: new BigNumber(Number(sharePerBlock))
+      .multipliedBy(new BigNumber(Number(mulCurrent)))
+      .dividedBy(new BigNumber(Number(mulTotal)))
+      .multipliedBy(1e18)
+      .div(new BigNumber(allShare)),
+    sharePerBlock,
+  }
 }
 
 export const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress, fromBlock = 0 }: Vault) => {
@@ -222,7 +267,69 @@ export const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress, fr
 }
 
 
-export const useVaultFarm = ({ tokenSymbol, tokenAddress, vault: vaultAddress, farmPid }: Vault, updateToken) => {
+export const fetchPancakeRate = async ({ baseAddress, lpAdress, quoteAddress }) => {
+  const erc20ABI = <any>erc20
+  const [
+    tokenBalanceLP,
+    quoteTokenBlanceLP,
+    tokenDecimals,
+    quoteTokenDecimals,
+  ] = await Promise.all([
+
+    // Balance of token in the LP contract
+    callMethodWithPool(baseAddress, erc20ABI, 'balanceOf', [lpAdress]),
+
+    // Balance of quote token on LP contract
+    callMethodWithPool(quoteAddress, erc20ABI, 'balanceOf', [lpAdress]),
+
+    // Token decimals   
+    callMethodWithPool(baseAddress, erc20ABI, 'decimals', []),
+
+    // Quote token decimals
+    callMethodWithPool(quoteAddress, erc20ABI, 'decimals', []),
+
+  ])
+
+  // console.log(
+  //   { baseAddress, lpAdress, quoteAddress },
+  //   "quoteTokenBlanceLP", String(quoteTokenBlanceLP),
+  //   "tokenDecimals", String(tokenDecimals),
+  //   "tokenBalanceLP", String(tokenBalanceLP),
+  //   "quoteTokenDecimals", String(quoteTokenDecimals),
+  // )
+  return new BigNumber(quoteTokenBlanceLP)
+    .multipliedBy(10 ** tokenDecimals)
+    .multipliedBy(1e18)
+    .div(new BigNumber(tokenBalanceLP))
+    .dividedBy(10 ** quoteTokenDecimals)
+}
+
+export const useLPRate = ({ baseAddress = "", lpAdress = "", quoteAddress = "" } = {}) => {
+
+  const [rate, setRate] = useState(new BigNumber(0))
+
+  useEffect(() => {
+
+    if (baseAddress && lpAdress && quoteAddress)
+      fetchPancakeRate({ baseAddress, lpAdress, quoteAddress })
+        .then(r => setRate(r))
+    else {
+      console.log({ baseAddress, lpAdress, quoteAddress })
+      setRate(new BigNumber(1e18))
+    }
+  }, [baseAddress, lpAdress, quoteAddress])
+
+  // /  console.log("useLPRate", Number(rate))
+
+  return rate
+}
+
+export const useYSISHIPrice = () => {
+  const ySushiRate = useLPRate({ baseAddress: "0x8abed819ab4fbb9e488d0d1687c93075b73b3db1", lpAdress: "0x6283541b4c79d9a48d258d1c0b788d3f99da5588", quoteAddress: contracts.busd[56] })
+  return ySushiRate
+}
+
+export const useVaultFarm = ({ tokenSymbol, tokenAddress, vault: vaultAddress, farmPid, lpToken, }: Vault, updateToken) => {
 
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
   const pendingFarming = usePendingVaultSishi({ account, pid: farmPid, updateToken })

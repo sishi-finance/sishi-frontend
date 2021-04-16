@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Heading, Text, BaseLayout, Link } from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
 import Page from 'components/layout/Page'
-import useVaultToken, { useVaults } from 'hooks/useVault'
+import useVaultToken, { useVaults, useYSISHIPrice } from 'hooks/useVault'
 import { usePriceBnbBusd, usePriceCakeBusd } from 'state/hooks'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { provider } from 'web3-core'
@@ -53,6 +53,7 @@ const Home: React.FC = () => {
   const allVaults = useVaults()
   const cakePrice = usePriceCakeBusd()
   const bnbPrice = usePriceBnbBusd()
+  const ySishiPrice = useYSISHIPrice()
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
 
   return (
@@ -89,7 +90,7 @@ const Home: React.FC = () => {
             </thead>
             <tbody>
               {
-                allVaults.map(vault => (<VaultCard key={vault.tokenSymbol} {...{ vault, account, bnbPrice, cakePrice, ethereum }} />))
+                allVaults.map(vault => (<VaultCard key={vault.tokenSymbol} {...{ vault, account, bnbPrice, cakePrice, ethereum, ySishiPrice }} />))
               }
             </tbody>
           </Table>

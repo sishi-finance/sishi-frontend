@@ -1,4 +1,5 @@
 import contracts from "./contracts"
+import { QuoteToken } from "./types"
 
 export interface Vault {
   tokenSymbol: string,
@@ -10,6 +11,11 @@ export interface Vault {
   strategy?: string,
   fromBlock?: number,
   harvestReward?: string,
+  lpToken?: {
+    address:string,
+    quoteAddress: string,
+    quote: string,
+  }
 }
 
 
@@ -33,6 +39,7 @@ export interface VaultWithData extends Vault {
 
 export const MasterChefVaultAddress = "0x94fe35FBDc43f97F4b536B22e2d76BDdC55f9a2b"
 export const ControllerVaultAddress = "0x9bf4a4ff8c8505bf75aab566a9b5dd635a68f837"
+// export const YieldTokenVaultAddress = "0x8abed819ab4fbb9e488d0d1687c93075b73b3db1"
 
 export default <Record<string, { vault, strategy }>>{
   BUSD: {
@@ -84,6 +91,11 @@ export const vaultLists: Vault[] = [
     strategy: "0x4581bdb0c086bDC5AFE17D27F50Fc011a144Deac",
     fromBlock: 6533850,
     harvestReward: "CAKE",
+    lpToken: {
+      address:'0x0Ed8E0A2D99643e1e65CCA22Ed4424090B8B7458',
+      quoteAddress: contracts.busd[56],
+      quote: QuoteToken.BUSD,
+    }
   },
   // {
   //   tokenSymbol: "ETH-BNB LP",
@@ -113,6 +125,11 @@ export const vaultLists: Vault[] = [
     strategy: "0xf7C30769e700d3af6b3347b36Ac663797588b3fD",
     fromBlock: 6563549,
     harvestReward: "XVS",
+    lpToken: {
+      address:'0xff17ff314925dff772b71abdff2782bc913b3575',
+      quoteAddress: contracts.busd[56],
+      quote: QuoteToken.BUSD,
+    },
   },
   {
     tokenSymbol: "SXP",
@@ -124,5 +141,11 @@ export const vaultLists: Vault[] = [
     strategy: "0xAB9c148C08cAB3e56Bb8ca2Cd0B240384184E26d",
     fromBlock: 6563997,
     harvestReward: "XVS",
+    lpToken: {
+      address:'0x2f82286c2178e9144f2a7b8d27d5b3203253cba4',
+      quoteAddress: contracts.busd[56],
+      quote: QuoteToken.BUSD,
+    },
   },
+
 ]
