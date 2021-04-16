@@ -90,7 +90,7 @@ class Pool {
 
     // console.log("[Pool] ABI", { queue, abi })
 
-    // console.time(`[Pool] [count:${queue.length}] ${poolRunId}`);
+    console.time(`[Pool] [count:${queue.length}] ${poolRunId}`);
 
     // console.log(`[Pool] [count:${queue.length}] callParams`, { callParams: this.callParams })
 
@@ -104,7 +104,7 @@ class Pool {
       ...this.callParams
     )
 
-    // console.timeEnd(`[Pool] [count:${queue.length}] ${poolRunId}`)
+    console.timeEnd(`[Pool] [count:${queue.length}] ${poolRunId}`)
 
 
     queue.forEach((call, index) => {

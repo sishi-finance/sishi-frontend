@@ -42,10 +42,18 @@ export const fetchFarmsPublicDataAsync = () => async (dispatch) => {
   dispatch(setFarmsPublicData(farms))
 }
 export const fetchFarmUserDataAsync = (account) => async (dispatch) => {
-  const userFarmAllowances = await fetchFarmUserAllowances(account)
-  const userFarmTokenBalances = await fetchFarmUserTokenBalances(account)
-  const userStakedBalances = await fetchFarmUserStakedBalances(account)
-  const userFarmEarnings = await fetchFarmUserEarnings(account)
+  const [
+    userFarmAllowances,
+    userFarmTokenBalances,
+    userStakedBalances,
+    userFarmEarnings,
+  ] = await Promise.all([
+    fetchFarmUserAllowances(account),
+    fetchFarmUserTokenBalances(account),
+    fetchFarmUserStakedBalances(account),
+    fetchFarmUserEarnings(account),
+  ])
+
 
   const arrayOfUserDataObjects = userFarmAllowances.map((farmAllowance, index) => {
     return {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AbiItem } from 'web3-utils'
 import { ContractOptions } from 'web3-eth-contract'
 import useWeb3 from 'hooks/useWeb3'
-import { getMasterChefAddress, getCakeAddress, getLotteryAddress, getLotteryTicketAddress, getVaultAddress, getStrategyAddress, getControllerAddress } from 'utils/addressHelpers'
+import { getMasterChefAddress, getCakeAddress, getLotteryAddress, getLotteryTicketAddress, getVaultAddress, getStrategyAddress, getControllerAddress, getVaultMasterChefAddress } from 'utils/addressHelpers'
 import { poolsConfig } from 'config/constants'
 import { PoolCategory } from 'config/constants/types'
 import ifo from 'config/abi/ifo.json'
@@ -75,6 +75,11 @@ export const useMasterchef = () => {
 export const useVault = (token: string) => {
   const abi = (sishivault as unknown) as AbiItem
   return useContract(abi, getVaultAddress(token))
+}
+
+export const useVaultMasterChef = () => {
+  const abi = (masterChef as unknown) as AbiItem
+  return useContract(abi, getVaultMasterChefAddress())
 }
 
 export const useVaultABI = () => {

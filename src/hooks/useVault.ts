@@ -5,8 +5,10 @@ import { Vault, vaultLists, VaultWithData } from 'config/constants/vaults'
 import { provider, } from 'web3-core'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import callMethodWithPool, { callMethodWithPoolFactory } from 'utils/pools'
+import masterChef from 'config/abi/masterchef.json'
+import { getMasterChefAddress, getVaultMasterChefAddress } from 'utils/addressHelpers'
 import useBlock from './useBlock'
-import useContract, { useERC20, useERC20ABI, useStrategy, useStrategyABI, useVault, useVaultABI } from './useContract'
+import useContract, { useERC20, useERC20ABI, useMasterchef, useStrategy, useStrategyABI, useVault, useVaultABI } from './useContract'
 
 
 
@@ -55,6 +57,52 @@ const useAllowance = ({ tokenAddress, allowanceAddress, account, updateToken }) 
 
 
   return walletApprove
+}
+
+const usePendingVaultSishi = ({ account, pid, updateToken }) => {
+  const [pendingBalance, setPendingBalance] = useState(0)
+  const masterChefAddress = getVaultMasterChefAddress()
+  const masterChefABI = masterChef
+
+  useEffect(() => {
+    String(updateToken);
+    if (account) {
+      callMethodWithPool(
+        masterChefAddress,
+        <any>masterChefABI,
+        "pendingSishi",
+        [pid, account],
+      )
+        .then(pending => {
+          setPendingBalance(Number(pending) / (10 ** 18))
+        })
+        .catch(e => console.error(e));
+    }
+  }, [account, updateToken, setPendingBalance, pid, masterChefAddress, masterChefABI]);
+
+  return pendingBalance
+}
+
+const useFarmingBalance = ({ account, pid, updateToken }) => {
+  const [farmingBalance, setFarmingBalance] = useState(0)
+  const masterChefAddress = getVaultMasterChefAddress()
+  const masterChefABI = masterChef
+
+  useEffect(() => {
+    String(updateToken);
+    if (account) {
+      callMethodWithPool(
+        masterChefAddress,
+        <any>masterChefABI,
+        "userInfo",
+        [pid, account],
+      ).then(([amount]) => {
+        setFarmingBalance(Number(amount) / (10 ** 18))
+      }).catch(e => console.error(e));
+    }
+  }, [account, updateToken, setFarmingBalance, pid, masterChefAddress, masterChefABI]);
+
+  return farmingBalance
 }
 
 export const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress, fromBlock = 0 }: Vault) => {
@@ -174,6 +222,22 @@ export const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress, fr
 }
 
 
+export const useVaultFarm = ({ tokenSymbol, tokenAddress, vault: vaultAddress, farmPid }: Vault, updateToken) => {
+
+  const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
+  const pendingFarming = usePendingVaultSishi({ account, pid: farmPid, updateToken })
+  const masterChefAddress = getVaultMasterChefAddress()
+  const vaultStackApproved = useAllowance({ tokenAddress: vaultAddress, account, allowanceAddress: masterChefAddress, updateToken })
+  const vaultAndFarmBalance = useFarmingBalance({ account, pid: farmPid, updateToken })
+
+  return {
+    vaultAndFarmBalance,
+    vaultStackApproved,
+    pendingFarming,
+  }
+}
+
+
 export const useVaultHarvestReward = (vault: Vault, account: string) => {
   const strategyContract = useStrategy(vault.tokenSymbol)
   const [reloadToken, reload] = useState(0)
@@ -191,21 +255,6 @@ export const useVaultHarvestReward = (vault: Vault, account: string) => {
     }
 
   }, [vault.strategy, strategyContract, setStrategyResult, account, reloadToken])
-
-  // useEffect(() => {
-  //   callMethodWithPool(
-  //     strategyContract.options.address,
-  //     strategyContract.options.jsonInterface,
-  //     "want",
-  //     []
-  //   ).then(address => {
-  //     return callMethodWithPool(String(address),<any>erc20ABI,"symbol",[])
-  //   }).then(symbol => {
-  //     setStrategyToken(symbol);
-  //   })
-  // }, [strategyContract, setStrategyToken, erc20ABI])
-
-
 
   return {
     reward: Number((Number(strategyResult) / (1e18)).toFixed(8)),

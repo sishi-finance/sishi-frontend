@@ -1,5 +1,5 @@
 import addresses from 'config/constants/contracts'
-import vaults from 'config/constants/vaults'
+import vaults, { MasterChefVaultAddress } from 'config/constants/vaults'
 
 const chainId = process.env.REACT_APP_CHAIN_ID
 const notFound = () => {
@@ -10,6 +10,12 @@ export const getCakeAddress = () => {
 }
 export const getMasterChefAddress = () => {
   return addresses.masterChef[chainId]
+}
+export const getVaultControllerAddress = () => {
+  return MasterChefVaultAddress
+}
+export const getVaultMasterChefAddress = () => {
+  return MasterChefVaultAddress
 }
 export const getMulticallAddress = () => {
   return addresses.mulltiCall[chainId]
