@@ -7,7 +7,7 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import callMethodWithPool, { callMethodWithPoolFactory } from 'utils/pools'
 import masterChef from 'config/abi/masterchef.json'
 import { getMasterChefAddress, getVaultMasterChefAddress } from 'utils/addressHelpers'
-import contracts from 'config/constants/contracts'
+import contracts, { deadAddress } from 'config/constants/contracts'
 import erc20 from 'config/abi/erc20.json'
 import sishivault from 'config/abi/sishivault.json'
 import { QuoteToken } from 'config/constants/types'
@@ -85,13 +85,11 @@ export const useVaultHarvestReward = (vault: Vault, account: string) => {
   // const erc20ABI =  useERC20ABI()
 
   useEffect(() => {
-    if (account) {
-      String(reloadToken);
-      strategyContract.methods
-        .harvest()
-        .call({ from: account })
-        .then(result => setStrategyResult(result))
-    }
+    String(reloadToken);
+    strategyContract.methods
+      .harvest()
+      .call({ from: account || deadAddress })
+      .then(result => setStrategyResult(result))
 
   }, [vault.strategy, strategyContract, setStrategyResult, account, reloadToken])
 
@@ -234,7 +232,7 @@ export const fetchVaultFarms = async (vaults: Vault[]) => {
 
 export const fetchVaultFarmUsers = async (vaults: Vault[], { account }: { account: string }) => {
   const allVaultFarmUsers = await Promise.all(vaults.map(async vault => {
-    if(vault.farmPid < 0){
+    if (vault.farmPid < 0) {
       return {
         vaultStackApproved: false,
         vaultAndFarmBalance: new BigNumber(0),

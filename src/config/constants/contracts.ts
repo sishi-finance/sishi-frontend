@@ -36,3 +36,5 @@ export default {
     97: '',
   },
 }
+
+export const deadAddress = "0x000000000000000000000000000000000000dead"
