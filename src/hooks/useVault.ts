@@ -203,9 +203,13 @@ export const fetchVaultUsers = async (vaults: Vault[], account: string) => {
 export const fetchVaultFarms = async (vaults: Vault[]) => {
   const allVaultFarmsShare = await Promise.all(vaults.map(async vault => {
 
+
+
     const [mulTotal, [, mulCurrent, ,], rawSharePerBlock, rawTotalShare] = await Promise.all([
       callMethodWithPool(MasterChefVaultAddress, <any>masterChef, "totalAllocPoint", []),
-      callMethodWithPool(MasterChefVaultAddress, <any>masterChef, "poolInfo", [vault.farmPid]),
+      vault.farmPid > 0
+        ? callMethodWithPool(MasterChefVaultAddress, <any>masterChef, "poolInfo", [vault.farmPid])
+        : Promise.resolve(["", new BigNumber(0)]),
       callMethodWithPool(MasterChefVaultAddress, <any>masterChef, "sishiPerBlock", []),
       callMethodWithPool(vault.vault, <any>erc20, "balanceOf", [MasterChefVaultAddress]),
     ])
@@ -230,7 +234,13 @@ export const fetchVaultFarms = async (vaults: Vault[]) => {
 
 export const fetchVaultFarmUsers = async (vaults: Vault[], { account }: { account: string }) => {
   const allVaultFarmUsers = await Promise.all(vaults.map(async vault => {
-
+    if(vault.farmPid < 0){
+      return {
+        vaultStackApproved: false,
+        vaultAndFarmBalance: new BigNumber(0),
+        pendingFarming: new BigNumber(0),
+      }
+    }
     const [
       pendingFarming,
       farmingAllowance,
@@ -259,7 +269,7 @@ export const useVaultsData = (vaults: Vault[], { currentBlock, bnbBusdRate, toke
   const [vaultsFarming, setVaultsFarming] = useState<any[]>(vaults.map(e => ({})))
 
 
-  
+
   useEffect(() => {
     String(token);
     fetchVaultsAPY(vaults, { currentBlock, bnbBusdRate })

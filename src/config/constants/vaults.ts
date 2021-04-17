@@ -73,9 +73,16 @@ export const vaultLists: Vault[] = [
   //   isTokenOnly: false,
   //   tokenAddress: "0x70d8929d04b60af4fb9b58713ebcf18765ade422",
   //   tag: ["Pancake"],
-  //   farmPid: 11,
+  //   farmPid: -1,
   //   vault: "0x30cd4c7fC04dd15072047918e79CdD23Dae4Cc39",
-  //   strategy: "0xF37111949b12D86229c63B2d1Ad0df3880C9a884"
+  //   strategy: "0xF37111949b12D86229c63B2d1Ad0df3880C9a884",
+  //   fromBlock: 6533850,
+  //   harvestReward: "CAKE",
+  //   lpToken: {
+  //     address:'0x70d8929d04b60af4fb9b58713ebcf18765ade422',
+  //     quoteAddress: contracts.busd[56],
+  //     quote: QuoteToken.BUSD,
+  //   }
   // },
   // {
   //   tokenSymbol: "XVS",
