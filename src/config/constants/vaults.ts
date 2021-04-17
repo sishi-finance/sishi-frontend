@@ -39,35 +39,6 @@ export interface VaultWithData extends Vault {
 
 export const MasterChefVaultAddress = "0x94fe35FBDc43f97F4b536B22e2d76BDdC55f9a2b"
 export const ControllerVaultAddress = "0x9bf4a4ff8c8505bf75aab566a9b5dd635a68f837"
-// export const YieldTokenVaultAddress = "0x8abed819ab4fbb9e488d0d1687c93075b73b3db1"
-
-// export default <Record<string, { vault, strategy }>>{
-//   BUSD: {
-//     vault: "0x80C93DF954af9E61DaF72CEC19B51041c1C8fA09",
-//     strategy: "0xF81D859a4Ed3877F8e81a9090D5a6B1482c07181"
-//   },
-//   CAKE: {
-//     vault: "0xFD3d66E7ed01761e0B83a632736Da5F2F68acde8",
-//     strategy: "0x4581bdb0c086bDC5AFE17D27F50Fc011a144Deac"
-//   },
-//   "ETH-BNB LP": {
-//     vault: "0x30cd4c7fC04dd15072047918e79CdD23Dae4Cc39",
-//     strategy: "0xF37111949b12D86229c63B2d1Ad0df3880C9a884"
-//   },
-//   XVS: {
-//     vault: "0x451C79bcDa7608D7824394e384160EfFf47Fe8b8",
-//     strategy: "0x6B23B55B576657D0E7D0963aEb21b528396DBDac"
-//   },
-//   VAI: {
-//     vault: "0x0f4B0c695418893A8eEfB3eD8D18880147Ef8B18",
-//     strategy: "0xf7C30769e700d3af6b3347b36Ac663797588b3fD"
-//   },
-//   SXP: {
-//     vault: "0xf8f10825C54A54A8d07D9330c7F96563D57252E2",
-//     strategy: "0xAB9c148C08cAB3e56Bb8ca2Cd0B240384184E26d"
-//   },
-// }
-
 
 export const vaultLists: Vault[] = [
   {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { BLOCKS_PER_DAY, BLOCKS_PER_HOUR } from 'config'
 import BigNumber from 'bignumber.js/bignumber'
 import { MasterChefVaultAddress, Vault, vaultLists, VaultWithData } from 'config/constants/vaults'
@@ -10,8 +10,8 @@ import { getMasterChefAddress, getVaultMasterChefAddress } from 'utils/addressHe
 import contracts from 'config/constants/contracts'
 import erc20 from 'config/abi/erc20.json'
 import sishivault from 'config/abi/sishivault.json'
-import useBlock from './useBlock'
-import useContract, { useERC20, useERC20ABI, useMasterchef, useStrategyABI, useVault, useStrategy, useVaultABI } from './useContract'
+import { QuoteToken } from 'config/constants/types'
+import { useERC20ABI, useStrategy, } from './useContract'
 
 
 
@@ -62,29 +62,6 @@ const useAllowance = ({ tokenAddress, allowanceAddress, account, updateToken }) 
   return walletApprove
 }
 
-const usePendingVaultSishi = ({ account, pid, updateToken }) => {
-  const [pendingBalance, setPendingBalance] = useState(0)
-  const masterChefAddress = getVaultMasterChefAddress()
-  const masterChefABI = masterChef
-
-  useEffect(() => {
-    String(updateToken);
-    if (account) {
-      callMethodWithPool(
-        masterChefAddress,
-        <any>masterChefABI,
-        "pendingSishi",
-        [pid, account],
-      )
-        .then(pending => {
-          setPendingBalance(Number(pending) / (10 ** 18))
-        })
-        .catch(e => console.error(e));
-    }
-  }, [account, updateToken, setPendingBalance, pid, masterChefAddress, masterChefABI]);
-
-  return pendingBalance
-}
 
 const useFarmingBalance = ({ account, pid, updateToken }) => {
   const [farmingBalance, setFarmingBalance] = useState(0)
@@ -108,165 +85,7 @@ const useFarmingBalance = ({ account, pid, updateToken }) => {
   return farmingBalance
 }
 
-export const useVaultFarmingShare = ({ pid, vaultAddress }) => {
-  const [[mulTotal, mulCurrent, allShare, sharePerBlock], setFarmingShare] = useState([0, 0, new BigNumber(0), new BigNumber(0)])
-  const masterChefAddress = getVaultMasterChefAddress()
-  const masterChefABI = masterChef
 
-  useEffect(() => {
-    setTimeout(async () => {
-
-      const [total, [lpAddress, point, ,], perBlock, totalShare] = await Promise.all([
-        callMethodWithPool(masterChefAddress, <any>masterChefABI, "totalAllocPoint", []),
-        callMethodWithPool(masterChefAddress, <any>masterChefABI, "poolInfo", [pid]),
-        callMethodWithPool(masterChefAddress, <any>masterChefABI, "sishiPerBlock", []),
-        callMethodWithPool(vaultAddress, <any>erc20, "balanceOf", [masterChefAddress]),
-      ])
-
-      setFarmingShare([total, point, totalShare, perBlock])
-    }, 0)
-
-
-  }, [pid, masterChefAddress, masterChefABI, vaultAddress]);
-
-  // console.log("---------------",
-  //   Number(
-  //     new BigNumber(Number(sharePerBlock))
-  //       .multipliedBy(new BigNumber(Number(mulCurrent)))
-  //       .dividedBy(new BigNumber(Number(mulTotal)))
-  //       .multipliedBy(1e18)
-  //       .div(new BigNumber(allShare))
-  //   )
-  // )
-
-  return {
-    mulTotal,
-    mulCurrent,
-    perShare: new BigNumber(Number(sharePerBlock))
-      .multipliedBy(new BigNumber(Number(mulCurrent)))
-      .dividedBy(new BigNumber(Number(mulTotal)))
-      .multipliedBy(1e18)
-      .div(new BigNumber(allShare)),
-    sharePerBlock,
-  }
-}
-
-export const useVaultAPY = (vault: Vault) => {
-  const { tokenSymbol, tokenAddress, vault: vaultAddress, fromBlock = 0 } = vault
-  const [updateToken, setUpdateToken] = useState(0)
-  const vaultABI = useVaultABI()
-  // const vaultContract = useVault(tokenSymbol)
-  const agoVaultContract = useVault(vault)
-  const [[pricePerFullShare, loaded1], setPricePerFullShare] = useState([new BigNumber(0), false])
-  const [[oldPricePerFullShare, loaded2], setOldPricePerFullShare] = useState([new BigNumber(0), false])
-  const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
-  const [vaultTVL, setVaultTVL] = useState(0)
-  const [vaultShare, setVaultShare] = useState(0)
-
-  const walletBalance = useBalance({ tokenAddress, account, updateToken })
-  const vaultApproved = useAllowance({ tokenAddress, allowanceAddress: vaultAddress, account, updateToken })
-
-  const currentBlock = useBlock()
-  const deltaBlock = Number(BLOCKS_PER_HOUR) * 36
-  const prevBlock = Math.max(fromBlock + 1000, currentBlock - deltaBlock)
-  const callMethodWithAgoPool = callMethodWithPoolFactory(prevBlock)
-  const reloadToken = useCallback(() => setUpdateToken(updateToken + 1), [setUpdateToken, updateToken])
-
-  useEffect(() => {
-    String(updateToken);
-    callMethodWithPool(
-      vaultAddress,
-      <any>vaultABI,
-      "balance",
-      [],
-    )
-      .then(balance => {
-        // console.log("balance", { balance })
-        setVaultTVL(Number(balance) / (10 ** 18))
-      })
-      .catch(e => console.error(e));
-  }, [vaultAddress, vaultABI, setVaultTVL, updateToken]);
-
-
-  useEffect(() => {
-    String(updateToken);
-    if (account) {
-      callMethodWithPool(
-        vaultAddress,
-        <any>vaultABI,
-        "balanceOf",
-        [account],
-      )
-        .then(balance => {
-          setVaultShare(Number(balance) / (10 ** 18))
-        })
-        .catch(e => console.error(e));
-    }
-  }, [vaultAddress, vaultABI, setVaultShare, account, updateToken]);
-
-  useEffect(() => {
-    // console.log({ currentBlock, prevBlock })
-    if (Number.isFinite(currentBlock) && currentBlock > 1) {
-      callMethodWithPool(
-        vaultAddress,
-        <any>vaultABI,
-        "getPricePerFullShare",
-        [],
-      )
-        .then(price => {
-          // console.log("1", { price })
-          setPricePerFullShare([new BigNumber(price), true])
-        })
-        .catch(e => console.error(e));
-    }
-
-
-  }, [vaultAddress, vaultABI, agoVaultContract, currentBlock, setPricePerFullShare])
-
-  useEffect(() => {
-    if (Number.isFinite(prevBlock) && prevBlock > 1) {
-      callMethodWithAgoPool(
-        vaultAddress,
-        <any>vaultABI,
-        "getPricePerFullShare",
-        [],
-      )
-        .then(price => {
-          setOldPricePerFullShare([new BigNumber(price), true])
-        })
-        .catch(e => console.error(e))
-    }
-  }, [vaultAddress, vaultABI, prevBlock, setPricePerFullShare, setOldPricePerFullShare, callMethodWithAgoPool])
-
-  const roiDay = pricePerFullShare
-    .div(oldPricePerFullShare)
-    .minus(new BigNumber(1))
-    .multipliedBy(BLOCKS_PER_DAY)
-    .dividedBy(deltaBlock)
-  const roiHour = roiDay.dividedBy(24)
-  const roiWeek = roiDay.plus(1).exponentiatedBy(7).minus(1)
-  const roiMonth = roiDay.plus(1).exponentiatedBy(30).minus(1)
-  const roiYear = roiDay.plus(1).exponentiatedBy(365).minus(1)
-  const roiLoaded = loaded1 && loaded2;
-  return {
-    roiLoaded,
-    calc: {
-      roiHour: Number(roiLoaded ? (roiHour).toFixed(10) : (0).toFixed(10)),
-      roiDay: Number(roiLoaded ? (roiDay).toFixed(10) : (0).toFixed(10)),
-      roiWeek: Number(roiLoaded ? (roiWeek).toFixed(10) : (0).toFixed(10)),
-      roiMonth: Number(roiLoaded ? (roiMonth).toFixed(10) : (0).toFixed(10)),
-      roiYear: Number(roiLoaded ? (roiYear).toFixed(10) : (0).toFixed(10)),
-      apy: Number(roiLoaded ? (roiYear).toFixed(10) : (0).toFixed(10)),
-      apr: Number(roiLoaded ? (roiDay.multipliedBy(365)).toFixed(10) : (0).toFixed(10)),
-      tvl: Number(vaultTVL.toFixed(10)),
-      share: Number(vaultShare.toFixed(10)),
-      balance: Number(vaultShare * pricePerFullShare.toNumber() / 1e18),
-      walletBalance: Number(Number(walletBalance).toFixed(10)),
-      vaultApproved,
-    },
-    reloadToken,
-  }
-}
 
 
 export const fetchPancakeRate = async ({ baseAddress, lpAdress, quoteAddress }) => {
@@ -331,21 +150,6 @@ export const useYSISHIPrice = () => {
   return ySushiRate
 }
 
-export const useVaultFarm = ({ tokenSymbol, tokenAddress, vault: vaultAddress, farmPid, lpToken, }: Vault, updateToken) => {
-
-  const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
-  const pendingFarming = usePendingVaultSishi({ account, pid: farmPid, updateToken })
-  const masterChefAddress = getVaultMasterChefAddress()
-  const vaultStackApproved = useAllowance({ tokenAddress: vaultAddress, account, allowanceAddress: masterChefAddress, updateToken })
-  const vaultAndFarmBalance = useFarmingBalance({ account, pid: farmPid, updateToken })
-
-  return {
-    vaultAndFarmBalance,
-    vaultStackApproved,
-    pendingFarming,
-  }
-}
-
 
 export const useVaultHarvestReward = (vault: Vault, account: string) => {
   const strategyContract = useStrategy(vault)
@@ -379,7 +183,7 @@ export const useVaults = () => {
 
 
 
-export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock }: { currentBlock: number }) => {
+export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock, bnbBusdRate }: { currentBlock: number, bnbBusdRate: BigNumber }) => {
 
   const deltaBlock = Number(BLOCKS_PER_HOUR) * 36
 
@@ -392,15 +196,26 @@ export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock }: { curren
       rawVaultTVL,
       rawPricePerFullShare,
       rawPricePerFullShareAgo,
+      rawTokenQuoteRate,
     ] = await Promise.all([
       callMethodWithPool(vault.vault, <any>sishivault, "balance", []),
       callMethodWithPool(vault.vault, <any>sishivault, "getPricePerFullShare", []),
       callMethodWithAgoPool(vault.vault, <any>sishivault, "getPricePerFullShare", []),
+      vault.lpToken ? fetchPancakeRate({
+        baseAddress: vault.tokenAddress,
+        lpAdress: vault.lpToken.address,
+        quoteAddress: vault.lpToken.quoteAddress
+      }) : Promise.resolve(new BigNumber(1e18))
     ])
 
     const vaultTVL = new BigNumber(rawVaultTVL)
     const pricePerFullShare = new BigNumber(rawPricePerFullShare)
     const pricePerFullShareAgo = new BigNumber(rawPricePerFullShareAgo)
+    const tokenQuoteRate = new BigNumber(rawTokenQuoteRate)
+
+    const tokenBUSDRate = vault?.lpToken?.quote === QuoteToken.BNB
+      ? tokenQuoteRate.multipliedBy(bnbBusdRate)
+      : tokenQuoteRate
 
     const roiDay = pricePerFullShare
       .div(pricePerFullShareAgo)
@@ -415,6 +230,8 @@ export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock }: { curren
 
     return {
       roiLoaded: true,
+      tokenBUSDRate,
+      pricePerFullShare,
       calc: {
         roiHour: Number((roiHour).toFixed(10)),
         roiDay: Number((roiDay).toFixed(10)),
@@ -491,16 +308,18 @@ export const fetchVaultFarmUsers = async (vaults: Vault[], { account }: { accoun
     const [
       pendingFarming,
       farmingAllowance,
-      vaultAndFarmBalance,
+      [vaultAndFarmBalance],
     ] = await Promise.all([
       callMethodWithPool(MasterChefVaultAddress, <any>masterChef, "pendingSishi", [vault.farmPid, account]),
       callMethodWithPool(vault.vault, <any>erc20, "allowance", [account, MasterChefVaultAddress]),
       callMethodWithPool(MasterChefVaultAddress, <any>masterChef, "userInfo", [vault.farmPid, account],)
     ])
 
+    // console.log("vaultAndFarmBalance", Number(new BigNumber(String(vaultAndFarmBalance)),) / 1e18)
+
     return {
       vaultStackApproved: Number(farmingAllowance) / (10 ** 18) >= 100000000,
-      vaultAndFarmBalance: new BigNumber(vaultAndFarmBalance),
+      vaultAndFarmBalance: new BigNumber(String(vaultAndFarmBalance)),
       pendingFarming: new BigNumber(pendingFarming),
     }
   }))
@@ -508,6 +327,76 @@ export const fetchVaultFarmUsers = async (vaults: Vault[], { account }: { accoun
   return allVaultFarmUsers
 }
 
+export const useVaultsData = (vaults: Vault[], { currentBlock, bnbBusdRate }: { currentBlock: number, bnbBusdRate: BigNumber, sishiBusdRate: BigNumber }) => {
+
+  const [vaultsAPY, setVaulstAPY] = useState<any[]>(vaults.map(e => ({})))
+  const [vaultsFarming, setVaultsFarming] = useState<any[]>(vaults.map(e => ({})))
 
 
-export default useVaultAPY
+  
+  useEffect(() => {
+    fetchVaultsAPY(vaults, { currentBlock, bnbBusdRate })
+      .then(datas => setVaulstAPY(datas));
+  }, [vaults, currentBlock, bnbBusdRate])
+
+  useEffect(() => {
+    fetchVaultFarms(vaults)
+      .then(datas => setVaultsFarming(datas));
+
+  }, [vaults])
+
+  return useMemo(
+    () => {
+      // console.log("[allMergeVaults] update")
+
+      return vaults.map((vault, index) => ({
+        // ...vault,
+        ...vaultsAPY[index] || {},
+        ...vaultsFarming[index] || {},
+        calc: {
+          ...vaultsAPY[index]?.calc || {},
+          ...vaultsFarming[index]?.calc || {},
+        }
+      }))
+    },
+    [vaultsAPY, vaultsFarming, vaults]
+  )
+}
+
+
+export const useVaultsUserData = (vaults: Vault[], { account }: { account: string }) => {
+  const [vaultUsers, setVaultUsers] = useState<any[]>(vaults.map(e => ({})))
+  const [vaultFarmingUsers, setVaultFarmingUsers] = useState<any[]>(vaults.map(e => ({})))
+
+  useEffect(() => {
+    if (account)
+      fetchVaultUsers(vaults, account)
+        .then(datas => setVaultUsers(datas));
+    else
+      setVaultUsers(vaults.map(e => ({})))
+  }, [vaults, account])
+
+  useEffect(() => {
+    if (account)
+      fetchVaultFarmUsers(vaults, { account })
+        .then(datas => setVaultFarmingUsers(datas));
+    else
+      setVaultFarmingUsers(vaults.map(e => ({})))
+
+  }, [vaults, account])
+
+  return useMemo(
+    () => vaults.map((vault, index) => ({
+      // ...vault,
+      ...vaultUsers[index] || {},
+      ...vaultFarmingUsers[index] || {},
+      calc: {
+        ...vaultUsers[index]?.calc || {},
+        ...vaultFarmingUsers[index]?.calc || {},
+      }
+    })),
+    [vaults, vaultUsers, vaultFarmingUsers]
+  )
+}
+
+// export default useVaultAPY

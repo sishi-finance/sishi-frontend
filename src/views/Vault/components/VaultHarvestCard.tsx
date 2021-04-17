@@ -5,7 +5,7 @@ import { Flex, Text, Skeleton, Image, Tag, Button, LinkExternal } from '@pancake
 import { provider } from 'web3-core'
 import useI18n from 'hooks/useI18n'
 import { Vault, VaultWithData } from 'config/constants/vaults'
-import { useVaultAPY, useVaultHarvestReward } from 'hooks/useVault'
+import {  useVaultHarvestReward } from 'hooks/useVault'
 import { useVaultHarvest } from 'hooks/useVaultDeposit'
 import CardValue from 'views/Home/components/CardValue'
 import Spacer from 'components/Spacer'

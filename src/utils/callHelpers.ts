@@ -10,7 +10,7 @@ export const approve = async (lpContract, masterChefContract, account) => {
 
 export const stake = async (masterChefContract, pid, amount, account, decimal = 18) => {
   return masterChefContract.methods
-    .deposit(pid, new BigNumber(amount).times(new BigNumber(10).pow(decimal)).toString())
+    .deposit(pid, new BigNumber(amount).times(new BigNumber(10).pow(decimal)).toFixed())
     .send({ from: account })
     .on('transactionHash', (tx) => {
       return tx.transactionHash
@@ -25,7 +25,7 @@ export const harvestVault = async (strategyContract, account) => {
 
 export const vaultDeposit = async (vaultContract, amount, account, decimal = 18) => {
   return vaultContract.methods
-    .deposit(new BigNumber(amount).times(new BigNumber(10).pow(decimal)).toString())
+    .deposit(new BigNumber(amount).times(new BigNumber(10).pow(decimal)).toFixed())
     .send({ from: account })
     .on('transactionHash', (tx) => {
       return tx.transactionHash
@@ -34,7 +34,7 @@ export const vaultDeposit = async (vaultContract, amount, account, decimal = 18)
 
 export const vaultWithdrawal = async (vaultContract, amount, account, decimal = 18) => {
   return vaultContract.methods
-    .withdraw(new BigNumber(amount).times(new BigNumber(10).pow(decimal)).toString())
+    .withdraw(new BigNumber(amount).times(new BigNumber(10).pow(decimal)).toFixed())
     .send({ from: account })
     .on('transactionHash', (tx) => {
       return tx.transactionHash

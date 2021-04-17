@@ -6,10 +6,8 @@ import { Farm } from 'state/types'
 import { provider } from 'web3-core'
 import useI18n from 'hooks/useI18n'
 import { Vault, VaultWithData } from 'config/constants/vaults'
-import { ExternalLink } from 'react-feather'
-import { useLPRate, useVaultAPY, useVaultFarm, useVaultFarmingShare, useYSISHIPrice } from 'hooks/useVault'
-import { QuoteToken } from 'config/constants/types'
 import { BLOCKS_PER_DAY } from 'config'
+import { getBalanceNumber } from 'utils/formatBalance'
 import VaultAction from "./VaultAction"
 import StackAction from "./StackAction"
 
@@ -27,6 +25,7 @@ const VaultRow = styled.tr`
 `
 interface VaultCardProps {
   vault: Vault
+  vaultData: any,
   cakePrice?: BigNumber
   bnbPrice?: BigNumber
   ySishiPrice?: BigNumber
@@ -34,12 +33,8 @@ interface VaultCardProps {
   account?: string
 }
 
-const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePrice, bnbPrice, ySishiPrice }) => {
+const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, account, cakePrice, bnbPrice, ySishiPrice }) => {
   const TranslateString = useI18n()
-  const vaultAPY = useVaultAPY(vault)
-  const vaultFarming = useVaultFarm(vault, vaultAPY.reloadToken)
-  const vaultFarmingShare = useVaultFarmingShare({ pid: vault.farmPid, vaultAddress: vault.vault })
-  const vaultData = { ...vault, ...vaultAPY, ...vaultFarming, ...vaultFarmingShare }
   const { tokenSymbol, tag } = vaultData
   const [expand, setExpand] = useState(false)
   const farmImage = vaultData.tokenSymbol.toLowerCase().replace(" lp", "")
@@ -48,34 +43,36 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
   const yieldAPR = (vaultData.calc.apr)
   const yieldRoiDay = (vaultData.calc.roiDay)
   const yieldTVL = (vaultData.calc.tvl)
-  const yieldBalance = (vaultData.calc.balance)
   const walletBalance = (vaultData.calc.walletBalance)
+  const share = new BigNumber(vaultData.calc.share).decimalPlaces(0)
+  const pricePerFullShare = (vaultData.pricePerFullShare)
+  const tokenPrice = vaultData.tokenBUSDRate
+  const yieldBalance = (new BigNumber(share))
+    .multipliedBy(new BigNumber(pricePerFullShare))
+    .dividedBy(1e18)
+    .decimalPlaces(0)
+
+  const yieldTVLUSD = new BigNumber(yieldTVL)
+    .times(new BigNumber(tokenPrice))
+    .dividedBy(1e18)
+  const walletBalanceUSD = new BigNumber(walletBalance)
+    .times(new BigNumber(tokenPrice))
+    .dividedBy(1e18)
   const {
     pendingFarming, vaultAndFarmBalance, vaultStackApproved, lpToken,
     perShare, sharePerBlock,
   } = vaultData
-  const tokenVSQuoteRate = useLPRate({ baseAddress: vault.tokenAddress, lpAdress: lpToken?.address, quoteAddress: lpToken?.quoteAddress })
-  const tokenPrice = lpToken?.quote === QuoteToken.BNB
-    ? (bnbPrice.times(tokenVSQuoteRate).dividedBy(1e18))
-    : tokenVSQuoteRate
 
-  // const yieldFarmRoi = new BigNumber(Number(ySishiPrice)).dividedBy(1e18)
-  //   .multipliedBy(new BigNumber(Number(perShare))).dividedBy(1e12)
-  //   .div(new BigNumber(Number(tokenPrice)))
-  //   .multipliedBy(BLOCKS_PER_DAY)
+  // console.log("vaultAndFarmBalance", Number(vaultAndFarmBalance) / 1e18)
 
 
-  const yieldFarmRoi = new BigNumber(Number(perShare))
-    .times(new BigNumber(Number(ySishiPrice)))
+
+
+  const yieldFarmRoi = new BigNumber(perShare)
+    .times(new BigNumber(ySishiPrice))
     .times(BLOCKS_PER_DAY)
-    .div(new BigNumber(Number(tokenPrice)))
+    .div(new BigNumber(tokenPrice))
     .dividedBy(1e18)
-
-
-  // console.log("perShare", Number(perShare) / 1e18)
-  // console.log("ySishiPrice", Number(ySishiPrice) / 1e18)
-  // console.log("yieldFarmRoi", Number(yieldFarmRoi) / 1e18)
-  // console.log("tokenPrice", Number(tokenPrice) / 1e18)
 
 
   const yieldFarmAPR = yieldFarmRoi.multipliedBy(365)
@@ -85,7 +82,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
 
   return (
     <>
-      <VaultRow style={{ borderBottom: expand ? 'none' : `solid 2px #8884` }} onClick={onExpandClick}>
+      <VaultRow key={`${vault.tokenSymbol}_1`} style={{ borderBottom: expand ? 'none' : `solid 2px #8884` }} onClick={onExpandClick}>
         <td style={{ width: "200px", minWidth: "200px" }}>
           <Flex flexDirection="row" alignItems="center" >
             <Image src={`/images/farms/${farmImage}.png`} width={40} height={40} marginLeft="2" marginRight="2" />
@@ -105,87 +102,89 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, ethereum, account, cakePri
           {(yieldRoiDay * 100).toFixed(2)}%
         </td>
         <td>
-          {Number(yieldTVL).toFixed(4)}
+          ${getBalanceNumber(yieldTVLUSD).toFixed(2)}
         </td>
         <td>
-          {Number(walletBalance).toFixed(4)}
+          ${getBalanceNumber(walletBalanceUSD).toFixed(2)}
         </td>
       </VaultRow>
-      {expand && <VaultRow style={{ borderBottom: !expand ? 'none' : `solid 2px #8884` }}>
-        <td colSpan={6}>
-          <Row style={{ justifyContent: "stretch", alignItems: "flex-start", padding: "0em 0.5em" }}>
-            <div style={{ flex: 4 }}>
-              <Row>
-                <div style={{ width: "10em", textAlign: "left" }}>Vault APY:</div>
-                <div>{(yieldAPY * 100).toFixed(2)}%</div>
-              </Row>
-              <Row>
-                <div style={{ width: "10em", textAlign: "left" }}>Vault APR:</div>
-                <div>{(yieldAPR * 100).toFixed(2)}%</div>
-              </Row>
-              <Row>
-                <div style={{ width: "10em", textAlign: "left" }}>Vault Daily:</div>
-                <div>{(yieldRoiDay * 100).toFixed(2)}%</div>
-              </Row>
-            </div>
-            <div style={{ flex: 3 }}>
-              <Row>
-                <div style={{ width: "10em", textAlign: "left" }}>Wallet:</div>
-                <div>{Number(walletBalance).toFixed(4)}</div>
-              </Row>
-              <Row>
-                <div style={{ width: "10em", textAlign: "left" }}>Vault:</div>
-                <div>{Number(yieldBalance).toFixed(4)}</div>
-              </Row>
-            </div>
-            <div style={{ flex: 2 }}>
-              <VaultAction vault={vaultData} account={account} tokenBalance={new BigNumber(walletBalance * 1e18)} depositBalance={new BigNumber(yieldBalance * 1e18)} />
-            </div>
-          </Row>
-          <hr style={{ opacity: "0.2", padding: "0 2em" }} />
+      {
+        expand && <VaultRow key={`${vault.tokenSymbol}_2`} style={{ borderBottom: !expand ? 'none' : `solid 2px #8884` }}>
+          <td colSpan={6}>
+            <Row style={{ justifyContent: "stretch", alignItems: "flex-start", padding: "0em 0.5em" }}>
+              <div style={{ flex: 4 }}>
+                <Row>
+                  <div style={{ width: "10em", textAlign: "left" }}>Vault APY:</div>
+                  <div>{(yieldAPY * 100).toFixed(2)}%</div>
+                </Row>
+                <Row>
+                  <div style={{ width: "10em", textAlign: "left" }}>Vault APR:</div>
+                  <div>{(yieldAPR * 100).toFixed(2)}%</div>
+                </Row>
+                <Row>
+                  <div style={{ width: "10em", textAlign: "left" }}>Vault Daily:</div>
+                  <div>{(yieldRoiDay * 100).toFixed(2)}%</div>
+                </Row>
+              </div>
+              <div style={{ flex: 3 }}>
+                <Row>
+                  <div style={{ width: "10em", textAlign: "left" }}>Wallet:</div>
+                  <div>{getBalanceNumber(walletBalance).toFixed(4)}</div>
+                </Row>
+                <Row>
+                  <div style={{ width: "10em", textAlign: "left" }}>Vault:</div>
+                  <div>{getBalanceNumber(share).toFixed(4)}</div>
+                </Row>
+              </div>
+              <div style={{ flex: 2 }}>
+                <VaultAction vault={vaultData} account={account} tokenBalance={walletBalance} depositBalance={share} />
+              </div>
+            </Row>
+            <hr style={{ opacity: "0.2", padding: "0 2em" }} />
 
-          <Row style={{ justifyContent: "stretch", alignItems: "flex-start", padding: "0em 0.5em" }}>
-            <div style={{ flex: 4 }}>
-              <Row>
-                <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} APY:</div>
-                <div>{(Number(yieldFarmAPY) * 100).toFixed(2)}%</div>
-              </Row>
-              <Row>
-                <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} APR:</div>
-                <div>{(Number(yieldFarmAPR) * 100).toFixed(2)}%</div>
-              </Row>
-              <Row>
-                <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} Daily:</div>
-                <div>{(Number(yieldFarmRoi) * 100).toFixed(2)}%</div>
-              </Row>
-              <Row>
-                <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} Weight:</div>
-                <div>1X</div>
-              </Row>
-            </div>
-            <div style={{ flex: 3 }}>
-              <Row>
-                <div style={{ width: "10em", textAlign: "left" }}>Vault & Farm:</div>
-                <div>{Number(vaultAndFarmBalance).toFixed(4)}</div>
-              </Row>
-              <Row>
-                <div style={{ width: "10em", textAlign: "left" }}>Pending {rewardToken}:</div>
-                <div>{Number(pendingFarming).toFixed(2)}</div>
-              </Row>
-            </div>
-            <div style={{ flex: 2 }}>
-              <StackAction vault={vaultData} vaultStackApproved={vaultStackApproved} account={account} tokenBalance={new BigNumber(yieldBalance * 1e18)} depositBalance={new BigNumber(vaultAndFarmBalance * 1e18)} />
-            </div>
-          </Row>
+            <Row style={{ justifyContent: "stretch", alignItems: "flex-start", padding: "0em 0.5em" }}>
+              <div style={{ flex: 4 }}>
+                <Row>
+                  <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} APY:</div>
+                  <div>{(Number(yieldFarmAPY) * 100).toFixed(2)}%</div>
+                </Row>
+                <Row>
+                  <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} APR:</div>
+                  <div>{(Number(yieldFarmAPR) * 100).toFixed(2)}%</div>
+                </Row>
+                <Row>
+                  <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} Daily:</div>
+                  <div>{(Number(yieldFarmRoi) * 100).toFixed(2)}%</div>
+                </Row>
+                <Row>
+                  <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} Weight:</div>
+                  <div>1X</div>
+                </Row>
+              </div>
+              <div style={{ flex: 3 }}>
+                <Row>
+                  <div style={{ width: "10em", textAlign: "left" }}>Vault & Farm:</div>
+                  <div>{getBalanceNumber(vaultAndFarmBalance).toFixed(4)}</div>
+                </Row>
+                <Row>
+                  <div style={{ width: "10em", textAlign: "left" }}>Pending {rewardToken}:</div>
+                  <div>{getBalanceNumber(pendingFarming).toFixed(2)}</div>
+                </Row>
+              </div>
+              <div style={{ flex: 2 }}>
+                <StackAction vault={vaultData} vaultStackApproved={vaultStackApproved} account={account} tokenBalance={share} depositBalance={vaultAndFarmBalance} />
+              </div>
+            </Row>
 
-          {/* <hr style={{ opacity: "0.2", padding: "0 2em" }} /> */}
+            {/* <hr style={{ opacity: "0.2", padding: "0 2em" }} /> */}
 
-          <Row style={{ justifyContent: "stretch", marginTop: "1em", padding: "0em 0.5em" }}>
-            <LinkExternal href={`https://bscscan.com/address/${vaultData.vault}`} fontSize="12" marginRight="3">Vault contract</LinkExternal>
-            <LinkExternal href={`https://bscscan.com/address/${vaultData.strategy}`} fontSize="12" marginRight="3">Strategy contract</LinkExternal>
-          </Row>
-        </td>
-      </VaultRow>}
+            <Row style={{ justifyContent: "stretch", marginTop: "1em", padding: "0em 0.5em" }}>
+              <LinkExternal href={`https://bscscan.com/address/${vaultData.vault}`} fontSize="12" marginRight="3">Vault contract</LinkExternal>
+              <LinkExternal href={`https://bscscan.com/address/${vaultData.strategy}`} fontSize="12" marginRight="3">Strategy contract</LinkExternal>
+            </Row>
+          </td>
+        </VaultRow>
+      }
     </>
   )
 }

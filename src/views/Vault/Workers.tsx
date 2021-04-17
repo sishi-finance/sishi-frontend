@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Heading, Text, BaseLayout, Link } from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
 import Page from 'components/layout/Page'
-import useVaultToken, { useVaults } from 'hooks/useVault'
+import { useVaults } from 'hooks/useVault'
 import { usePriceBnbBusd, usePriceCakeBusd } from 'state/hooks'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { provider } from 'web3-core'
@@ -68,7 +68,7 @@ const Workers: React.FC = () => {
         <br />
         <br />
         <Text color="red" fontSize="12px">
-          Risk Warning: Sishi Vault is in beta testing, it is unaudited and smart contracts were forked from  
+          Risk Warning: Sishi Vault is in beta testing, it is unaudited and smart contracts were forked from
           <a href="https://yearn.finance/" target="_blank" rel="noreferrer"> Yearn Finance</a>.
         </Text>
         <br />
@@ -79,8 +79,8 @@ const Workers: React.FC = () => {
             <thead>
               <tr>
                 <th> </th>
-                <th style={{textAlign:"left"}}> Reward </th>
-                <th style={{textAlign:"left"}}> Action</th>
+                <th style={{ textAlign: "left" }}> Reward </th>
+                <th style={{ textAlign: "left" }}> Action</th>
               </tr>
             </thead>
             <tbody>
