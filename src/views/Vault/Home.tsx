@@ -94,6 +94,8 @@ const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, y
         <Text color="red" fontSize="12px">
           Risk Warning: Sishi Vault is in beta testing, it is unaudited and smart contracts were forked from
           <a href="https://yearn.finance/" target="_blank" rel="noreferrer"> Yearn Finance</a>.
+          <br/>
+          ySISHI is a test token, it has no value.
         </Text>
         <br />
         <br />
