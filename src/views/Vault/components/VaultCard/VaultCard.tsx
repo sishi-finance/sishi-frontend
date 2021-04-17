@@ -177,7 +177,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
                 </Row>
                 <Row>
                   <div style={{ width: "10em", textAlign: "left" }}>Earned:</div>
-                  <div>{getBalanceNumber(pendingFarming).toFixed(2)} {rewardToken} ~ $ {getBalanceNumber(pendingFarmingUSD).toFixed(2)}</div>
+                  <div>{getBalanceNumber(pendingFarming).toFixed(4)} {rewardToken} ~ $ {getBalanceNumber(pendingFarmingUSD).toFixed(2)}</div>
                 </Row>
               </div>
               <div style={{ flex: 2 }}>
