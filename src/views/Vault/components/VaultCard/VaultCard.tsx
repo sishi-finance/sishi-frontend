@@ -96,10 +96,10 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
           </>)}
         </td>
         <td>
-          {(yieldAPY * 100).toFixed(2)}%
+          {(((yieldAPY || 0) + Number(yieldFarmAPY)) * 100).toFixed(2)}%
         </td>
         <td>
-          {(yieldRoiDay * 100).toFixed(2)}%
+          {(((yieldRoiDay || 0) + Number(yieldFarmRoi)) * 100).toFixed(2)}%
         </td>
         <td>
           ${getBalanceNumber(yieldTVLUSD).toFixed(2)}
@@ -112,7 +112,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
         expand && <VaultRow key={`${vault.tokenSymbol}_2`} style={{ borderBottom: !expand ? 'none' : `solid 2px #8884` }}>
           <td colSpan={6}>
             <Row style={{ justifyContent: "stretch", alignItems: "flex-start", padding: "0em 0.5em" }}>
-              <div style={{ flex: 4 }}>
+              <div style={{ flex: 3 }}>
                 <Row>
                   <div style={{ width: "10em", textAlign: "left" }}>Vault APY:</div>
                   <div>{(yieldAPY * 100).toFixed(2)}%</div>
@@ -127,13 +127,17 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
                 </Row>
               </div>
               <div style={{ flex: 3 }}>
-                <Row>
+                {/* <Row>
                   <div style={{ width: "10em", textAlign: "left" }}>Wallet:</div>
                   <div>{getBalanceNumber(walletBalance).toFixed(4)}</div>
+                </Row> */}
+                <Row>
+                  <div style={{ width: "10em", textAlign: "left" }}>Deposit:</div>
+                  <div>{getBalanceNumber(yieldBalance).toFixed(4)} {tokenSymbol}</div>
                 </Row>
                 <Row>
-                  <div style={{ width: "10em", textAlign: "left" }}>Vault:</div>
-                  <div>{getBalanceNumber(share).toFixed(4)}</div>
+                  <div style={{ width: "10em", textAlign: "left" }}>Vault Share:</div>
+                  <div>{getBalanceNumber(share).toFixed(4)} s{tokenSymbol}</div>
                 </Row>
               </div>
               <div style={{ flex: 2 }}>
@@ -143,7 +147,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
             <hr style={{ opacity: "0.2", padding: "0 2em" }} />
 
             <Row style={{ justifyContent: "stretch", alignItems: "flex-start", padding: "0em 0.5em" }}>
-              <div style={{ flex: 4 }}>
+              <div style={{ flex: 3 }}>
                 <Row>
                   <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} APY:</div>
                   <div>{(Number(yieldFarmAPY) * 100).toFixed(2)}%</div>
@@ -163,16 +167,24 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
               </div>
               <div style={{ flex: 3 }}>
                 <Row>
-                  <div style={{ width: "10em", textAlign: "left" }}>Vault & Farm:</div>
-                  <div>{getBalanceNumber(vaultAndFarmBalance).toFixed(4)}</div>
+                  <div style={{ width: "10em", textAlign: "left" }}>Stake:</div>
+                  <div>{getBalanceNumber(vaultAndFarmBalance).toFixed(4)} s{tokenSymbol}</div>
                 </Row>
                 <Row>
-                  <div style={{ width: "10em", textAlign: "left" }}>Pending {rewardToken}:</div>
-                  <div>{getBalanceNumber(pendingFarming).toFixed(2)}</div>
+                  <div style={{ width: "10em", textAlign: "left" }}>Pending:</div>
+                  <div>{getBalanceNumber(pendingFarming).toFixed(2)} {rewardToken}</div>
                 </Row>
               </div>
               <div style={{ flex: 2 }}>
-                <StackAction vault={vaultData} reloadToken={vaultData.reloadToken} vaultStackApproved={vaultStackApproved} account={account} tokenBalance={share} depositBalance={vaultAndFarmBalance} />
+                <StackAction
+                  vault={vaultData}
+                  reloadToken={vaultData.reloadToken}
+                  vaultStackApproved={vaultStackApproved}
+                  account={account} 
+                  tokenBalance={share} 
+                  depositBalance={vaultAndFarmBalance} 
+                  pendingHarvest={pendingFarming}
+                />
               </div>
             </Row>
 

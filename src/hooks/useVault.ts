@@ -14,80 +14,6 @@ import { QuoteToken } from 'config/constants/types'
 import { useERC20ABI, useStrategy, } from './useContract'
 
 
-
-const useBalance = ({ tokenAddress, account, updateToken }) => {
-  const [walletBalance, setWalletBalance] = useState(0)
-  const tokenAbi = useERC20ABI()
-
-  useEffect(() => {
-    String(updateToken);
-    if (account) {
-      callMethodWithPool(
-        tokenAddress,
-        <any>tokenAbi,
-        "balanceOf",
-        [account],
-      )
-        .then(balance => {
-          setWalletBalance(Number(balance) / (10 ** 18))
-        })
-        .catch(e => console.error(e));
-    }
-  }, [account, tokenAbi, tokenAddress, setWalletBalance, updateToken]);
-
-  return walletBalance
-}
-
-const useAllowance = ({ tokenAddress, allowanceAddress, account, updateToken }) => {
-  const [walletApprove, setWalletApprove] = useState(false)
-  const tokenAbi = useERC20ABI()
-
-  useEffect(() => {
-    String(updateToken);
-    if (account) {
-      callMethodWithPool(
-        tokenAddress,
-        <any>tokenAbi,
-        "allowance",
-        [account, allowanceAddress],
-      )
-        .then(allowed => {
-          setWalletApprove(Number(allowed) / (10 ** 18) >= 100000000)
-        })
-        .catch(e => console.error(e));
-    }
-  }, [account, allowanceAddress, tokenAddress, tokenAbi, setWalletApprove, updateToken]);
-
-
-  return walletApprove
-}
-
-
-const useFarmingBalance = ({ account, pid, updateToken }) => {
-  const [farmingBalance, setFarmingBalance] = useState(0)
-  const masterChefAddress = getVaultMasterChefAddress()
-  const masterChefABI = masterChef
-
-  useEffect(() => {
-    String(updateToken);
-    if (account) {
-      callMethodWithPool(
-        masterChefAddress,
-        <any>masterChefABI,
-        "userInfo",
-        [pid, account],
-      ).then(([amount]) => {
-        setFarmingBalance(Number(amount) / (10 ** 18))
-      }).catch(e => console.error(e));
-    }
-  }, [account, updateToken, setFarmingBalance, pid, masterChefAddress, masterChefABI]);
-
-  return farmingBalance
-}
-
-
-
-
 export const fetchPancakeRate = async ({ baseAddress, lpAdress, quoteAddress }) => {
   const erc20ABI = <any>erc20
   const [
@@ -185,7 +111,7 @@ export const useVaults = () => {
 
 export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock, bnbBusdRate }: { currentBlock: number, bnbBusdRate: BigNumber }) => {
 
-  const deltaBlock = Number(BLOCKS_PER_HOUR) * 36
+  const deltaBlock = Number(BLOCKS_PER_HOUR) * 48
 
   const allVaultsAPY = await Promise.all(vaults.map(async vault => {
 

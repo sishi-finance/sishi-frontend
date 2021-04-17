@@ -26,6 +26,7 @@ interface VaultCardActionsProps {
 
 const IconButtonWrapper = styled.div`
   display: flex;
+  margin-left: auto;
   svg {
     width: 20px;
   }
@@ -73,11 +74,11 @@ const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken, acco
   }
 
   return (
-    <Flex justifyContent="space-between" alignItems="center">
+    <Flex justifyContent="right" alignItems="center" marginLeft="auto">
       {!account
         ? <UnlockButton mt="8px" fullWidth size="sm"/>
         : <>
-          <Heading color={rawStakedBalance === 0 ? 'textDisabled' : 'text'} mr="6px">{displayBalance}</Heading>
+          {/* <Heading color={rawStakedBalance === 0 ? 'textDisabled' : 'text'} mr="6px">{displayBalance}</Heading> */}
           {renderStakingButtons()}
         </>
       }

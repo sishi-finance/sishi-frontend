@@ -17,6 +17,7 @@ interface VaultCardActionsProps {
   reloadToken: any,
   depositBalance?: BigNumber
   tokenBalance?: BigNumber
+  pendingHarvest?: BigNumber
   tokenName?: string,
   tokenDecimal?: number,
   pid?: number
@@ -27,27 +28,30 @@ interface VaultCardActionsProps {
 
 const IconButtonWrapper = styled.div`
   display: flex;
+  margin-left: auto;
   svg {
     width: 20px;
   }
 `
 
-const VaultStackAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken, vaultStackApproved, account, depositBalance, tokenBalance, tokenName, depositFeeBP, tokenDecimal = 18 }) => {
+const VaultStackAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken, pendingHarvest, vaultStackApproved, account, depositBalance, tokenBalance, tokenName, depositFeeBP, tokenDecimal = 18 }) => {
   const TranslateString = useI18n()
   const { onStack } = useVaultStack(vault, reloadToken)
   const { onUnstack } = useVaultUnstack(vault, reloadToken)
   const rawStakedBalance = getBalanceNumber(depositBalance, tokenDecimal)
   const rawTokenBalance = getBalanceNumber(tokenBalance, tokenDecimal)
-  const displayBalance = rawStakedBalance.toLocaleString()
+  // const displayBalance = rawStakedBalance.toLocaleString()
   const [requestedApproval, setRequestedApproval] = useState(false)
+  const [requestedHarvest, setRequestedHarvest] = useState(false)
   const { onApprove } = useVaultStackApprove(vault, reloadToken)
   const handleApprove = useCallback(async () => {
     try {
       setRequestedApproval(true)
       await onApprove()
-      setRequestedApproval(false)
     } catch (e) {
       console.error(e)
+    } finally {
+      setRequestedApproval(false)
     }
   }, [onApprove])
 
@@ -55,12 +59,28 @@ const VaultStackAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken,
   const [onPresentDeposit] = useModal(
     <DepositModal max={tokenBalance} onConfirm={onStack} tokenName={tokenName} depositFeeBP={depositFeeBP} tokenDecimal={tokenDecimal} />,
   )
+
   const [onPresentWithdraw] = useModal(
     <WithdrawModal max={depositBalance} onConfirm={onUnstack} tokenName={tokenName} tokenDecimal={tokenDecimal} />,
   )
 
+  const onHarvest = useCallback(async () => {
+    try {
+      setRequestedHarvest(true)
+      await onStack("0")
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setRequestedHarvest(false)
+    }
+  },[onStack, setRequestedHarvest])
+
   const renderStakingButtons = () => {
     return vaultStackApproved ? <IconButtonWrapper>
+      <Button size="sm" variant="tertiary" mr="6px" onClick={onHarvest} disabled={requestedHarvest}>
+        Harvest 
+        {/* {getBalanceNumber(pendingHarvest, tokenDecimal).toFixed(2)} */}
+      </Button>
       <IconButton size="sm" variant="tertiary" onClick={onPresentWithdraw} mr="6px" disabled={rawStakedBalance === 0}>
         <MinusIcon color="primary" />
       </IconButton>
@@ -73,11 +93,11 @@ const VaultStackAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken,
   }
 
   return (
-    <Flex justifyContent="space-between" alignItems="center">
+    <Flex justifyContent="space-between" alignItems="right">
       {!account
-        ? <UnlockButton mt="8px" fullWidth size="sm"/>
+        ? <UnlockButton mt="8px" fullWidth size="sm" />
         : <>
-          <Heading color={rawStakedBalance === 0 ? 'textDisabled' : 'text'} mr="6px">{displayBalance}</Heading>
+          {/* <Heading color={rawStakedBalance === 0 ? 'textDisabled' : 'text'} mr="6px">{displayBalance}</Heading> */}
           {renderStakingButtons()}
         </>
       }
