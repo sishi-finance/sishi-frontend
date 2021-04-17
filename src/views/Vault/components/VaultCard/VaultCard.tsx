@@ -107,10 +107,10 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
           {(((yieldRoiDay || 0) + Number(yieldFarmRoi)) * 100).toFixed(2)}%
         </td>
         <td>
-          ${getBalanceNumber(yieldTVLUSD).toFixed(2)}
+          $ {getBalanceNumber(yieldTVLUSD).toFixed(2)}
         </td>
         <td>
-          ${getBalanceNumber(walletBalanceUSD).toFixed(2)}
+          $ {getBalanceNumber(walletBalanceUSD).toFixed(2)}
         </td>
       </VaultRow>
       {
@@ -177,7 +177,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
                 </Row>
                 <Row>
                   <div style={{ width: "10em", textAlign: "left" }}>Earned:</div>
-                  <div>{getBalanceNumber(pendingFarming).toFixed(2)} {rewardToken} ~ ${getBalanceNumber(pendingFarmingUSD).toFixed(2)}</div>
+                  <div>{getBalanceNumber(pendingFarming).toFixed(2)} {rewardToken} ~ $ {getBalanceNumber(pendingFarmingUSD).toFixed(2)}</div>
                 </Row>
               </div>
               <div style={{ flex: 2 }}>
