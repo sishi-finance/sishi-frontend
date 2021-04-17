@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import styled, { keyframes } from 'styled-components'
 import { Flex, Text, Skeleton, Image, Tag, Button, LinkExternal } from '@pancakeswap-libs/uikit'
@@ -34,7 +34,8 @@ interface VaultCardProps {
 }
 
 const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, account, cakePrice, bnbPrice, ySishiPrice }) => {
-  const TranslateString = useI18n()
+  // console.log("[VaultCard] Render")
+  // const TranslateString = useI18n()
   const { tokenSymbol, tag } = vaultData
   const [expand, setExpand] = useState(false)
   const farmImage = vaultData.tokenSymbol.toLowerCase().replace(" lp", "")
@@ -44,49 +45,73 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
   const yieldRoiDay = (vaultData.calc.roiDay)
   const yieldTVL = (vaultData.calc.tvl)
   const walletBalance = (vaultData.calc.walletBalance)
-  const share = new BigNumber(vaultData.calc.share).decimalPlaces(0)
   const pricePerFullShare = (vaultData.pricePerFullShare)
   const mulCurrent = (vaultData.mulCurrent)
   const tokenPrice = vaultData.tokenBUSDRate
-  const yieldBalance = (new BigNumber(share))
-    .multipliedBy(new BigNumber(pricePerFullShare))
-    .dividedBy(1e18)
-    .decimalPlaces(0)
 
-  const yieldTVLUSD = new BigNumber(yieldTVL)
-    .times(new BigNumber(tokenPrice))
-    .dividedBy(1e18)
-  const walletBalanceUSD = new BigNumber(walletBalance)
-    .times(new BigNumber(tokenPrice))
-    .dividedBy(1e18)
   const {
     pendingFarming, vaultAndFarmBalance, vaultStackApproved, lpToken,
     perShare, sharePerBlock,
   } = vaultData
 
-  // console.log("vaultAndFarmBalance", Number(vaultAndFarmBalance) / 1e18)
+  const share = useMemo(
+    () => new BigNumber(vaultData.calc.share)
+      .decimalPlaces(0),
+    [vaultData.calc.share]
+  )
 
+  const yieldBalance = useMemo(
+    () => (new BigNumber(share))
+      .multipliedBy(new BigNumber(pricePerFullShare))
+      .dividedBy(1e18)
+      .decimalPlaces(0),
+    [share, pricePerFullShare]
+  )
 
+  const yieldTVLUSD = useMemo(
+    () => new BigNumber(yieldTVL)
+      .times(new BigNumber(tokenPrice))
+      .dividedBy(1e18),
+    [yieldTVL, tokenPrice]
+  )
 
+  const walletBalanceUSD = useMemo(
+    () => new BigNumber(walletBalance)
+      .times(new BigNumber(tokenPrice))
+      .dividedBy(1e18),
+    [walletBalance, tokenPrice]
+  )
 
-  const yieldFarmRoi = new BigNumber(perShare)
-    .times(new BigNumber(ySishiPrice))
-    .times(BLOCKS_PER_DAY)
-    .div(new BigNumber(tokenPrice))
-    .dividedBy(1e18)
+  const yieldFarmRoi = useMemo(
+    () => new BigNumber(perShare)
+      .times(new BigNumber(ySishiPrice))
+      .times(BLOCKS_PER_DAY)
+      .div(new BigNumber(tokenPrice))
+      .dividedBy(1e18),
+    [perShare, ySishiPrice, tokenPrice]
+  )
 
-  const pendingFarmingUSD = new BigNumber(pendingFarming)
-    .times(new BigNumber(ySishiPrice))
-    .dividedBy(1e18)
+  const pendingFarmingUSD = useMemo(
+    () => new BigNumber(pendingFarming)
+      .times(new BigNumber(ySishiPrice))
+      .dividedBy(1e18),
+    [pendingFarming, ySishiPrice]
+  )
 
+  const yieldFarmAPR = useMemo(
+    () => yieldFarmRoi.multipliedBy(365),
+    [yieldFarmRoi]
+  )
 
-  const yieldFarmAPR = yieldFarmRoi.multipliedBy(365)
-  const yieldFarmAPY = yieldFarmRoi.plus(1).pow(365).minus(1)
+  const yieldFarmAPY = useMemo(
+    () => yieldFarmRoi.plus(1).pow(365).minus(1),
+    [yieldFarmRoi]
+  )
 
   const onExpandClick = useCallback(() => setExpand(!expand), [setExpand, expand])
 
   return (
-    <>
+    <div style={{ display: "contents" }}>
       <VaultRow key={`${vault.tokenSymbol}_1`} style={{ borderBottom: expand ? 'none' : `solid 2px #8884` }} onClick={onExpandClick}>
         <td style={{ width: "200px", minWidth: "200px" }}>
           <Flex flexDirection="row" alignItems="center" >
@@ -132,10 +157,6 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
                 </Row>
               </div>
               <div style={{ flex: 3 }}>
-                {/* <Row>
-                  <div style={{ width: "10em", textAlign: "left" }}>Wallet:</div>
-                  <div>{getBalanceNumber(walletBalance).toFixed(4)}</div>
-                </Row> */}
                 <Row>
                   <div style={{ width: "10em", textAlign: "left" }}>Deposit:</div>
                   <div>{getBalanceNumber(yieldBalance).toFixed(4)} {tokenSymbol}</div>
@@ -146,7 +167,12 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
                 </Row>
               </div>
               <div style={{ flex: 2 }}>
-                <VaultAction vault={vaultData} reloadToken={vaultData.reloadToken} account={account} tokenBalance={walletBalance} depositBalance={share} />
+                <VaultAction
+                  vault={vaultData}
+                  reloadToken={vaultData.reloadToken}
+                  account={account}
+                  tokenBalance={walletBalance}
+                  depositBalance={share} />
               </div>
             </Row>
             <hr style={{ opacity: "0.2", padding: "0 2em" }} />
@@ -167,7 +193,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
                 </Row>
                 <Row>
                   <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} Weight:</div>
-                  <div>{mulCurrent/100}X</div>
+                  <div>{mulCurrent / 100}X</div>
                 </Row>
               </div>
               <div style={{ flex: 3 }}>
@@ -185,16 +211,13 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
                   vault={vaultData}
                   reloadToken={vaultData.reloadToken}
                   vaultStackApproved={vaultStackApproved}
-                  account={account} 
-                  tokenBalance={share} 
-                  depositBalance={vaultAndFarmBalance} 
+                  account={account}
+                  tokenBalance={share}
+                  depositBalance={vaultAndFarmBalance}
                   pendingHarvest={pendingFarming}
                 />
               </div>
             </Row>
-
-            {/* <hr style={{ opacity: "0.2", padding: "0 2em" }} /> */}
-
             <Row style={{ justifyContent: "stretch", marginTop: "1em", padding: "0em 0.5em" }}>
               <LinkExternal href={`https://bscscan.com/address/${vaultData.vault}`} fontSize="12" marginRight="3">Vault contract</LinkExternal>
               <LinkExternal href={`https://bscscan.com/address/${vaultData.strategy}`} fontSize="12" marginRight="3">Strategy contract</LinkExternal>
@@ -202,7 +225,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
           </td>
         </VaultRow>
       }
-    </>
+    </div>
   )
 }
 

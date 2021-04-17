@@ -53,12 +53,17 @@ const Table = styled.table`
 
 const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, ySishiPrice, currentBlock }> = ({ account, ethereum, allVaults, cakePrice, bnbPrice, ySishiPrice, currentBlock, }) => {
 
-  console.log("[Rerender]", { cakePrice, bnbPrice, ySishiPrice, currentBlock })
+  // console.log("[Rerender]", {
+  //   cakePrice: String(cakePrice),
+  //   bnbPrice: String(bnbPrice),
+  //   ySishiPrice: String(ySishiPrice),
+  //   currentBlock: String(currentBlock)
+  // })
 
   const [token, setToken] = useState(Math.random())
   const vaultDatas = useVaultsData(allVaults, { currentBlock, bnbBusdRate: bnbPrice, sishiBusdRate: ySishiPrice, token })
   const vaultDataUsers = useVaultsUserData(allVaults, { account, token })
-  const reloadToken = useCallback(() => setToken(Math.random()),[setToken])
+  const reloadToken = useCallback(() => setToken(Math.random()), [setToken])
 
   const allMergeVaults = useMemo(
     () => {
@@ -78,6 +83,13 @@ const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, y
     [allVaults, vaultDatas, vaultDataUsers, reloadToken]
   )
 
+  const allVaultRender = useMemo(() => {
+    return allVaults.map((vault, index) => (<VaultCard
+      key={vault.tokenSymbol}
+      {...{ vault, vaultData: allMergeVaults[index], account, bnbPrice, cakePrice, ethereum, ySishiPrice }}
+    />))
+  }, [allVaults, allMergeVaults, account, bnbPrice, cakePrice, ethereum, ySishiPrice])
+
 
   return (
     <Page>
@@ -94,7 +106,7 @@ const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, y
         <Text color="red" fontSize="12px">
           Risk Warning: Sishi Vault is in beta testing, it is unaudited and smart contracts were forked from
           <a href="https://yearn.finance/" target="_blank" rel="noreferrer"> Yearn Finance</a>.
-          <br/>
+          <br />
           ySISHI is a test token, it has no value.
         </Text>
         <br />
@@ -114,12 +126,7 @@ const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, y
               </tr>
             </thead>
             <tbody>
-              {
-                allVaults.map((vault, index) => (<VaultCard
-                  key={vault.tokenSymbol}
-                  {...{ vault, vaultData: allMergeVaults[index], account, bnbPrice, cakePrice, ethereum, ySishiPrice }}
-                />))
-              }
+              {allVaultRender}
             </tbody>
           </Table>
 
@@ -131,26 +138,26 @@ const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, y
 
 const Home: React.FC = () => {
   const allVaults = useVaults()
-  const cakePrice = (usePriceCakeBusd())
-  const bnbPrice = (usePriceBnbBusd())
-  const ySishiPrice = (useYSISHIPrice())
+  const cakePrice = String(usePriceCakeBusd())
+  const bnbPrice = String(usePriceBnbBusd())
+  const ySishiPrice = String(useYSISHIPrice())
   const currentBlock = Math.floor(useBlock() / 30) * 30
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
 
   return useMemo(
     () => {
-      console.log("[compare]", [cakePrice, bnbPrice, ySishiPrice, currentBlock])
+      // console.log("[compare]", [cakePrice, bnbPrice, ySishiPrice, currentBlock])
       return <VaultHome
         allVaults={allVaults}
-        cakePrice={(cakePrice)}
-        bnbPrice={(bnbPrice)}
-        ySishiPrice={(ySishiPrice)}
+        cakePrice={new BigNumber(cakePrice)}
+        bnbPrice={new BigNumber(bnbPrice)}
+        ySishiPrice={new BigNumber(ySishiPrice)}
         currentBlock={currentBlock}
         account={account}
         ethereum={ethereum}
       />
     },
-    [allVaults, account, ethereum, cakePrice, bnbPrice, ySishiPrice, currentBlock]
+    [allVaults, cakePrice, bnbPrice, ySishiPrice, currentBlock, account, ethereum,]
   )
 }
 
