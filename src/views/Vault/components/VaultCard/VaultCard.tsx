@@ -75,6 +75,10 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
     .div(new BigNumber(tokenPrice))
     .dividedBy(1e18)
 
+  const pendingFarmingUSD = new BigNumber(pendingFarming)
+    .times(new BigNumber(ySishiPrice))
+    .dividedBy(1e18)
+
 
   const yieldFarmAPR = yieldFarmRoi.multipliedBy(365)
   const yieldFarmAPY = yieldFarmRoi.plus(1).pow(365).minus(1)
@@ -172,8 +176,8 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
                   <div>{getBalanceNumber(vaultAndFarmBalance).toFixed(4)} s{tokenSymbol}</div>
                 </Row>
                 <Row>
-                  <div style={{ width: "10em", textAlign: "left" }}>Pending:</div>
-                  <div>{getBalanceNumber(pendingFarming).toFixed(2)} {rewardToken}</div>
+                  <div style={{ width: "10em", textAlign: "left" }}>Earned:</div>
+                  <div>{getBalanceNumber(pendingFarming).toFixed(2)} {rewardToken} ~ ${getBalanceNumber(pendingFarmingUSD).toFixed(2)}</div>
                 </Row>
               </div>
               <div style={{ flex: 2 }}>
