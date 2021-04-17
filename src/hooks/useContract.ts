@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AbiItem } from 'web3-utils'
 import { ContractOptions } from 'web3-eth-contract'
 import useWeb3 from 'hooks/useWeb3'
-import { getMasterChefAddress, getCakeAddress, getLotteryAddress, getLotteryTicketAddress, getVaultAddress, getStrategyAddress, getControllerAddress, getVaultMasterChefAddress } from 'utils/addressHelpers'
+import { getMasterChefAddress, getCakeAddress, getLotteryAddress, getLotteryTicketAddress, getControllerAddress, getVaultMasterChefAddress } from 'utils/addressHelpers'
 import { poolsConfig } from 'config/constants'
 import { PoolCategory } from 'config/constants/types'
 import ifo from 'config/abi/ifo.json'
@@ -17,6 +17,7 @@ import sousChefBnb from 'config/abi/sousChefBnb.json'
 import sishistrategy from 'config/abi/sishistrategy.json'
 import sishivault from 'config/abi/sishivault.json'
 import sishicontroller from 'config/abi/controller.json'
+import { Vault } from 'config/constants/vaults'
 
 const useContract = (abi: AbiItem, address: string, contractOptions?: ContractOptions) => {
   const web3 = useWeb3()
@@ -72,11 +73,6 @@ export const useMasterchef = () => {
   return useContract(abi, getMasterChefAddress())
 }
 
-export const useVault = (token: string) => {
-  const abi = (sishivault as unknown) as AbiItem
-  return useContract(abi, getVaultAddress(token))
-}
-
 export const useVaultMasterChef = () => {
   const abi = (masterChef as unknown) as AbiItem
   return useContract(abi, getVaultMasterChefAddress())
@@ -98,9 +94,15 @@ export const useVaultController = () => {
 }
 
 
-export const useStrategy = (token: string) => {
+export const useVault = (vault: Vault) => {
+  const abi = (sishivault as unknown) as AbiItem
+  return useContract(abi, vault.vault)
+}
+
+
+export const useStrategy = (vault: Vault) => {
   const abi = (sishistrategy as unknown) as AbiItem
-  return useContract(abi, getStrategyAddress(token))
+  return useContract(abi, vault.strategy)
 }
 
 export const useStrategyABI = () => {

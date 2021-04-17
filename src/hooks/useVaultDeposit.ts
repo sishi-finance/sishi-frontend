@@ -8,7 +8,7 @@ import { useERC20, useStrategy, useVault } from './useContract';
 export const useVaultDeposit = (vault: Vault, reloadToken) => {
   // const dispatch = useDispatch();
   const { account } = useWallet();
-  const vaultContract = useVault(vault.tokenSymbol);
+  const vaultContract = useVault(vault);
 
   const handleDeposit = useCallback(
     async (amount: string) => {
@@ -27,7 +27,7 @@ export const useVaultDeposit = (vault: Vault, reloadToken) => {
 export const useVaultWithdrawal = (vault: Vault, reloadToken) => {
   // const dispatch = useDispatch()
   const { account } = useWallet()
-  const vaultContract = useVault(vault.tokenSymbol);
+  const vaultContract = useVault(vault);
   const handleWithdrawal = useCallback(
     async (amount: string) => {
       const txHash = await vaultWithdrawal(vaultContract, amount, account)
@@ -43,7 +43,7 @@ export const useVaultWithdrawal = (vault: Vault, reloadToken) => {
 
 export const useVaultApprove = (vault: Vault, reloadToken) => {
   const tokenContract = useERC20(vault.tokenAddress);
-  const vaultContract = useVault(vault.tokenSymbol);
+  const vaultContract = useVault(vault);
 
   const { account }: { account: string } = useWallet()
 
@@ -62,7 +62,7 @@ export const useVaultApprove = (vault: Vault, reloadToken) => {
 
 export const useVaultHarvest = (vault: Vault, reloadToken) => {
   // const tokenContract = useERC20(vault.tokenAddress);
-  const strategyContract = useStrategy(vault.tokenSymbol);
+  const strategyContract = useStrategy(vault);
   const [loading, setLoading] = useState(false)
 
   const { account }: { account: string } = useWallet()

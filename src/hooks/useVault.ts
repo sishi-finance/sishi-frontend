@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { BLOCKS_PER_DAY, BLOCKS_PER_HOUR } from 'config'
 import BigNumber from 'bignumber.js/bignumber'
-import { Vault, vaultLists, VaultWithData } from 'config/constants/vaults'
+import { MasterChefVaultAddress, Vault, vaultLists, VaultWithData } from 'config/constants/vaults'
 import { provider, } from 'web3-core'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import callMethodWithPool, { callMethodWithPoolFactory } from 'utils/pools'
@@ -9,8 +9,9 @@ import masterChef from 'config/abi/masterchef.json'
 import { getMasterChefAddress, getVaultMasterChefAddress } from 'utils/addressHelpers'
 import contracts from 'config/constants/contracts'
 import erc20 from 'config/abi/erc20.json'
+import sishivault from 'config/abi/sishivault.json'
 import useBlock from './useBlock'
-import useContract, { useERC20, useERC20ABI, useMasterchef, useStrategy, useStrategyABI, useVault, useVaultABI } from './useContract'
+import useContract, { useERC20, useERC20ABI, useMasterchef, useStrategyABI, useVault, useStrategy, useVaultABI } from './useContract'
 
 
 
@@ -150,11 +151,12 @@ export const useVaultFarmingShare = ({ pid, vaultAddress }) => {
   }
 }
 
-export const useVaultAPY = ({ tokenSymbol, tokenAddress, vault: vaultAddress, fromBlock = 0 }: Vault) => {
+export const useVaultAPY = (vault: Vault) => {
+  const { tokenSymbol, tokenAddress, vault: vaultAddress, fromBlock = 0 } = vault
   const [updateToken, setUpdateToken] = useState(0)
   const vaultABI = useVaultABI()
   // const vaultContract = useVault(tokenSymbol)
-  const agoVaultContract = useVault(tokenSymbol)
+  const agoVaultContract = useVault(vault)
   const [[pricePerFullShare, loaded1], setPricePerFullShare] = useState([new BigNumber(0), false])
   const [[oldPricePerFullShare, loaded2], setOldPricePerFullShare] = useState([new BigNumber(0), false])
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
@@ -346,7 +348,7 @@ export const useVaultFarm = ({ tokenSymbol, tokenAddress, vault: vaultAddress, f
 
 
 export const useVaultHarvestReward = (vault: Vault, account: string) => {
-  const strategyContract = useStrategy(vault.tokenSymbol)
+  const strategyContract = useStrategy(vault)
   const [reloadToken, reload] = useState(0)
   const [strategyResult, setStrategyResult] = useState(null)
   // const [strategyRewardToken, setStrategyToken] = useState('')
@@ -374,6 +376,138 @@ export const useVaultHarvestReward = (vault: Vault, account: string) => {
 export const useVaults = () => {
   return vaultLists
 }
+
+
+
+export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock }: { currentBlock: number }) => {
+
+  const deltaBlock = Number(BLOCKS_PER_HOUR) * 36
+
+  const allVaultsAPY = await Promise.all(vaults.map(async vault => {
+
+    const prevBlock = Math.max(vault.fromBlock + 100, currentBlock - deltaBlock)
+    const callMethodWithAgoPool = callMethodWithPoolFactory(prevBlock)
+
+    const [
+      rawVaultTVL,
+      rawPricePerFullShare,
+      rawPricePerFullShareAgo,
+    ] = await Promise.all([
+      callMethodWithPool(vault.vault, <any>sishivault, "balance", []),
+      callMethodWithPool(vault.vault, <any>sishivault, "getPricePerFullShare", []),
+      callMethodWithAgoPool(vault.vault, <any>sishivault, "getPricePerFullShare", []),
+    ])
+
+    const vaultTVL = new BigNumber(rawVaultTVL)
+    const pricePerFullShare = new BigNumber(rawPricePerFullShare)
+    const pricePerFullShareAgo = new BigNumber(rawPricePerFullShareAgo)
+
+    const roiDay = pricePerFullShare
+      .div(pricePerFullShareAgo)
+      .minus(new BigNumber(1))
+      .multipliedBy(BLOCKS_PER_DAY)
+      .dividedBy(deltaBlock)
+
+    const roiHour = roiDay.dividedBy(24)
+    const roiWeek = roiDay.plus(1).exponentiatedBy(7).minus(1)
+    const roiMonth = roiDay.plus(1).exponentiatedBy(30).minus(1)
+    const roiYear = roiDay.plus(1).exponentiatedBy(365).minus(1)
+
+    return {
+      roiLoaded: true,
+      calc: {
+        roiHour: Number((roiHour).toFixed(10)),
+        roiDay: Number((roiDay).toFixed(10)),
+        roiWeek: Number((roiWeek).toFixed(10)),
+        roiMonth: Number((roiMonth).toFixed(10)),
+        roiYear: Number((roiYear).toFixed(10)),
+        apy: Number((roiYear).toFixed(10)),
+        apr: Number((roiDay.multipliedBy(365))),
+        tvl: Number(vaultTVL.toFixed(10)),
+      },
+    }
+  }))
+
+  return allVaultsAPY
+}
+
+export const fetchVaultUsers = async (vaults: Vault[], account: string) => {
+
+  const allVaultsUser = await Promise.all(vaults.map(async vault => {
+    const [
+      vaultShare,
+      tokenBalance,
+      vaultAllowance,
+    ] = await Promise.all([
+      callMethodWithPool(vault.vault, <any>sishivault, "balanceOf", [account]),
+      callMethodWithPool(vault.tokenAddress, <any>erc20, "balanceOf", [account]),
+      callMethodWithPool(vault.tokenAddress, <any>erc20, "allowance", [account, vault.vault])
+    ])
+
+    return {
+      calc: {
+        share: new BigNumber(vaultShare),
+        walletBalance: new BigNumber(tokenBalance),
+        vaultApproved: Number(vaultAllowance) / (10 ** 18) >= 100000000,
+      },
+    }
+  }))
+
+
+  return allVaultsUser
+}
+
+export const fetchVaultFarms = async (vaults: Vault[]) => {
+  const allVaultFarmsShare = await Promise.all(vaults.map(async vault => {
+
+    const [mulTotal, [, mulCurrent, ,], rawSharePerBlock, rawTotalShare] = await Promise.all([
+      callMethodWithPool(MasterChefVaultAddress, <any>masterChef, "totalAllocPoint", []),
+      callMethodWithPool(MasterChefVaultAddress, <any>masterChef, "poolInfo", [vault.farmPid]),
+      callMethodWithPool(MasterChefVaultAddress, <any>masterChef, "sishiPerBlock", []),
+      callMethodWithPool(vault.vault, <any>erc20, "balanceOf", [MasterChefVaultAddress]),
+    ])
+
+    const sharePerBlock = new BigNumber(rawSharePerBlock)
+    const totalShare = new BigNumber(rawTotalShare)
+
+    return {
+      mulTotal,
+      mulCurrent,
+      perShare: new BigNumber(Number(sharePerBlock))
+        .multipliedBy(new BigNumber(Number(mulCurrent)))
+        .dividedBy(new BigNumber(Number(mulTotal)))
+        .multipliedBy(1e18)
+        .div(new BigNumber(totalShare)),
+      sharePerBlock,
+    }
+  }))
+
+  return allVaultFarmsShare
+}
+
+export const fetchVaultFarmUsers = async (vaults: Vault[], { account }: { account: string }) => {
+  const allVaultFarmUsers = await Promise.all(vaults.map(async vault => {
+
+    const [
+      pendingFarming,
+      farmingAllowance,
+      vaultAndFarmBalance,
+    ] = await Promise.all([
+      callMethodWithPool(MasterChefVaultAddress, <any>masterChef, "pendingSishi", [vault.farmPid, account]),
+      callMethodWithPool(vault.vault, <any>erc20, "allowance", [account, MasterChefVaultAddress]),
+      callMethodWithPool(MasterChefVaultAddress, <any>masterChef, "userInfo", [vault.farmPid, account],)
+    ])
+
+    return {
+      vaultStackApproved: Number(farmingAllowance) / (10 ** 18) >= 100000000,
+      vaultAndFarmBalance: new BigNumber(vaultAndFarmBalance),
+      pendingFarming: new BigNumber(pendingFarming),
+    }
+  }))
+
+  return allVaultFarmUsers
+}
+
 
 
 export default useVaultAPY

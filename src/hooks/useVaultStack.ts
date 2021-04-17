@@ -43,7 +43,7 @@ export const useVaultUnstack = (vault: Vault, reloadToken) => {
 }
 
 export const useVaultStackApprove = (vault: Vault, reloadToken) => {
-  const vaultContract = useVault(vault.tokenSymbol);
+  const vaultContract = useVault(vault);
   const masterChef = useVaultMasterChef()
 
   const { account }: { account: string } = useWallet()
