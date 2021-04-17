@@ -5,10 +5,11 @@ import { Flex, Text, Skeleton, Image, Tag, Button, LinkExternal } from '@pancake
 import { provider } from 'web3-core'
 import useI18n from 'hooks/useI18n'
 import { Vault, VaultWithData } from 'config/constants/vaults'
-import {  useVaultHarvestReward } from 'hooks/useVault'
+import { useVaultHarvestReward } from 'hooks/useVault'
 import { useVaultHarvest } from 'hooks/useVaultDeposit'
 import CardValue from 'views/Home/components/CardValue'
 import Spacer from 'components/Spacer'
+import UnlockButton from 'components/UnlockButton'
 
 const Row = styled.div`
   align-items: center;
@@ -47,16 +48,19 @@ const VaultHarvestCard: React.FC<VaultCardProps> = ({ vault, ethereum, cakePrice
         </td>
         <td style={{ textAlign: "left" }}>
           <Flex>
-            <CardValue value={Number(reward)} decimals={8} prefix="" fontSize="inherit"/>
-            <Spacer/>
-            <b> {vault.harvestReward || vault.tokenSymbol }  </b>
+            <CardValue value={Number(reward)} decimals={8} prefix="" fontSize="inherit" />
+            <Spacer />
+            <b> {vault.harvestReward || vault.tokenSymbol}  </b>
           </Flex>
           {/* {Number(reward).toFixed(8)} {rewardToken} */}
         </td>
         <td style={{ textAlign: "left" }}>
-          <Button onClick={() => onHarvest().then(reloadToken)} size="sm" disabled={loading}>
-            Harvest
-          </Button>
+          {!account
+            ? <UnlockButton mt="8px" size="sm" />
+            : <Button onClick={() => onHarvest().then(reloadToken)} size="sm" disabled={loading}>
+              Harvest
+            </Button>
+          }
         </td>
       </VaultRow>
     </>

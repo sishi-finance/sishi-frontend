@@ -68,7 +68,7 @@ const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken, acco
       <IconButton size="sm" variant="tertiary" onClick={onPresentDeposit} disabled={rawTokenBalance === 0}>
         <AddIcon color="primary" />
       </IconButton>
-    </IconButtonWrapper> : <Button size="sm" disabled={requestedApproval} onClick={handleApprove}>
+    </IconButtonWrapper> : <Button size="sm" ml="auto" disabled={requestedApproval} onClick={handleApprove}>
       {TranslateString(999, 'Approve')}
     </Button>
   }
@@ -76,7 +76,7 @@ const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken, acco
   return (
     <Flex justifyContent="right" alignItems="center" marginLeft="auto">
       {!account
-        ? <UnlockButton mt="8px" fullWidth size="sm"/>
+        ? <UnlockButton mt="8px" ml="auto" size="sm"/>
         : <>
           {/* <Heading color={rawStakedBalance === 0 ? 'textDisabled' : 'text'} mr="6px">{displayBalance}</Heading> */}
           {renderStakingButtons()}
