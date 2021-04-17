@@ -46,6 +46,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
   const walletBalance = (vaultData.calc.walletBalance)
   const share = new BigNumber(vaultData.calc.share).decimalPlaces(0)
   const pricePerFullShare = (vaultData.pricePerFullShare)
+  const mulCurrent = (vaultData.mulCurrent)
   const tokenPrice = vaultData.tokenBUSDRate
   const yieldBalance = (new BigNumber(share))
     .multipliedBy(new BigNumber(pricePerFullShare))
@@ -162,7 +163,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
                 </Row>
                 <Row>
                   <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} Weight:</div>
-                  <div>1X</div>
+                  <div>{mulCurrent/100}X</div>
                 </Row>
               </div>
               <div style={{ flex: 3 }}>
