@@ -110,7 +110,7 @@ const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, y
                 <th> Daily</th>
                 <th> TVL</th>
                 <th> Balance</th>
-                <th> </th>
+                {/* <th> </th> */}
               </tr>
             </thead>
             <tbody>
