@@ -201,7 +201,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
       </Flex>
       {
         !farm.isTokenOnly && <Flex justifyContent="space-between" mt="6px">
-          <Text>1 {lpLabel} </Text>
+          <Text>1 {lpLabel}:</Text>
           <Text bold>
             $ {Number(tokenPriceInUSD).toFixed(4)}
           </Text>
