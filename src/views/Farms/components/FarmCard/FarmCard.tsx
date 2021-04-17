@@ -120,6 +120,31 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
     ? `$${Number(totalValue).toLocaleString(undefined, { maximumFractionDigits: 0 })}`
     : '-'
 
+  const tokenPriceInUSD: BigNumber = useMemo(() => {
+    if (!farm.tokenPriceVsQuote)
+      return null
+
+    const priceInQuoteToken = (!farm.isTokenOnly && farm.lpTotalSupply && farm.lpTotalInQuoteToken)
+      ? new BigNumber(farm.lpTotalQuote)
+        .multipliedBy(2)
+        .div(farm.lpTotalSupply)
+      : new BigNumber((farm.tokenPriceVsQuote).toString())
+
+
+    if (farm.quoteTokenSymbol === QuoteToken.BNB)
+      return priceInQuoteToken
+        .times(bnbPrice)
+    if (farm.quoteTokenSymbol === QuoteToken.BUSD){
+      console.log( "[fk]" ,farm.lpSymbol, farm.lpTotalInQuoteToken, farm.lpTotalSupply)
+      return priceInQuoteToken
+    }
+    if (farm.quoteTokenSymbol === QuoteToken.SISHI)
+      return priceInQuoteToken
+        .times(cakePrice)
+
+    return null
+  }, [farm.lpSymbol, farm.lpTotalQuote, bnbPrice, cakePrice, farm.tokenPriceVsQuote, farm.quoteTokenSymbol, farm.isTokenOnly, farm.lpTotalSupply, farm.lpTotalInQuoteToken])
+
   const lpLabel = farm.lpSymbol
   const earnLabel = 'SISHI'
   const farmAPY =
@@ -168,12 +193,20 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
         <Text>{TranslateString(318, 'Earn')}:</Text>
         <Text bold>{earnLabel}</Text>
       </Flex>
-      <Flex justifyContent="space-between">
-        <Text style={{ fontSize: '24px' }}>{TranslateString(10001, 'Deposit Fee')}:</Text>
-        <Text bold style={{ fontSize: '24px' }}>
+      <Flex justifyContent="space-between" mt="6px">
+        <Text>{TranslateString(10001, 'Deposit Fee')}:</Text>
+        <Text bold>
           {farm.depositFeeBP / 100}%
         </Text>
       </Flex>
+      {
+        !farm.isTokenOnly && <Flex justifyContent="space-between" mt="6px">
+          <Text>1 {lpLabel} </Text>
+          <Text bold>
+            $ {Number(tokenPriceInUSD).toFixed(4)}
+          </Text>
+        </Flex>
+      }
       <CardActionsContainer farm={farm} ethereum={ethereum} account={account} />
       <Divider />
       <ExpandableSectionButton

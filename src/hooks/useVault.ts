@@ -14,7 +14,7 @@ import { QuoteToken } from 'config/constants/types'
 import { useERC20ABI, useStrategy, } from './useContract'
 
 
-export const fetchPancakeRate = async ({ baseAddress, lpAdress, quoteAddress }) => {
+export const fetchPancakeRate = async ({ baseAddress, lpAdress, quoteAddress, isLP = false }) => {
   const erc20ABI = <any>erc20
   const [
     tokenBalanceLP,
@@ -24,7 +24,9 @@ export const fetchPancakeRate = async ({ baseAddress, lpAdress, quoteAddress }) 
   ] = await Promise.all([
 
     // Balance of token in the LP contract
-    callMethodWithPool(baseAddress, erc20ABI, 'balanceOf', [lpAdress]),
+    isLP
+      ? callMethodWithPool(lpAdress, erc20ABI, 'totalSupply', [])
+      : callMethodWithPool(baseAddress, erc20ABI, 'balanceOf', [lpAdress]),
 
     // Balance of quote token on LP contract
     callMethodWithPool(quoteAddress, erc20ABI, 'balanceOf', [lpAdress]),
@@ -37,34 +39,37 @@ export const fetchPancakeRate = async ({ baseAddress, lpAdress, quoteAddress }) 
 
   ])
 
-  // console.log(
-  //   { baseAddress, lpAdress, quoteAddress },
-  //   "quoteTokenBlanceLP", String(quoteTokenBlanceLP),
-  //   "tokenDecimals", String(tokenDecimals),
-  //   "tokenBalanceLP", String(tokenBalanceLP),
-  //   "quoteTokenDecimals", String(quoteTokenDecimals),
-  // )
+
+
+
+  if (!isLP) {
+    return new BigNumber(quoteTokenBlanceLP)
+      .multipliedBy(10 ** tokenDecimals)
+      .multipliedBy(1e18)
+      .div(new BigNumber(tokenBalanceLP))
+      .dividedBy(10 ** quoteTokenDecimals)
+  }
+  
   return new BigNumber(quoteTokenBlanceLP)
-    .multipliedBy(10 ** tokenDecimals)
+    .multipliedBy(2)
     .multipliedBy(1e18)
     .div(new BigNumber(tokenBalanceLP))
-    .dividedBy(10 ** quoteTokenDecimals)
 }
 
-export const useLPRate = ({ baseAddress = "", lpAdress = "", quoteAddress = "" } = {}) => {
+export const useLPRate = ({ baseAddress = "", lpAdress = "", quoteAddress = "", isLP = false } = {}) => {
 
   const [rate, setRate] = useState(new BigNumber(0))
 
   useEffect(() => {
 
     if (baseAddress && lpAdress && quoteAddress)
-      fetchPancakeRate({ baseAddress, lpAdress, quoteAddress })
+      fetchPancakeRate({ baseAddress, lpAdress, quoteAddress, isLP })
         .then(r => setRate(r))
     else {
       console.log({ baseAddress, lpAdress, quoteAddress })
       setRate(new BigNumber(1e18))
     }
-  }, [baseAddress, lpAdress, quoteAddress])
+  }, [baseAddress, lpAdress, quoteAddress, isLP])
 
   // /  console.log("useLPRate", Number(rate))
 
@@ -128,7 +133,8 @@ export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock, bnbBusdRat
       vault.lpToken ? fetchPancakeRate({
         baseAddress: vault.tokenAddress,
         lpAdress: vault.lpToken.address,
-        quoteAddress: vault.lpToken.quoteAddress
+        quoteAddress: vault.lpToken.quoteAddress,
+        isLP: !vault.isTokenOnly,
       }) : Promise.resolve(new BigNumber(1e18))
     ])
 
