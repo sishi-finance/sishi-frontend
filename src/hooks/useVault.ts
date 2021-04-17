@@ -327,7 +327,7 @@ export const fetchVaultFarmUsers = async (vaults: Vault[], { account }: { accoun
   return allVaultFarmUsers
 }
 
-export const useVaultsData = (vaults: Vault[], { currentBlock, bnbBusdRate }: { currentBlock: number, bnbBusdRate: BigNumber, sishiBusdRate: BigNumber }) => {
+export const useVaultsData = (vaults: Vault[], { currentBlock, bnbBusdRate, token }: { currentBlock: number, bnbBusdRate: BigNumber, sishiBusdRate: BigNumber, token: any }) => {
 
   const [vaultsAPY, setVaulstAPY] = useState<any[]>(vaults.map(e => ({})))
   const [vaultsFarming, setVaultsFarming] = useState<any[]>(vaults.map(e => ({})))
@@ -335,15 +335,18 @@ export const useVaultsData = (vaults: Vault[], { currentBlock, bnbBusdRate }: { 
 
   
   useEffect(() => {
+    String(token);
     fetchVaultsAPY(vaults, { currentBlock, bnbBusdRate })
       .then(datas => setVaulstAPY(datas));
-  }, [vaults, currentBlock, bnbBusdRate])
+  }, [vaults, currentBlock, bnbBusdRate, token])
 
   useEffect(() => {
+    String(token);
+
     fetchVaultFarms(vaults)
       .then(datas => setVaultsFarming(datas));
 
-  }, [vaults])
+  }, [vaults, token])
 
   return useMemo(
     () => {
@@ -364,26 +367,28 @@ export const useVaultsData = (vaults: Vault[], { currentBlock, bnbBusdRate }: { 
 }
 
 
-export const useVaultsUserData = (vaults: Vault[], { account }: { account: string }) => {
+export const useVaultsUserData = (vaults: Vault[], { account, token }: { account: string, token: any }) => {
   const [vaultUsers, setVaultUsers] = useState<any[]>(vaults.map(e => ({})))
   const [vaultFarmingUsers, setVaultFarmingUsers] = useState<any[]>(vaults.map(e => ({})))
 
   useEffect(() => {
+    String(token);
     if (account)
       fetchVaultUsers(vaults, account)
         .then(datas => setVaultUsers(datas));
     else
       setVaultUsers(vaults.map(e => ({})))
-  }, [vaults, account])
+  }, [vaults, account, token])
 
   useEffect(() => {
+    String(token);
     if (account)
       fetchVaultFarmUsers(vaults, { account })
         .then(datas => setVaultFarmingUsers(datas));
     else
       setVaultFarmingUsers(vaults.map(e => ({})))
 
-  }, [vaults, account])
+  }, [vaults, account, token])
 
   return useMemo(
     () => vaults.map((vault, index) => ({

@@ -14,6 +14,7 @@ import WithdrawModal from '../WithdrawModal'
 
 interface VaultCardActionsProps {
   vault: VaultWithData,
+  reloadToken: any,
   depositBalance?: BigNumber
   tokenBalance?: BigNumber
   tokenName?: string,
@@ -31,15 +32,15 @@ const IconButtonWrapper = styled.div`
   }
 `
 
-const VaultStackAction: React.FC<VaultCardActionsProps> = ({ vault, vaultStackApproved, account, depositBalance, tokenBalance, tokenName, depositFeeBP, tokenDecimal = 18 }) => {
+const VaultStackAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken, vaultStackApproved, account, depositBalance, tokenBalance, tokenName, depositFeeBP, tokenDecimal = 18 }) => {
   const TranslateString = useI18n()
-  const { onStack } = useVaultStack(vault, vault.reloadToken)
-  const { onUnstack } = useVaultUnstack(vault, vault.reloadToken)
+  const { onStack } = useVaultStack(vault, reloadToken)
+  const { onUnstack } = useVaultUnstack(vault, reloadToken)
   const rawStakedBalance = getBalanceNumber(depositBalance, tokenDecimal)
   const rawTokenBalance = getBalanceNumber(tokenBalance, tokenDecimal)
   const displayBalance = rawStakedBalance.toLocaleString()
   const [requestedApproval, setRequestedApproval] = useState(false)
-  const { onApprove } = useVaultStackApprove(vault, vault.reloadToken)
+  const { onApprove } = useVaultStackApprove(vault, reloadToken)
   const handleApprove = useCallback(async () => {
     try {
       setRequestedApproval(true)

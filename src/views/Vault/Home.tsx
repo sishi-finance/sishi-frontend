@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Heading, Text, BaseLayout, Link } from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
@@ -55,13 +55,15 @@ const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, y
 
   console.log("[Rerender]", { cakePrice, bnbPrice, ySishiPrice, currentBlock })
 
-  const vaultDatas = useVaultsData(allVaults, { currentBlock, bnbBusdRate: bnbPrice, sishiBusdRate: ySishiPrice })
-  const vaultDataUsers = useVaultsUserData(allVaults, { account })
-
+  const [token, setToken] = useState(Math.random())
+  const vaultDatas = useVaultsData(allVaults, { currentBlock, bnbBusdRate: bnbPrice, sishiBusdRate: ySishiPrice, token })
+  const vaultDataUsers = useVaultsUserData(allVaults, { account, token })
+  const reloadToken = useCallback(() => setToken(Math.random()),[setToken])
 
   const allMergeVaults = useMemo(
     () => {
       console.log("[allMergeVaults] update")
+      String(reloadToken);
       return allVaults.map((vault, index) => ({
         ...vault,
         ...vaultDatas[index] || {},
@@ -69,10 +71,11 @@ const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, y
         calc: {
           ...vaultDatas[index]?.calc || {},
           ...vaultDataUsers[index]?.calc || {},
-        }
+        },
+        reloadToken,
       }))
     },
-    [allVaults, vaultDatas, vaultDataUsers]
+    [allVaults, vaultDatas, vaultDataUsers, reloadToken]
   )
 
 

@@ -137,7 +137,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
                 </Row>
               </div>
               <div style={{ flex: 2 }}>
-                <VaultAction vault={vaultData} account={account} tokenBalance={walletBalance} depositBalance={share} />
+                <VaultAction vault={vaultData} reloadToken={vaultData.reloadToken} account={account} tokenBalance={walletBalance} depositBalance={share} />
               </div>
             </Row>
             <hr style={{ opacity: "0.2", padding: "0 2em" }} />
@@ -172,7 +172,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
                 </Row>
               </div>
               <div style={{ flex: 2 }}>
-                <StackAction vault={vaultData} vaultStackApproved={vaultStackApproved} account={account} tokenBalance={share} depositBalance={vaultAndFarmBalance} />
+                <StackAction vault={vaultData} reloadToken={vaultData.reloadToken} vaultStackApproved={vaultStackApproved} account={account} tokenBalance={share} depositBalance={vaultAndFarmBalance} />
               </div>
             </Row>
 

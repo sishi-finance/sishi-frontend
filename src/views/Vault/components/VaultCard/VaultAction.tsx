@@ -14,6 +14,7 @@ import WithdrawModal from '../WithdrawModal'
 
 interface VaultCardActionsProps {
   vault: VaultWithData,
+  reloadToken: any
   depositBalance?: BigNumber
   tokenBalance?: BigNumber
   tokenName?: string,
@@ -30,16 +31,16 @@ const IconButtonWrapper = styled.div`
   }
 `
 
-const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, account, depositBalance, tokenBalance, tokenName, depositFeeBP, tokenDecimal = 18 }) => {
+const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken, account, depositBalance, tokenBalance, tokenName, depositFeeBP, tokenDecimal = 18 }) => {
   const TranslateString = useI18n()
-  const { onDeposit } = useVaultDeposit(vault, vault.reloadToken)
-  const { onWithdrawal } = useVaultWithdrawal(vault, vault.reloadToken)
+  const { onDeposit } = useVaultDeposit(vault, reloadToken)
+  const { onWithdrawal } = useVaultWithdrawal(vault, reloadToken)
   const rawStakedBalance = getBalanceNumber(depositBalance, tokenDecimal)
   const rawTokenBalance = getBalanceNumber(tokenBalance, tokenDecimal)
   const displayBalance = rawStakedBalance.toLocaleString()
   const [requestedApproval, setRequestedApproval] = useState(false)
   const tokenContract = useERC20(vault.tokenAddress)
-  const { onApprove } = useVaultApprove(vault, vault.reloadToken)
+  const { onApprove } = useVaultApprove(vault, reloadToken)
   const handleApprove = useCallback(async () => {
     try {
       setRequestedApproval(true)
