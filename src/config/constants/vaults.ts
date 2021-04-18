@@ -149,7 +149,7 @@ export const vaultLists: Vault[] = [
     farmPid: 8,
     vault: "0x189a45ac7C1DA043230eBc7EE52B2502eD577E3B",
     strategy: "0x1A6383342530cDFd1479c6Ee9cBfd1e8B29493fC",
-    fromBlock: 6670600,
+    fromBlock: 6670700,
     harvestReward: "KEBAB",
     lpToken: {
       address:'0xd51bee2e0a3886289f6d229b6f30c0c2b34fc0ec',
