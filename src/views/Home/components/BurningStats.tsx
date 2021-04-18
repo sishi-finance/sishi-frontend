@@ -117,7 +117,7 @@ const BurningStats = () => {
         <Heading size="lg" mb="24px">
           <HeadRow>
             <div>Total Burned</div>
-            <CardValue fontSize="inherit" value={getBalanceNumber(burnedBalance)} decimals={0} />
+            <CardValue fontSize="inherit" value={getBalanceNumber(burnedBalance)} decimals={3} />
           </HeadRow>
         </Heading>
         <Row style={{ overflow: "auto" }}>
