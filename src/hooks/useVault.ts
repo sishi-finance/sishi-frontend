@@ -114,18 +114,18 @@ export const useVaults = () => {
 
 export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock, bnbBusdRate }: { currentBlock: number, bnbBusdRate: BigNumber }) => {
 
-  const deltaBlock = Number(BLOCKS_PER_HOUR) * 0.1
+  const deltaBlock = Number(BLOCKS_PER_HOUR) * 48
 
   const allVaultsAPY = await Promise.all(vaults.map(async vault => {
 
-    const prevBlock = Math.max(vault.fromBlock + 10, currentBlock - deltaBlock)
+    const prevBlock = Math.max(vault.fromBlock, currentBlock - deltaBlock)
     const callMethodWithAgoPool = callMethodWithPoolFactory(prevBlock)
     const currentDelta = currentBlock - prevBlock
-    // console.log("[deltaBlock]", currentBlock - prevBlock)
+    console.log("[deltaBlock] ", vault.tokenSymbol, currentBlock - prevBlock)
 
     const _q1 = callMethodWithPool(vault.vault, <any>sishivault, "balance", [])
     const _q2 = callMethodWithPool(vault.vault, <any>sishivault, "getPricePerFullShare", [])
-    const _q3 = currentDelta > 0 
+    const _q3 = currentDelta > 0
       ? callMethodWithAgoPool(vault.vault, <any>sishivault, "getPricePerFullShare", [])
       : _q2
     const _q4 = vault.lpToken ? fetchPancakeRate({

@@ -33,10 +33,10 @@ const VaultRowItem: React.FC<VaultRowItemInfo> = ({ expand, onExpandClick, tag, 
     </td>
     <td>
       {(roiDay * 100).toFixed(2)}%
-  </td>
+    </td>
     <td>
       {(apy * 100).toFixed(2)}%
-  </td>
+    </td>
     <td>
       $ {getBalanceNumber(yieldTVLUSD).toFixed(2)}
     </td>

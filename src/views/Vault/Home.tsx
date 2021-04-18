@@ -118,8 +118,8 @@ const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, y
               <tr>
                 <th> </th>
                 <th style={{ textAlign: "left" }}> Farm </th>
-                <th> APY </th>
                 <th> Daily</th>
+                <th> APY </th>
                 <th> TVL</th>
                 <th> Balance</th>
                 {/* <th> </th> */}
