@@ -125,5 +125,21 @@ export const vaultLists: Vault[] = [
       quote: QuoteToken.BUSD,
     },
   },
+  {
+    tokenSymbol: "ZEFI",
+    isTokenOnly: true,
+    tokenAddress: "0x0288D3E353fE2299F11eA2c2e1696b4A648eCC07",
+    tag: ["Zcore"],
+    farmPid: -1,
+    vault: "0x66025f732A5B20dD631EDbA9AAE0665A6B869071",
+    strategy: "0xEA2BFb782DB37EbcBc1E16C87CCCB2b9656477dA",
+    fromBlock: 6668565,
+    harvestReward: "ZEFI",
+    lpToken: {
+      address:'0x24B87c29e907D6329ED8fD6d7B2ecb074089093E',
+      quoteAddress: contracts.busd[56],
+      quote: QuoteToken.BUSD,
+    },
+  },
 
 ]

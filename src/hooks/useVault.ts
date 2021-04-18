@@ -49,7 +49,7 @@ export const fetchPancakeRate = async ({ baseAddress, lpAdress, quoteAddress, is
       .div(new BigNumber(tokenBalanceLP))
       .dividedBy(10 ** quoteTokenDecimals)
   }
-  
+
   return new BigNumber(quoteTokenBlanceLP)
     .multipliedBy(2)
     .multipliedBy(1e18)
@@ -114,29 +114,33 @@ export const useVaults = () => {
 
 export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock, bnbBusdRate }: { currentBlock: number, bnbBusdRate: BigNumber }) => {
 
-  const deltaBlock = Number(BLOCKS_PER_HOUR) * 48
+  const deltaBlock = Number(BLOCKS_PER_HOUR) * 0.1
 
   const allVaultsAPY = await Promise.all(vaults.map(async vault => {
 
-    const prevBlock = Math.max(vault.fromBlock + 100, currentBlock - deltaBlock)
+    const prevBlock = Math.max(vault.fromBlock + 10, currentBlock - deltaBlock)
     const callMethodWithAgoPool = callMethodWithPoolFactory(prevBlock)
+    const currentDelta = currentBlock - prevBlock
+    // console.log("[deltaBlock]", currentBlock - prevBlock)
+
+    const _q1 = callMethodWithPool(vault.vault, <any>sishivault, "balance", [])
+    const _q2 = callMethodWithPool(vault.vault, <any>sishivault, "getPricePerFullShare", [])
+    const _q3 = currentDelta > 0 
+      ? callMethodWithAgoPool(vault.vault, <any>sishivault, "getPricePerFullShare", [])
+      : _q2
+    const _q4 = vault.lpToken ? fetchPancakeRate({
+      baseAddress: vault.tokenAddress,
+      lpAdress: vault.lpToken.address,
+      quoteAddress: vault.lpToken.quoteAddress,
+      isLP: !vault.isTokenOnly,
+    }) : Promise.resolve(new BigNumber(1e18))
 
     const [
       rawVaultTVL,
       rawPricePerFullShare,
       rawPricePerFullShareAgo,
       rawTokenQuoteRate,
-    ] = await Promise.all([
-      callMethodWithPool(vault.vault, <any>sishivault, "balance", []),
-      callMethodWithPool(vault.vault, <any>sishivault, "getPricePerFullShare", []),
-      callMethodWithAgoPool(vault.vault, <any>sishivault, "getPricePerFullShare", []),
-      vault.lpToken ? fetchPancakeRate({
-        baseAddress: vault.tokenAddress,
-        lpAdress: vault.lpToken.address,
-        quoteAddress: vault.lpToken.quoteAddress,
-        isLP: !vault.isTokenOnly,
-      }) : Promise.resolve(new BigNumber(1e18))
-    ])
+    ] = await Promise.all([_q1, _q2, _q3, _q4])
 
     const vaultTVL = new BigNumber(rawVaultTVL)
     const pricePerFullShare = new BigNumber(rawPricePerFullShare)
@@ -207,7 +211,12 @@ export const fetchVaultUsers = async (vaults: Vault[], account: string) => {
 export const fetchVaultFarms = async (vaults: Vault[]) => {
   const allVaultFarmsShare = await Promise.all(vaults.map(async vault => {
 
-
+    if (vault.farmPid < 0) return {
+      mulTotal: 0,
+      mulCurrent: 0,
+      perShare: new BigNumber(0),
+      sharePerBlock: new BigNumber(0),
+    }
 
     const [mulTotal, [, mulCurrent, ,], rawSharePerBlock, rawTotalShare] = await Promise.all([
       callMethodWithPool(MasterChefVaultAddress, <any>masterChef, "totalAllocPoint", []),

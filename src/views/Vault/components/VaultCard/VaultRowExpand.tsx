@@ -57,7 +57,7 @@ const VaultRowItemExpand: React.FC<VaultRowItemExpand> = ({
   yieldFarmAPR,
   vaultStackApproved,
   yieldFarmRoi,
-  pendingFarmingUSD
+  pendingFarmingUSD,
 }) => {
   return <VaultRowStyled style={{ borderBottom: `solid 2px #8884` }}>
     <td colSpan={6}>
@@ -96,48 +96,50 @@ const VaultRowItemExpand: React.FC<VaultRowItemExpand> = ({
         </div>
       </Row>
       <hr style={{ opacity: "0.2", padding: "0 2em" }} />
+      {
+        vaultData.farmPid >= 0 && <Row style={{ justifyContent: "stretch", alignItems: "flex-start", padding: "0em 0.5em" }}>
+          <div style={{ flex: 3 }}>
+            <Row>
+              <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} APY:</div>
+              <div>{(Number(yieldFarmAPY) * 100).toFixed(2)}%</div>
+            </Row>
+            <Row>
+              <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} APR:</div>
+              <div>{(Number(yieldFarmAPR) * 100).toFixed(2)}%</div>
+            </Row>
+            <Row>
+              <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} Daily:</div>
+              <div>{(Number(yieldFarmRoi) * 100).toFixed(2)}%</div>
+            </Row>
+            <Row>
+              <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} Weight:</div>
+              <div>{mulCurrent / 100}X</div>
+            </Row>
+          </div>
+          <div style={{ flex: 3 }}>
+            <Row>
+              <div style={{ width: "10em", textAlign: "left" }}>Stake:</div>
+              <div>{getBalanceNumber(vaultAndFarmBalance).toFixed(4)} s{tokenSymbol}</div>
+            </Row>
+            <Row>
+              <div style={{ width: "10em", textAlign: "left" }}>Earned:</div>
+              <div>{getBalanceNumber(pendingFarming).toFixed(4)} {rewardToken} ~ $ {getBalanceNumber(pendingFarmingUSD).toFixed(2)}</div>
+            </Row>
+          </div>
+          <div style={{ flex: 2 }}>
+            <StackAction
+              vault={vaultData}
+              reloadToken={vaultData.reloadToken}
+              vaultStackApproved={vaultStackApproved}
+              account={account}
+              tokenBalance={share}
+              depositBalance={vaultAndFarmBalance}
+              pendingHarvest={pendingFarming}
+            />
+          </div>
+        </Row>
+      }
 
-      <Row style={{ justifyContent: "stretch", alignItems: "flex-start", padding: "0em 0.5em" }}>
-        <div style={{ flex: 3 }}>
-          <Row>
-            <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} APY:</div>
-            <div>{(Number(yieldFarmAPY) * 100).toFixed(2)}%</div>
-          </Row>
-          <Row>
-            <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} APR:</div>
-            <div>{(Number(yieldFarmAPR) * 100).toFixed(2)}%</div>
-          </Row>
-          <Row>
-            <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} Daily:</div>
-            <div>{(Number(yieldFarmRoi) * 100).toFixed(2)}%</div>
-          </Row>
-          <Row>
-            <div style={{ width: "10em", textAlign: "left" }}>{rewardToken} Weight:</div>
-            <div>{mulCurrent / 100}X</div>
-          </Row>
-        </div>
-        <div style={{ flex: 3 }}>
-          <Row>
-            <div style={{ width: "10em", textAlign: "left" }}>Stake:</div>
-            <div>{getBalanceNumber(vaultAndFarmBalance).toFixed(4)} s{tokenSymbol}</div>
-          </Row>
-          <Row>
-            <div style={{ width: "10em", textAlign: "left" }}>Earned:</div>
-            <div>{getBalanceNumber(pendingFarming).toFixed(4)} {rewardToken} ~ $ {getBalanceNumber(pendingFarmingUSD).toFixed(2)}</div>
-          </Row>
-        </div>
-        <div style={{ flex: 2 }}>
-          <StackAction
-            vault={vaultData}
-            reloadToken={vaultData.reloadToken}
-            vaultStackApproved={vaultStackApproved}
-            account={account}
-            tokenBalance={share}
-            depositBalance={vaultAndFarmBalance}
-            pendingHarvest={pendingFarming}
-          />
-        </div>
-      </Row>
       <Row style={{ justifyContent: "stretch", marginTop: "1em", padding: "0em 0.5em" }}>
         <LinkExternal href={`https://bscscan.com/address/${vaultData.vault}`} fontSize="12" marginRight="3">Vault contract</LinkExternal>
         <LinkExternal href={`https://bscscan.com/address/${vaultData.strategy}`} fontSize="12" marginRight="3">Strategy contract</LinkExternal>

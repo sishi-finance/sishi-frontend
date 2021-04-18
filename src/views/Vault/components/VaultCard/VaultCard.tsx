@@ -82,11 +82,14 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
   )
 
   const yieldFarmRoi = useMemo(
-    () => new BigNumber(perShare)
-      .times(new BigNumber(ySishiPrice))
-      .times(BLOCKS_PER_DAY)
-      .div(new BigNumber(tokenPrice))
-      .dividedBy(1e18),
+    () => {
+      const value = new BigNumber(perShare)
+        .times(new BigNumber(ySishiPrice))
+        .times(BLOCKS_PER_DAY)
+        .div(new BigNumber(tokenPrice))
+        .dividedBy(1e18)
+      return value.isFinite() ? value : new BigNumber(0)
+    },
     [perShare, ySishiPrice, tokenPrice]
   )
 
@@ -114,8 +117,8 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
       <VaultRowItem {...{
         expand, farmImage, tokenSymbol, onExpandClick,
         yieldTVLUSD, walletBalanceUSD, tag,
-        apy: (yieldAPY || 0) + Number(yieldFarmAPY),
-        roiDay: (yieldRoiDay || 0) + Number(yieldFarmRoi),
+        apy: (yieldAPY || 0) + (Number(yieldFarmAPY)),
+        roiDay: (yieldRoiDay || 0) + (Number(yieldFarmRoi)),
       }} />
       {
         expand && <VaultRowItemExpand {...{
