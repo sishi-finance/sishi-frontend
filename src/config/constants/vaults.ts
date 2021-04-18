@@ -146,7 +146,7 @@ export const vaultLists: Vault[] = [
     isTokenOnly: true,
     tokenAddress: "0x7979F6C54ebA05E18Ded44C4F986F49a5De551c2",
     tag: ["Kebab"],
-    farmPid: -1,
+    farmPid: 8,
     vault: "0x189a45ac7C1DA043230eBc7EE52B2502eD577E3B",
     strategy: "0x1A6383342530cDFd1479c6Ee9cBfd1e8B29493fC",
     fromBlock: 6670600,
