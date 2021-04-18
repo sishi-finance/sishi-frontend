@@ -157,5 +157,21 @@ export const vaultLists: Vault[] = [
       quote: QuoteToken.BUSD,
     },
   },
+  {
+    tokenSymbol: "CUB",
+    isTokenOnly: true,
+    tokenAddress: "0x50D809c74e0B8e49e7B4c65BB3109AbE3Ff4C1C1",
+    tag: ["Cub"],
+    farmPid: 9,
+    vault: "0xF13dee95D0Db201ba3B7344Cf2f7EdfE23Ba9Ed1",
+    strategy: "0x7f9Ef40dF13D7D1497024cD5Dc9F3A66870F3cF8",
+    fromBlock: 6671953,
+    harvestReward: "CUB",
+    lpToken: {
+      address:'0x0EF564D4F8D6C0ffE13348A32e21EFd55e508e84',
+      quoteAddress: contracts.busd[56],
+      quote: QuoteToken.BUSD,
+    },
+  },
 
 ]

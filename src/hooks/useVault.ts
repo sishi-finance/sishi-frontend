@@ -155,7 +155,7 @@ export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock, bnbBusdRat
       .div(pricePerFullShareAgo)
       .minus(new BigNumber(1))
       .multipliedBy(BLOCKS_PER_DAY)
-      .dividedBy(deltaBlock)
+      .dividedBy(currentDelta)
 
     const roiHour = roiDay.dividedBy(24)
     const roiWeek = roiDay.plus(1).exponentiatedBy(7).minus(1)
