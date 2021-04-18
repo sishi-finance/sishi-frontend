@@ -134,8 +134,8 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
     if (farm.quoteTokenSymbol === QuoteToken.BNB)
       return priceInQuoteToken
         .times(bnbPrice)
-    if (farm.quoteTokenSymbol === QuoteToken.BUSD){
-      console.log( "[fk]" ,farm.lpSymbol, farm.lpTotalInQuoteToken, farm.lpTotalSupply)
+    if (farm.quoteTokenSymbol === QuoteToken.BUSD) {
+      // console.log( "[fk]" ,farm.lpSymbol, farm.lpTotalInQuoteToken, farm.lpTotalSupply)
       return priceInQuoteToken
     }
     if (farm.quoteTokenSymbol === QuoteToken.SISHI)
@@ -143,7 +143,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
         .times(cakePrice)
 
     return null
-  }, [farm.lpSymbol, farm.lpTotalQuote, bnbPrice, cakePrice, farm.tokenPriceVsQuote, farm.quoteTokenSymbol, farm.isTokenOnly, farm.lpTotalSupply, farm.lpTotalInQuoteToken])
+  }, [farm.lpTotalQuote, bnbPrice, cakePrice, farm.tokenPriceVsQuote, farm.quoteTokenSymbol, farm.isTokenOnly, farm.lpTotalSupply, farm.lpTotalInQuoteToken])
 
   const lpLabel = farm.lpSymbol
   const earnLabel = 'SISHI'

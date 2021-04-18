@@ -76,7 +76,7 @@ const HeadRow = styled.div`
 
 const workerTable = {
   "0xa5751bbc51c0df729d93ffb9afe173d777b1785b": "Worker1",
-  "0x8556d6841db1e41a128e42024dc5c9d5ddce3dcb": "FYO",
+  "0x8556d6841db1e41a128e42024dc5c9d5ddce3dcb": "FBB",
 }
 
 const BurningStats = () => {
