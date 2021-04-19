@@ -22,7 +22,9 @@ const BlockContextProvider = ({ children }) => {
     }
     const interval = setInterval(update, 6000)
     
-    isConnected.then(e => !!e && update())
+    isConnected
+      .then(e => console.log("[web3] connected"))
+      .then(e => update())
 
     return () => clearInterval(interval)
   }, [])

@@ -84,6 +84,22 @@ export const vaultLists: Vault[] = [
       quote: QuoteToken.BNB,
     }
   },
+  {
+    tokenSymbol: "CAKE-BNB LP",
+    isTokenOnly: false,
+    tokenAddress: "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6",
+    tag: ["Pancake"],
+    farmPid: 10,
+    vault: "0xF6b2B95f8c09aB726EC6fE50848970d77C2d50c9",
+    strategy: "0xBF3a27c5083B31Ac479891499fff84407c524f84",
+    fromBlock: 6704280,
+    harvestReward: "CAKE",
+    lpToken: {
+      address:'0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6',
+      quoteAddress: contracts.wbnb[56],
+      quote: QuoteToken.BNB,
+    }
+  },
   // {
   //   tokenSymbol: "XVS",
   //   isTokenOnly: true,

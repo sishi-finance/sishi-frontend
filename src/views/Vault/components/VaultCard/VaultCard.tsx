@@ -59,56 +59,25 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
     [vaultData.calc.share]
   )
 
-  const yieldBalance = useMemo(
-    () => (new BigNumber(share))
-      .multipliedBy(new BigNumber(pricePerFullShare))
-      .dividedBy(1e18)
-      .decimalPlaces(0),
-    [share, pricePerFullShare]
-  )
+  const yieldBalance = Number(share) * Number(pricePerFullShare) / 1e18
+  
+  const yieldTVLUSD = Number(yieldTVL) * Number(tokenPrice) / 1e18
 
-  const yieldTVLUSD = useMemo(
-    () => new BigNumber(yieldTVL)
-      .times(new BigNumber(tokenPrice))
-      .dividedBy(1e18),
-    [yieldTVL, tokenPrice]
-  )
+  const walletBalanceUSD = Number(walletBalance) * Number(tokenPrice) / 1e18
 
-  const walletBalanceUSD = useMemo(
-    () => new BigNumber(walletBalance)
-      .times(new BigNumber(tokenPrice))
-      .dividedBy(1e18),
-    [walletBalance, tokenPrice]
-  )
+  const pendingFarmingUSD = Number(pendingFarming) * Number(ySishiPrice) / 1e18
 
-  const yieldFarmRoi = useMemo(
-    () => {
-      const value = new BigNumber(perShare)
-        .times(new BigNumber(ySishiPrice))
-        .times(BLOCKS_PER_DAY)
-        .div(new BigNumber(tokenPrice))
-        .dividedBy(1e18)
-      return value.isFinite() ? value : new BigNumber(0)
-    },
-    [perShare, ySishiPrice, tokenPrice]
-  )
+  const _yieldFarmRoi = Number(perShare)
+    * Number(ySishiPrice)
+    * Number(BLOCKS_PER_DAY)
+    / Number(tokenPrice)
+    / 1e18
+  
+  const yieldFarmRoi = Number.isFinite(_yieldFarmRoi) ? _yieldFarmRoi : 0
 
-  const pendingFarmingUSD = useMemo(
-    () => new BigNumber(pendingFarming)
-      .times(new BigNumber(ySishiPrice))
-      .dividedBy(1e18),
-    [pendingFarming, ySishiPrice]
-  )
+  const yieldFarmAPR = yieldFarmRoi * 365
 
-  const yieldFarmAPR = useMemo(
-    () => yieldFarmRoi.multipliedBy(365),
-    [yieldFarmRoi]
-  )
-
-  const yieldFarmAPY = useMemo(
-    () => yieldFarmRoi.plus(1).pow(365).minus(1),
-    [yieldFarmRoi]
-  )
+  const yieldFarmAPY = (yieldFarmRoi + 1) ** 365 - 1
 
   const onExpandClick = useCallback(() => setExpand(!expand), [setExpand, expand])
 
@@ -117,8 +86,8 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
       <VaultRowItem {...{
         expand, farmImage, tokenSymbol, onExpandClick,
         yieldTVLUSD, walletBalanceUSD, tag,
-        apy: (yieldAPY || 0) + (Number(yieldFarmAPY)),
-        roiDay: (yieldRoiDay || 0) + (Number(yieldFarmRoi)),
+        apy: Number(yieldAPY) + Number(yieldFarmAPY),
+        roiDay: Number(yieldRoiDay) + Number(yieldFarmRoi),
       }} />
       {
         expand && <VaultRowItemExpand {...{

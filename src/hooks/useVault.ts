@@ -114,7 +114,7 @@ export const useVaults = () => {
 
 export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock, bnbBusdRate }: { currentBlock: number, bnbBusdRate: BigNumber }) => {
 
-  const deltaBlock = Number(BLOCKS_PER_HOUR) * 48
+  const deltaBlock = Number(BLOCKS_PER_HOUR) * 24
 
   const allVaultsAPY = await Promise.all(vaults.map(async vault => {
 
@@ -142,38 +142,34 @@ export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock, bnbBusdRat
       rawTokenQuoteRate,
     ] = await Promise.all([_q1, _q2, _q3, _q4])
 
-    const vaultTVL = new BigNumber(rawVaultTVL)
-    const pricePerFullShare = new BigNumber(rawPricePerFullShare)
-    const pricePerFullShareAgo = new BigNumber(rawPricePerFullShareAgo)
-    const tokenQuoteRate = new BigNumber(rawTokenQuoteRate)
+    const vaultTVL = Number(rawVaultTVL)
+    const pricePerFullShare = Number(rawPricePerFullShare)
+    const pricePerFullShareAgo = Number(rawPricePerFullShareAgo)
+    const tokenQuoteRate = Number(rawTokenQuoteRate)
 
     const tokenBUSDRate = vault?.lpToken?.quote === QuoteToken.BNB
-      ? tokenQuoteRate.multipliedBy(bnbBusdRate)
+      ? tokenQuoteRate * Number(bnbBusdRate)
       : tokenQuoteRate
 
-    const roiDay = pricePerFullShare
-      .div(pricePerFullShareAgo)
-      .minus(new BigNumber(1))
-      .multipliedBy(BLOCKS_PER_DAY)
-      .dividedBy(currentDelta)
+    const roiDay = (Number(pricePerFullShare) / Number(pricePerFullShareAgo) - 1) * Number(BLOCKS_PER_DAY) / currentDelta
 
-    const roiHour = roiDay.dividedBy(24)
-    const roiWeek = roiDay.plus(1).exponentiatedBy(7).minus(1)
-    const roiMonth = roiDay.plus(1).exponentiatedBy(30).minus(1)
-    const roiYear = roiDay.plus(1).exponentiatedBy(365).minus(1)
+    const roiHour = roiDay / 24
+    const roiWeek = ((roiDay + 1) ** (7)) - 1
+    const roiMonth = ((roiDay + 1) ** (30)) - 1
+    const roiYear = ((roiDay + 1) ** (365)) - 1
 
     return {
       roiLoaded: true,
       tokenBUSDRate,
-      pricePerFullShare,
+      pricePerFullShare: new BigNumber(rawPricePerFullShare),
       calc: {
-        roiHour: Number((roiHour).toFixed(10)),
-        roiDay: Number((roiDay).toFixed(10)),
-        roiWeek: Number((roiWeek).toFixed(10)),
-        roiMonth: Number((roiMonth).toFixed(10)),
-        roiYear: Number((roiYear).toFixed(10)),
-        apy: Number((roiYear).toFixed(10)),
-        apr: Number((roiDay.multipliedBy(365))),
+        roiHour: roiHour.toFixed(10),
+        roiDay: roiDay.toFixed(10),
+        roiWeek: roiWeek.toFixed(10),
+        roiMonth: roiMonth.toFixed(10),
+        roiYear: roiYear.toFixed(10),
+        apy: roiYear.toFixed(10),
+        apr: (roiDay * 365).toFixed(10),
         tvl: Number(vaultTVL.toFixed(10)),
       },
     }
@@ -214,7 +210,7 @@ export const fetchVaultFarms = async (vaults: Vault[]) => {
     if (vault.farmPid < 0) return {
       mulTotal: 0,
       mulCurrent: 0,
-      perShare: new BigNumber(0),
+      perShare: 0,
       sharePerBlock: new BigNumber(0),
     }
 
@@ -228,16 +224,25 @@ export const fetchVaultFarms = async (vaults: Vault[]) => {
     ])
 
     const sharePerBlock = new BigNumber(rawSharePerBlock)
-    const totalShare = new BigNumber(rawTotalShare)
+    // const totalShare = new BigNumber(rawTotalShare)
 
     return {
       mulTotal,
       mulCurrent,
-      perShare: new BigNumber(Number(sharePerBlock))
-        .multipliedBy(new BigNumber(Number(mulCurrent)))
-        .dividedBy(new BigNumber(Number(mulTotal)))
-        .multipliedBy(1e18)
-        .div(new BigNumber(totalShare)),
+      perShare: Number(rawSharePerBlock) 
+        * Number(mulCurrent) 
+        / Number(mulTotal)
+        * (1e18)
+        / (Number(rawTotalShare)),
+        // .multipliedBy(new BigNumber(Number(mulCurrent)))
+        // .dividedBy(new BigNumber(Number(mulTotal)))
+        // .multipliedBy(1e18)
+        // .div(new BigNumber(totalShare)),
+      // perShare: new BigNumber(Number(sharePerBlock))
+      //   .multipliedBy(new BigNumber(Number(mulCurrent)))
+      //   .dividedBy(new BigNumber(Number(mulTotal)))
+      //   .multipliedBy(1e18)
+      //   .div(new BigNumber(totalShare)),
       sharePerBlock,
     }
   }))
