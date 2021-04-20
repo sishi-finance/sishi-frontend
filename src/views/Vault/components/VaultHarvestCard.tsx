@@ -40,7 +40,7 @@ const VaultHarvestCard: React.FC<VaultCardProps> = ({ vault, ethereum, cakePrice
   return (
     <>
       <VaultRow style={{ borderBottom: `solid 2px #8884` }}>
-        <td style={{ width: "200px", minWidth: "200px" }}>
+        <td style={{ width: "220px", minWidth: "220px" }}>
           <Flex flexDirection="row" alignItems="center" >
             <Image src={`/images/farms/${farmImage}.png`} width={40} height={40} marginLeft="2" marginRight="2" />
             <span style={{ fontSize: '20px' }}>{vault.tokenSymbol}</span>
