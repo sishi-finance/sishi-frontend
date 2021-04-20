@@ -8,4 +8,8 @@ const getNodeUrl = () => {
   return nodes[randomIndex]
 }
 
+export const getArchiveNodeUrl = () => {
+  return "https://bsc.sishi.finance/"
+}
+
 export default getNodeUrl

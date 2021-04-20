@@ -1,7 +1,7 @@
 import { Contract } from "web3-eth-contract";
 import equal from "deep-equal"
 import { memoize } from "lodash"
-import multicall from "./multicall";
+import multicall, { multicallWithArchive } from "./multicall";
 
 type DataType = "address" | "uint256"
 
@@ -41,6 +41,8 @@ class Pool {
   public success = 0
 
   public callParams = []
+
+  public enableArchiveMode = false
 
   get abi() {
     return Object.values(this.abiMap)
@@ -92,9 +94,10 @@ class Pool {
 
     console.time(`[Pool] [count:${queue.length}] ${poolRunId}`);
 
-    // console.log(`[Pool] [count:${queue.length}] callParams`, { callParams: this.callParams })
 
-    const allResult = await multicall(
+    const exeMethod = this.enableArchiveMode ? multicallWithArchive : multicall
+
+    const allResult = await exeMethod(
       abi,
       queue.map(e => ({
         address: e.address,
@@ -197,6 +200,7 @@ export const callMethodWithPoolFactory = memoize(
         if (!customPools.some(pool => pool.addToPool(request))) {
           const pool = new Pool()
           pool.callParams = [{}, blockNumber]
+          pool.enableArchiveMode = true
           customPools.push(pool)
           pool.addToPool(request)
         }

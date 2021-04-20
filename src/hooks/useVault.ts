@@ -114,65 +114,90 @@ export const useVaults = () => {
 
 export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock, bnbBusdRate }: { currentBlock: number, bnbBusdRate: BigNumber }) => {
 
-  const deltaBlock = Number(BLOCKS_PER_HOUR) * 24
+  const deltaBlock = Number(BLOCKS_PER_HOUR) * 36
 
   const allVaultsAPY = await Promise.all(vaults.map(async vault => {
+    try {
+      const prevBlock = Math.max(vault.fromBlock, currentBlock - deltaBlock)
+      const callMethodWithAgoPool = callMethodWithPoolFactory(prevBlock)
+      const currentDelta = currentBlock - prevBlock
+      console.log("[deltaBlock] ", vault.tokenSymbol, currentDelta)
 
-    const prevBlock = Math.max(vault.fromBlock, currentBlock - deltaBlock)
-    const callMethodWithAgoPool = callMethodWithPoolFactory(prevBlock)
-    const currentDelta = currentBlock - prevBlock
-    console.log("[deltaBlock] ", vault.tokenSymbol, currentBlock - prevBlock)
+      const _q1 = callMethodWithPool(vault.vault, <any>sishivault, "balance", [])
+      const _q2 = callMethodWithPool(vault.vault, <any>sishivault, "getPricePerFullShare", [])
+        .catch(e => new BigNumber(1e18))
+      const _q3 = currentDelta > 0
+        ? callMethodWithAgoPool(vault.vault, <any>sishivault, "getPricePerFullShare", [])
+          .catch(e => _q2)
+        : _q2
+        
+      const _q4 = vault.lpToken ? fetchPancakeRate({
+        baseAddress: vault.tokenAddress,
+        lpAdress: vault.lpToken.address,
+        quoteAddress: vault.lpToken.quoteAddress,
+        isLP: !vault.isTokenOnly,
+      }) : Promise.resolve(new BigNumber(1e18))
 
-    const _q1 = callMethodWithPool(vault.vault, <any>sishivault, "balance", [])
-    const _q2 = callMethodWithPool(vault.vault, <any>sishivault, "getPricePerFullShare", [])
-    const _q3 = currentDelta > 0
-      ? callMethodWithAgoPool(vault.vault, <any>sishivault, "getPricePerFullShare", [])
-      : _q2
-    const _q4 = vault.lpToken ? fetchPancakeRate({
-      baseAddress: vault.tokenAddress,
-      lpAdress: vault.lpToken.address,
-      quoteAddress: vault.lpToken.quoteAddress,
-      isLP: !vault.isTokenOnly,
-    }) : Promise.resolve(new BigNumber(1e18))
+      const [
+        rawVaultTVL,
+        rawPricePerFullShare,
+        rawPricePerFullShareAgo,
+        rawTokenQuoteRate,
+      ] = await Promise.all([_q1, _q2, _q3, _q4])
 
-    const [
-      rawVaultTVL,
-      rawPricePerFullShare,
-      rawPricePerFullShareAgo,
-      rawTokenQuoteRate,
-    ] = await Promise.all([_q1, _q2, _q3, _q4])
+      const vaultTVL = Number(rawVaultTVL)
+      const pricePerFullShare = Number(rawPricePerFullShare)
+      const pricePerFullShareAgo = Number(rawPricePerFullShareAgo)
+      const tokenQuoteRate = Number(rawTokenQuoteRate)
 
-    const vaultTVL = Number(rawVaultTVL)
-    const pricePerFullShare = Number(rawPricePerFullShare)
-    const pricePerFullShareAgo = Number(rawPricePerFullShareAgo)
-    const tokenQuoteRate = Number(rawTokenQuoteRate)
+      const tokenBUSDRate = vault?.lpToken?.quote === QuoteToken.BNB
+        ? tokenQuoteRate * Number(bnbBusdRate)
+        : tokenQuoteRate
 
-    const tokenBUSDRate = vault?.lpToken?.quote === QuoteToken.BNB
-      ? tokenQuoteRate * Number(bnbBusdRate)
-      : tokenQuoteRate
+      const roiDay = (Number(pricePerFullShare) / Number(pricePerFullShareAgo) - 1) * Number(BLOCKS_PER_DAY) / currentDelta
 
-    const roiDay = (Number(pricePerFullShare) / Number(pricePerFullShareAgo) - 1) * Number(BLOCKS_PER_DAY) / currentDelta
+      const roiHour = roiDay / 24
+      const roiWeek = ((roiDay + 1) ** (7)) - 1
+      const roiMonth = ((roiDay + 1) ** (30)) - 1
+      const roiYear = ((roiDay + 1) ** (365)) - 1
 
-    const roiHour = roiDay / 24
-    const roiWeek = ((roiDay + 1) ** (7)) - 1
-    const roiMonth = ((roiDay + 1) ** (30)) - 1
-    const roiYear = ((roiDay + 1) ** (365)) - 1
+      // console.log({ tokenSymbol: vault.tokenSymbol, vaultTVL: Number(rawVaultTVL), yieldAPY: roiYear.toFixed(10), yieldAPR: (roiDay * 365).toFixed(10) })
 
-    return {
-      roiLoaded: true,
-      tokenBUSDRate,
-      pricePerFullShare: new BigNumber(rawPricePerFullShare),
-      calc: {
-        roiHour: roiHour.toFixed(10),
-        roiDay: roiDay.toFixed(10),
-        roiWeek: roiWeek.toFixed(10),
-        roiMonth: roiMonth.toFixed(10),
-        roiYear: roiYear.toFixed(10),
-        apy: roiYear.toFixed(10),
-        apr: (roiDay * 365).toFixed(10),
-        tvl: Number(vaultTVL.toFixed(10)),
-      },
+      return {
+        roiLoaded: true,
+        tokenBUSDRate,
+        pricePerFullShare: new BigNumber(rawPricePerFullShare),
+        calc: {
+          roiHour: roiHour.toFixed(10),
+          roiDay: roiDay.toFixed(10),
+          roiWeek: roiWeek.toFixed(10),
+          roiMonth: roiMonth.toFixed(10),
+          roiYear: roiYear.toFixed(10),
+          apy: roiYear.toFixed(10),
+          apr: (roiDay * 365).toFixed(10),
+          tvl: Number(vaultTVL.toFixed(10)),
+        },
+      }
+    } catch (error) {
+
+      // console.error(vault.tokenSymbol)
+      return {
+        roiLoaded: 0,
+        tokenBUSDRate: 0,
+        pricePerFullShare: new BigNumber(0),
+        calc: {
+          roiHour: 0,
+          roiDay: 0,
+          roiWeek: 0,
+          roiMonth: 0,
+          roiYear: 0,
+          apy: 0,
+          apr: 0,
+          tvl: 0,
+        },
+      }
     }
+
   }))
 
   return allVaultsAPY
@@ -229,15 +254,15 @@ export const fetchVaultFarms = async (vaults: Vault[]) => {
     return {
       mulTotal,
       mulCurrent,
-      perShare: Number(rawSharePerBlock) 
-        * Number(mulCurrent) 
+      perShare: Number(rawSharePerBlock)
+        * Number(mulCurrent)
         / Number(mulTotal)
         * (1e18)
         / (Number(rawTotalShare)),
-        // .multipliedBy(new BigNumber(Number(mulCurrent)))
-        // .dividedBy(new BigNumber(Number(mulTotal)))
-        // .multipliedBy(1e18)
-        // .div(new BigNumber(totalShare)),
+      // .multipliedBy(new BigNumber(Number(mulCurrent)))
+      // .dividedBy(new BigNumber(Number(mulTotal)))
+      // .multipliedBy(1e18)
+      // .div(new BigNumber(totalShare)),
       // perShare: new BigNumber(Number(sharePerBlock))
       //   .multipliedBy(new BigNumber(Number(mulCurrent)))
       //   .dividedBy(new BigNumber(Number(mulTotal)))
