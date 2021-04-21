@@ -118,7 +118,7 @@ const VaultRowItemExpand: React.FC<VaultRowItemExpand> = ({
           </div>
           <div style={{ flex: 3 }}>
             <Row>
-              <div style={{ width: "10em", textAlign: "left" }}>Stake:</div>
+              <div style={{ width: "10em", textAlign: "left" }}>Staked:</div>
               <div>{getBalanceNumber(vaultAndFarmBalance).toFixed(4)} s{tokenSymbol}</div>
             </Row>
             <Row>

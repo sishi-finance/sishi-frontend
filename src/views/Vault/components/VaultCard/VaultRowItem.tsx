@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from "styled-components"
 import { Flex, Text, Skeleton, Image, Tag, Button, LinkExternal } from '@pancakeswap-libs/uikit'
-import { getBalanceNumber } from 'utils/formatBalance'
+import { getBalanceNumber, prettyNumberByPostfix } from 'utils/formatBalance'
 
 
 const VaultRowStyled = styled.tr`
@@ -38,10 +38,10 @@ const VaultRowItem: React.FC<VaultRowItemInfo> = ({ expand, onExpandClick, tag, 
       {(apy * 100).toFixed(2)}%
     </td>
     <td>
-      $ {getBalanceNumber(yieldTVLUSD).toFixed(2)}
+      $ {prettyNumberByPostfix(getBalanceNumber(yieldTVLUSD))}
     </td>
     <td>
-      $ {getBalanceNumber(walletBalanceUSD).toFixed(2)}
+      $ {prettyNumberByPostfix(getBalanceNumber(walletBalanceUSD))}
     </td>
   </VaultRowStyled>
 }

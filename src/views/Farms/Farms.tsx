@@ -28,7 +28,7 @@ const TableContainer = styled.div`
   width: 100%;
   max-width: calc(100vw - 2em);
   overflow: auto;
-  text-align: center;
+  text-align: left;
 `
 
 const Table = styled.table`
@@ -138,7 +138,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
                 <th> </th>
                 {/* <th> Deposit Fee </th> */}
                 <th> Daily</th>
-                <th> APY </th>
+                <th> Rewards APY </th>
                 <th> TVL</th>
                 <th> Staked</th>
                 <th> Balance</th>

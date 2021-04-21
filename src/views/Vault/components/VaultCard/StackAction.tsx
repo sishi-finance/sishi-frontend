@@ -40,7 +40,6 @@ const VaultStackAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken,
   const { onUnstack } = useVaultUnstack(vault, reloadToken)
   const rawStakedBalance = getBalanceNumber(depositBalance, tokenDecimal)
   const rawTokenBalance = getBalanceNumber(tokenBalance, tokenDecimal)
-  // const displayBalance = rawStakedBalance.toLocaleString()
   const [requestedApproval, setRequestedApproval] = useState(false)
   const [requestedHarvest, setRequestedHarvest] = useState(false)
   const { onApprove } = useVaultStackApprove(vault, reloadToken)
@@ -97,7 +96,6 @@ const VaultStackAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken,
       {!account
         ? <UnlockButton mt="8px" ml="auto" size="sm" />
         : <>
-          {/* <Heading color={rawStakedBalance === 0 ? 'textDisabled' : 'text'} mr="6px">{displayBalance}</Heading> */}
           {renderStakingButtons()}
         </>
       }
