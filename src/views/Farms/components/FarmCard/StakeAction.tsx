@@ -40,6 +40,7 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, tokenBalan
   const tokenContract = useERC20(tokenAddress)
   const { onApprove } = useApprove(tokenContract)
   const [requestedApproval, setRequestedApproval] = useState(false)
+  const [requestedHarvest, setRequestedHarvest] = useState(false)
 
   const rawStakedBalance = getBalanceNumber(stakedBalance, tokenDecimal)
 
@@ -53,6 +54,18 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, tokenBalan
     }
   }, [onApprove])
 
+
+  const onHarvest = useCallback(async () => {
+    try {
+      setRequestedHarvest(true)
+      await onStake("0")
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setRequestedHarvest(false)
+    }
+  }, [onStake, setRequestedHarvest])
+
   const [onPresentDeposit] = useModal(
     <DepositModal max={tokenBalance} onConfirm={onStake} tokenName={tokenName} depositFeeBP={depositFeeBP} tokenDecimal={tokenDecimal} />,
   )
@@ -65,6 +78,10 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, tokenBalan
       <Button size="sm" marginLeft="auto" onClick={onPresentDeposit}>{TranslateString(999, 'Stake')}</Button>
     ) : (
       <IconButtonWrapper>
+        <Button size="sm" variant="tertiary" mr="6px" onClick={onHarvest} disabled={requestedHarvest}>
+          Harvest
+        {/* {getBalanceNumber(pendingHarvest, tokenDecimal).toFixed(2)} */}
+        </Button>
         <IconButton size="sm" variant="tertiary" onClick={onPresentWithdraw} mr="6px">
           <MinusIcon color="primary" />
         </IconButton>
