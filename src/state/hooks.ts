@@ -45,6 +45,39 @@ export const useFarmUser = (pid) => {
   }
 }
 
+export const useFarmsUser = () => {
+  const farms: Farm[] = useSelector((state: State) => state.farms.data)
+  const bnbPrice = usePriceBnbBusd()
+  const cakePrice = usePriceCakeBusd()
+
+  const getTokenQuotePrice = (sym: string) => {
+    if (sym === QuoteToken.BNB)
+      return bnbPrice
+    if (sym === QuoteToken.BUSD)
+      return 1
+    if (sym === QuoteToken.SISHI)
+      return cakePrice
+    return 0
+  }
+
+  return farms.map(farm => {
+
+    const tokenPrice = farm.tokenPriceVsQuote
+      ? Number(farm.tokenPriceVsQuote) * Number(getTokenQuotePrice(farm.quoteTokenSymbol))
+      : 0
+
+    return {
+      ...farm,
+      allowance: farm.userData ? new BigNumber(farm.userData.allowance) : new BigNumber(0),
+      tokenBalance: farm.userData ? new BigNumber(farm.userData.tokenBalance) : new BigNumber(0),
+      stakedBalance: farm.userData ? new BigNumber(farm.userData.stakedBalance) : new BigNumber(0),
+      tokenBalanceUSD: Number(farm.userData?.tokenBalance ?? 0) * tokenPrice,
+      stakedBalanceUSD: Number(farm.userData?.stakedBalance ?? 0) * tokenPrice,
+      earnings: farm.userData ? new BigNumber(farm.userData.earnings) : new BigNumber(0),
+    }
+  })
+}
+
 // Pools
 
 export const usePools = (account): Pool[] => {

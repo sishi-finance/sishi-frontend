@@ -26,11 +26,14 @@ type VaultFarmItemInfo = {
 }
 
 const VaultFarmItem: React.FC<VaultFarmItemInfo> = ({ farmImage, tokenSymbol, onExpandClick, expand, depositFee, roiDay, apy, yieldTVLUSD, walletBalanceUSD, stakedUSD }) => {
+  const iconSize = String(tokenSymbol).endsWith(" LP") ? 30 : 25
+  const iconMarginY = String(tokenSymbol).endsWith(" LP") ? "-9px" : "0px"
+  const iconMarginX = String(tokenSymbol).endsWith(" LP") ? "3.5px" : "6px"
   return <VaultRowStyled style={{ borderBottom: expand ? 'none' : `solid 2px #8884` }} onClick={onExpandClick}>
     <td style={{ width: "250px", minWidth: "250px" }}>
       <Flex flexDirection="row" alignItems="center" >
-        <Image src={`/images/farms/${farmImage}.png`} width={34} height={34} marginLeft="2" marginRight="2" />
-        <span style={{ fontSize: '18px' }}>{tokenSymbol}</span>
+        <Image src={`/images/farms/${farmImage}.png`} width={iconSize} height={iconSize} marginLeft={iconMarginX} marginRight={iconMarginX} marginTop={iconMarginY} marginBottom={iconMarginY}/>
+        <span >{tokenSymbol}</span>
       </Flex>
     </td>
     {/* <td>

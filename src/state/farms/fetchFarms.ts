@@ -55,12 +55,7 @@ const fetchFarms = async () => {
             .div(new BigNumber(10).pow(18 - tokenDecimals))
         }
         lpTotalInQuoteToken = tokenAmount.times(tokenPriceVsQuote)
-        // console.log(farmConfig.tokenSymbol, { 
-        //   tokenDecimals, quoteTokenDecimals, 
-        //   tokenPriceVsQuote: String(tokenPriceVsQuote),
-        //   tokenAmount: String(tokenAmount), 
-        //   lpTotalInQuoteToken: String(lpTotalInQuoteToken) 
-        // })
+
 
       } else {
         // Ratio in % a LP tokens that are in staking, vs the total number in circulation
@@ -85,22 +80,6 @@ const fetchFarms = async () => {
         }
       }
 
-      // const [info, totalAllocPoint, eggPerBlock] = await multicall(masterchefABI, [
-      //   {
-      //     address: getMasterChefAddress(),
-      //     name: 'poolInfo',
-      //     params: [farmConfig.pid],
-      //   },
-      //   {
-      //     address: getMasterChefAddress(),
-      //     name: 'totalAllocPoint',
-      //   },
-      //   {
-      //     address: getMasterChefAddress(),
-      //     name: 'sishiPerBlock',
-      //   },
-      // ])
-
       const [info, totalAllocPoint, eggPerBlock] = await Promise.all([
         callMethodWithPool(getMasterChefAddress(), masterchefABI, 'poolInfo', [farmConfig.pid]),
         callMethodWithPool(getMasterChefAddress(), masterchefABI, 'totalAllocPoint', []),
@@ -109,6 +88,11 @@ const fetchFarms = async () => {
 
       const allocPoint = new BigNumber(info.allocPoint._hex)
       const poolWeight = allocPoint.div(new BigNumber(totalAllocPoint))
+      const priceInQuoteToken = (!farmConfig.isTokenOnly && lpTotalSupply && lpTotalInQuoteToken)
+        ? new BigNumber(quoteTokenBlanceLP)
+          .multipliedBy(2)
+          .div(new BigNumber(lpTotalSupply))
+        : tokenPriceVsQuote
 
       return {
         ...farmConfig,
@@ -116,6 +100,7 @@ const fetchFarms = async () => {
         // quoteTokenAmount: quoteTokenAmount,
         lpTotalInQuoteToken: lpTotalInQuoteToken.toJSON(),
         tokenPriceVsQuote: tokenPriceVsQuote.toJSON(),
+        priceInQuoteToken: priceInQuoteToken.toJSON(),
         lpTotalQuote: new BigNumber(quoteTokenBlanceLP).dividedBy(1e18).toJSON(),
         lpTotalSupply: new BigNumber(lpTotalSupply).dividedBy(1e18).toJSON(),
         poolWeight: poolWeight.toNumber(),

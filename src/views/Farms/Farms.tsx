@@ -19,6 +19,7 @@ import styled from 'styled-components'
 import FarmCard, { FarmWithStakedValue } from './components/FarmCard/FarmCard'
 import FarmTabButtons from './components/FarmTabButtons'
 import Divider from './components/Divider'
+import FarmStats from './components/FarmCard/FarmStats'
 
 export interface FarmsProps {
   tokenMode?: boolean
@@ -35,12 +36,14 @@ const Table = styled.table`
   width: 100%;
   vertical-align: middle;
   line-height: 1.5;
+  font-weight: bold;
   color: ${({ theme }) => theme.colors.text};
   // background: ${(props) => props.theme.card.background};
 
   td, th {
     padding: 10px 5px;
     vertical-align: middle;
+    white-space: nowrap;
   }
 `
 
@@ -122,12 +125,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
         Stake tokens/LP tokens to earn SISHI
       </Heading>
 
-      <StyledCountdown />
-      <CountdownUpdateTimelock />
-
-      <Heading as="h2" color="secondary" mb="50px" style={{ textAlign: 'center' }}>
-        {TranslateString(10000, 'Deposit Fee will be used to yield optimization and  buyback SISHI')}
-      </Heading>
+      <FarmStats account={account} ethereum={ethereum } />
       <FarmTabButtons stakedOnly={stakedOnly} setStakedOnly={setStakedOnly} />
       <div>
         {/* <Divider /> */}
@@ -146,7 +144,6 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
               </tr>
             </thead>
             <tbody>
-
               <Route exact path={`${path}`}>
                 {stakedOnly ? farmsList(stakedOnlyFarms, false) : farmsList(activeFarms, false)}
               </Route>
@@ -157,7 +154,18 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
           </Table>
         </TableContainer>
       </div>
-      <Image src="/images/egg/8.png" alt="illustration" width={1352} height={587} responsive />
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <StyledCountdown />
+      <CountdownUpdateTimelock />
+
+      <Heading as="h2" color="secondary" mb="50px" style={{ textAlign: 'center' }}>
+        {TranslateString(10000, 'Deposit Fee will be used to yield optimization and  buyback SISHI')}
+      </Heading>
+      {/* <Image src="/images/egg/8.png" alt="illustration" width={1352} height={587} responsive /> */}
     </Page >
   )
 }

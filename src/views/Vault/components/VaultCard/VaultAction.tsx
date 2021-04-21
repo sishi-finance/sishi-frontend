@@ -53,6 +53,9 @@ const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken, acco
   }, [onApprove])
 
 
+  console.log("[rawTokenBalance]", tokenName, tokenDecimal, String(tokenBalance), String(rawTokenBalance))
+
+
   const [onPresentDeposit] = useModal(
     <DepositModal max={tokenBalance} onConfirm={onDeposit} tokenName={tokenName} depositFeeBP={depositFeeBP} tokenDecimal={tokenDecimal} />,
   )
@@ -76,7 +79,7 @@ const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken, acco
   return (
     <Flex justifyContent="right" alignItems="center" marginLeft="auto">
       {!account
-        ? <UnlockButton mt="8px" ml="auto" size="sm"/>
+        ? <UnlockButton mt="8px" ml="auto" size="sm" />
         : <>
           {/* <Heading color={rawStakedBalance === 0 ? 'textDisabled' : 'text'} mr="6px">{displayBalance}</Heading> */}
           {renderStakingButtons()}
