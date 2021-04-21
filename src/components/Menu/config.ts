@@ -23,15 +23,15 @@ const config: MenuEntry[] = [
     ],
   },
   {
-    label: 'Farms',
+    label: 'Yield Farming',
     icon: 'FarmIcon',
     href: '/farms',
   },
-  {
-    label: 'Staking',
-    icon: 'PoolIcon',
-    href: '/nests',
-  },
+  // {
+  //   label: 'Staking',
+  //   icon: 'PoolIcon',
+  //   href: '/nests',
+  // },
   {
     label: 'Vault - Beta',
     icon: 'VaultIcon',

@@ -15,6 +15,7 @@ import { QuoteToken } from 'config/constants/types'
 import useI18n from 'hooks/useI18n'
 import StyledCountdown from 'components/Countdown'
 import CountdownUpdateTimelock from 'components/CountdownUpdateTimelock'
+import styled from 'styled-components'
 import FarmCard, { FarmWithStakedValue } from './components/FarmCard/FarmCard'
 import FarmTabButtons from './components/FarmTabButtons'
 import Divider from './components/Divider'
@@ -23,6 +24,26 @@ export interface FarmsProps {
   tokenMode?: boolean
 }
 
+const TableContainer = styled.div`
+  width: 100%;
+  max-width: calc(100vw - 2em);
+  overflow: auto;
+  text-align: center;
+`
+
+const Table = styled.table`
+  width: 100%;
+  vertical-align: middle;
+  line-height: 1.5;
+  color: ${({ theme }) => theme.colors.text};
+  // background: ${(props) => props.theme.card.background};
+
+  td, th {
+    padding: 10px 5px;
+    vertical-align: middle;
+  }
+`
+
 const Farms: React.FC<FarmsProps> = (farmsProps) => {
   const { path } = useRouteMatch()
   const TranslateString = useI18n()
@@ -30,7 +51,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
   const cakePrice = usePriceCakeBusd()
   const bnbPrice = usePriceBnbBusd()
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
-  const { tokenMode } = farmsProps
+  // const { tokenMode } = farmsProps
 
   const dispatch = useDispatch()
   const { fastRefresh } = useRefresh()
@@ -42,8 +63,10 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
 
   const [stakedOnly, setStakedOnly] = useState(false)
 
-  const activeFarms = farmsLP.filter((farm) => !!farm.isTokenOnly === !!tokenMode && farm.multiplier !== '0X')
-  const inactiveFarms = farmsLP.filter((farm) => !!farm.isTokenOnly === !!tokenMode && farm.multiplier === '0X')
+  const activeFarms = farmsLP.filter((farm) => farm.multiplier !== '0X')
+  const inactiveFarms = farmsLP.filter((farm) => farm.multiplier === '0X')
+  // const activeFarms = farmsLP.filter((farm) => !!farm.isTokenOnly === !!tokenMode && farm.multiplier !== '0X')
+  // const inactiveFarms = farmsLP.filter((farm) => !!farm.isTokenOnly === !!tokenMode && farm.multiplier === '0X')
 
   const stakedOnlyFarms = activeFarms.filter(
     (farm) => farm.userData && new BigNumber(farm.userData.stakedBalance).isGreaterThan(0),
@@ -96,9 +119,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
   return (
     <Page>
       <Heading as="h1" size="lg" color="primary" mb="50px" style={{ textAlign: 'center' }}>
-        {tokenMode
-          ? TranslateString(10002, 'Stake tokens to earn SISHI')
-          : TranslateString(320, 'Stake LP tokens to earn SISHI')}
+        Stake tokens/LP tokens to earn SISHI
       </Heading>
 
       <StyledCountdown />
@@ -109,15 +130,32 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
       </Heading>
       <FarmTabButtons stakedOnly={stakedOnly} setStakedOnly={setStakedOnly} />
       <div>
-        <Divider />
-        <FlexLayout>
-          <Route exact path={`${path}`}>
-            {stakedOnly ? farmsList(stakedOnlyFarms, false) : farmsList(activeFarms, false)}
-          </Route>
-          <Route exact path={`${path}/history`}>
-            {farmsList(inactiveFarms, true)}
-          </Route>
-        </FlexLayout>
+        {/* <Divider /> */}
+        <TableContainer>
+          <Table>
+            <thead>
+              <tr>
+                <th> </th>
+                {/* <th> Deposit Fee </th> */}
+                <th> Daily</th>
+                <th> APY </th>
+                <th> TVL</th>
+                <th> Staked</th>
+                <th> Balance</th>
+                {/* <th> </th> */}
+              </tr>
+            </thead>
+            <tbody>
+
+              <Route exact path={`${path}`}>
+                {stakedOnly ? farmsList(stakedOnlyFarms, false) : farmsList(activeFarms, false)}
+              </Route>
+              <Route exact path={`${path}/history`}>
+                {farmsList(inactiveFarms, true)}
+              </Route>
+            </tbody>
+          </Table>
+        </TableContainer>
       </div>
       <Image src="/images/egg/8.png" alt="illustration" width={1352} height={587} responsive />
     </Page >
