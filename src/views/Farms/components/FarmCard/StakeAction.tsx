@@ -15,6 +15,7 @@ import WithdrawModal from '../WithdrawModal'
 interface FarmCardActionsProps {
   stakedBalance?: BigNumber
   tokenBalance?: BigNumber
+  earnedBalance?: BigNumber
   tokenName?: string,
   tokenDecimal?: number,
   pid?: number
@@ -22,17 +23,24 @@ interface FarmCardActionsProps {
   account?: string
   approved?: boolean,
   tokenAddress: string,
+  rewardToken: string,
 }
 
 const IconButtonWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   margin-left: auto;
+  > * {
+    margin-left: 6px;
+    margin-top: 6px;
+  }
   svg {
     width: 20px;
   }
 `
 
-const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, tokenBalance, tokenName, tokenAddress, pid, depositFeeBP, account, approved, tokenDecimal = 18 }) => {
+const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, earnedBalance, tokenBalance, tokenName, tokenAddress, pid, depositFeeBP, account, approved, rewardToken, tokenDecimal = 18 }) => {
   const TranslateString = useI18n()
   const { onStake } = useStake(pid)
   const { onUnstake } = useUnstake(pid)
@@ -41,8 +49,10 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, tokenBalan
   const { onApprove } = useApprove(tokenContract)
   const [requestedApproval, setRequestedApproval] = useState(false)
   const [requestedHarvest, setRequestedHarvest] = useState(false)
+  const [requestedCompound, setRequestedCompound] = useState(false)
 
   const rawStakedBalance = getBalanceNumber(stakedBalance, tokenDecimal)
+  const rawEarnedBalance = getBalanceNumber(earnedBalance, tokenDecimal)
 
   const handleApprove = useCallback(async () => {
     try {
@@ -66,6 +76,17 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, tokenBalan
     }
   }, [onStake, setRequestedHarvest])
 
+  const onCompound = useCallback(async () => {
+    try {
+      setRequestedCompound(true)
+      await onStake(rawEarnedBalance.toString())
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setRequestedCompound(false)
+    }
+  }, [onStake, rawEarnedBalance, setRequestedCompound])
+
   const [onPresentDeposit] = useModal(
     <DepositModal max={tokenBalance} onConfirm={onStake} tokenName={tokenName} depositFeeBP={depositFeeBP} tokenDecimal={tokenDecimal} />,
   )
@@ -78,16 +99,21 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, tokenBalan
       <Button size="sm" marginLeft="auto" onClick={onPresentDeposit}>{TranslateString(999, 'Stake')}</Button>
     ) : (
       <IconButtonWrapper>
-        <Button size="sm" variant="tertiary" mr="6px" onClick={onHarvest} disabled={requestedHarvest}>
+
+        <Button size="sm" variant="tertiary" onClick={onHarvest} disabled={requestedHarvest}>
           Harvest
-        {/* {getBalanceNumber(pendingHarvest, tokenDecimal).toFixed(2)} */}
         </Button>
-        <IconButton size="sm" variant="tertiary" onClick={onPresentWithdraw} mr="6px">
+        <IconButton size="sm" variant="tertiary" onClick={onPresentWithdraw}>
           <MinusIcon color="primary" />
         </IconButton>
         <IconButton size="sm" variant="tertiary" onClick={onPresentDeposit}>
           <AddIcon color="primary" />
         </IconButton>
+        {
+          tokenName === rewardToken && <Button size="sm" variant="tertiary" onClick={onCompound} disabled={requestedCompound}>
+            Compound
+          </Button>
+        }
       </IconButtonWrapper>
     )
   }

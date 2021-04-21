@@ -100,6 +100,7 @@ const FarmRowItemExpand: React.FC<FarmRowItemExpandParam> = ({
           <StakeAction
             stakedBalance={stakedBalance}
             tokenBalance={tokenBalance}
+            earnedBalance={pendingFarming}
             tokenName={lpName}
             tokenDecimal={tokenDecimal}
             pid={pid}
@@ -107,6 +108,7 @@ const FarmRowItemExpand: React.FC<FarmRowItemExpandParam> = ({
             account={account}
             approved={allowance}
             tokenAddress={tokenAddress}
+            rewardToken={rewardToken}
           />
         </div>
       </Row>
