@@ -9,7 +9,8 @@ export const getBalanceNumber = (balance: BigNumber, decimals = 18) => {
     return Number.isFinite(value) ? value : 0
   }
   
-  return Number(balance) / (10 ** decimals)
+  
+  return Number.isFinite(balance) ? Number(balance) / (10 ** decimals) : 0
 
 }
 
