@@ -19,7 +19,7 @@ import styled from 'styled-components'
 import FarmCard, { FarmWithStakedValue } from './components/FarmCard/FarmCard'
 import FarmTabButtons from './components/FarmTabButtons'
 import Divider from './components/Divider'
-import FarmStats from './components/FarmCard/FarmStats'
+// import FarmStats from './components/FarmCard/FarmStats'
 
 export interface FarmsProps {
   tokenMode?: boolean
@@ -125,7 +125,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
         Stake tokens/LP tokens to earn SISHI
       </Heading>
 
-      <FarmStats account={account} ethereum={ethereum } />
+      {/* <FarmStats account={account} ethereum={ethereum } /> */}
       <FarmTabButtons stakedOnly={stakedOnly} setStakedOnly={setStakedOnly} />
       <div>
         {/* <Divider /> */}

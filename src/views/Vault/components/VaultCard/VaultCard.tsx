@@ -43,21 +43,19 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, vaultData, ethereum, accou
   const yieldAPR = (vaultData.calc.apr)
   const yieldRoiDay = (vaultData.calc.roiDay)
   const yieldTVL = (vaultData.calc.tvl)
+  const share = new BigNumber(vaultData.calc.share)
   const walletBalance = new BigNumber(vaultData.calc.walletBalance)
+  const vaultAndFarmBalance = new BigNumber(vaultData.calc.vaultAndFarmBalance)
+  const pendingFarming = new BigNumber(vaultData.calc.pendingFarming)
+  const vaultStackApproved = vaultData.calc.vaultStackApproved
   const pricePerFullShare = (vaultData.pricePerFullShare)
   const mulCurrent = (vaultData.mulCurrent)
   const tokenPrice = vaultData.tokenBUSDRate
 
   const {
-    pendingFarming, vaultAndFarmBalance, vaultStackApproved, lpToken,
+    lpToken,
     perShare, sharePerBlock,
   } = vaultData
-
-  const share = useMemo(
-    () => new BigNumber(vaultData.calc.share)
-      .decimalPlaces(0),
-    [vaultData.calc.share]
-  )
 
   const yieldBalance = Number(share) * Number(pricePerFullShare) / 1e18
   

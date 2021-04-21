@@ -279,9 +279,11 @@ export const fetchVaultFarmUsers = async (vaults: Vault[], { account }: { accoun
   const allVaultFarmUsers = await Promise.all(vaults.map(async vault => {
     if (vault.farmPid < 0) {
       return {
-        vaultStackApproved: false,
-        vaultAndFarmBalance: new BigNumber(0),
-        pendingFarming: new BigNumber(0),
+        calc: {
+          vaultStackApproved: false,
+          vaultAndFarmBalance: new BigNumber(0),
+          pendingFarming: new BigNumber(0),
+        }
       }
     }
     const [
@@ -294,12 +296,14 @@ export const fetchVaultFarmUsers = async (vaults: Vault[], { account }: { accoun
       callMethodWithPool(MasterChefVaultAddress, <any>masterChef, "userInfo", [vault.farmPid, account],)
     ])
 
-    // console.log("vaultAndFarmBalance", Number(new BigNumber(String(vaultAndFarmBalance)),) / 1e18)
+    console.log("[debug] vaultAndFarmBalance", Number(new BigNumber(String(vaultAndFarmBalance)),) / 1e18)
 
     return {
-      vaultStackApproved: Number(farmingAllowance) / (10 ** 18) >= 100000000,
-      vaultAndFarmBalance: new BigNumber(String(vaultAndFarmBalance)),
-      pendingFarming: new BigNumber(pendingFarming),
+      calc : {
+        vaultStackApproved: Number(farmingAllowance) / (10 ** 18) >= 100000000,
+        vaultAndFarmBalance: new BigNumber(String(vaultAndFarmBalance)),
+        pendingFarming: new BigNumber(pendingFarming),
+      }
     }
   }))
 
