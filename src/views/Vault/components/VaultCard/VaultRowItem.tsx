@@ -38,10 +38,10 @@ const VaultRowItem: React.FC<VaultRowItemInfo> = ({ expand, onExpandClick, tag, 
       {(apy * 100).toFixed(2)}%
     </td>
     <td>
-      $ {prettyNumberByPostfix(getBalanceNumber(yieldTVLUSD))}
+      ${prettyNumberByPostfix(getBalanceNumber(yieldTVLUSD))}
     </td>
     <td>
-      $ {prettyNumberByPostfix(getBalanceNumber(walletBalanceUSD))}
+      ${prettyNumberByPostfix(getBalanceNumber(walletBalanceUSD))}
     </td>
   </VaultRowStyled>
 }

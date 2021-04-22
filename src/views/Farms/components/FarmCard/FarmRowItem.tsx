@@ -47,13 +47,13 @@ const VaultFarmItem: React.FC<VaultFarmItemInfo> = ({ farmImage, tokenSymbol, on
       {apyButton}
     </td>
     <td>
-      $ {prettyNumberByPostfix(getBalanceNumber(yieldTVLUSD))}
+      ${prettyNumberByPostfix(getBalanceNumber(yieldTVLUSD))}
     </td>
     <td>
-      $ {prettyNumberByPostfix(getBalanceNumber(stakedUSD))}
+      ${prettyNumberByPostfix(getBalanceNumber(stakedUSD))}
     </td>
     <td>
-      $ {prettyNumberByPostfix(getBalanceNumber(walletBalanceUSD))}
+      ${prettyNumberByPostfix(getBalanceNumber(walletBalanceUSD))}
     </td>
   </VaultRowStyled>
 }

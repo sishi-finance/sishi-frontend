@@ -89,7 +89,7 @@ const FarmRowItemExpand: React.FC<FarmRowItemExpandParam> = ({
           </Row>
           <Row>
             <div style={{ width: "7em", textAlign: "left" }}>{String(tokenSymbol).endsWith(" LP") ? "LP Price" : tokenSymbol}: </div>
-            <div>$ {getBalanceNumber(tokenPriceUSD).toFixed(4)}</div>
+            <div>${getBalanceNumber(tokenPriceUSD).toFixed(4)}</div>
           </Row>
           <Row>
             <LinkExternal marginTop="0.7em"
@@ -112,7 +112,7 @@ const FarmRowItemExpand: React.FC<FarmRowItemExpandParam> = ({
           </Row>
           <Row>
             <div style={{ width: "5em", textAlign: "left" }}>Earned:</div>
-            <div>{getBalanceNumber(pendingFarming).toFixed(4)} {rewardToken} ~ $ {getBalanceNumber(pendingFarmingUSD).toFixed(2)}</div>
+            <div>{getBalanceNumber(pendingFarming).toFixed(4)} {rewardToken} ~ ${getBalanceNumber(pendingFarmingUSD).toFixed(2)}</div>
           </Row>
 
         </div>
