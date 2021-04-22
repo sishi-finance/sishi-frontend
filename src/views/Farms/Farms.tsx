@@ -18,7 +18,7 @@ import CountdownUpdateTimelock from 'components/CountdownUpdateTimelock'
 import styled from 'styled-components'
 import FarmCard, { FarmWithStakedValue } from './components/FarmCard/FarmCard'
 import FarmTabButtons from './components/FarmTabButtons'
-import Divider from './components/Divider'
+// import Divider from './components/Divider'
 // import FarmStats from './components/FarmCard/FarmStats'
 
 export interface FarmsProps {
@@ -136,7 +136,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
                 <th> </th>
                 {/* <th> Deposit Fee </th> */}
                 <th> Daily</th>
-                <th> Rewards APY </th>
+                <th> APY </th>
                 <th> TVL</th>
                 <th> Staked</th>
                 <th> Balance</th>
