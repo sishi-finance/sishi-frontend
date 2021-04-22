@@ -23,7 +23,7 @@ const config: MenuEntry[] = [
     ],
   },
   {
-    label: 'Yield Farming',
+    label: 'sFarm',
     icon: 'FarmIcon',
     href: '/farms',
   },
@@ -33,12 +33,12 @@ const config: MenuEntry[] = [
   //   href: '/nests',
   // },
   {
-    label: 'Vault - Beta',
+    label: 'sVault',
     icon: 'VaultIcon',
     href: '/vaults',
   },
   {
-    label: 'Vault - Earn',
+    label: 'sEarn',
     icon: 'VaultIcon',
     href: '/vault-workers',
   },
@@ -71,6 +71,19 @@ const config: MenuEntry[] = [
   //     },
   //   ],
   // },
+
+  {
+    label: 'Audit',
+    icon: 'AuditIcon',
+    href:'https://docs.sishi.finance/security/audit',
+    newTab: true,
+  },
+  {
+    label: 'Governance',
+    icon: 'GroupsIcon',
+    href:'https://snapshot.org/#/sishi.eth',
+    newTab: true,
+  },
   {
     label: 'Listing',
     icon: 'LayerIcon',
@@ -101,18 +114,6 @@ const config: MenuEntry[] = [
         newTab: true,
       },
     ],
-  },
-  {
-    label: 'Audit',
-    icon: 'AuditIcon',
-    href:'https://docs.sishi.finance/security/audit',
-    newTab: true,
-  },
-  {
-    label: 'Governance',
-    icon: 'GroupsIcon',
-    href:'https://snapshot.org/#/sishi.eth',
-    newTab: true,
   },
   {
     label: 'More',

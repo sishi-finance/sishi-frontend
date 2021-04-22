@@ -35,6 +35,7 @@ const TableContainer = styled.div`
   width: 100%;
   max-width: calc(100vw - 2em);
   overflow: auto;
+  font-weight: bold;
 `
 
 const Table = styled.table`

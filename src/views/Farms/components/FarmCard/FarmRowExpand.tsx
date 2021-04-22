@@ -66,19 +66,7 @@ const FarmRowItemExpand: React.FC<FarmRowItemExpandParam> = ({
   return <VaultRowStyled style={{ borderBottom: `solid 2px #8884` }}>
     <td colSpan={6}>
       <Row style={{ justifyContent: "stretch", alignItems: "flex-start", padding: "0em 0.5em" }}>
-        <div style={{ flex: 3 }}>
-          {/* <Row>
-            <div style={{ width: "10em", textAlign: "left" }}>APY:</div>
-            <div>{(Number(yieldFarmAPY) * 100).toFixed(2)}%</div>
-          </Row>
-          <Row>
-            <div style={{ width: "10em", textAlign: "left" }}>APR:</div>
-            <div>{(Number(yieldFarmAPR) * 100).toFixed(2)}%</div>
-          </Row>
-          <Row>
-            <div style={{ width: "10em", textAlign: "left" }}>Daily:</div>
-            <div>{(Number(yieldFarmRoi) * 100).toFixed(2)}%</div>
-          </Row> */}
+        <div style={{ flex: 3, margin: "0.5em 1em" }}>
           <Row>
             <div style={{ width: "7em", textAlign: "left" }}>Weight:</div>
             <div>{mulCurrent}</div>
@@ -100,12 +88,8 @@ const FarmRowItemExpand: React.FC<FarmRowItemExpandParam> = ({
                 Get {tokenSymbol}
             </LinkExternal>
           </Row>
-          {/* <Row>
-            <div style={{ width: "10em", textAlign: "left" }}>Deposit Fee:</div>
-            <div>{(depositFeeBP / 100).toFixed(2)}%</div>
-          </Row> */}
         </div>
-        <div style={{ flex: 3 }}>
+        <div style={{ flex: 3, margin: "0.5em 1em" }}>
           <Row>
             <div style={{ width: "5em", textAlign: "left" }}>Staked:</div>
             <div>{getBalanceNumber(stakedBalance).toFixed(4)} {tokenSymbol}</div>
@@ -116,7 +100,7 @@ const FarmRowItemExpand: React.FC<FarmRowItemExpandParam> = ({
           </Row>
 
         </div>
-        <div style={{ flex: 2 }}>
+        <div style={{ flex: 2, margin: "0.5em 1em" }}>
           <StakeAction
             stakedBalance={stakedBalance}
             tokenBalance={tokenBalance}
