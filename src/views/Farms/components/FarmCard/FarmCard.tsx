@@ -150,6 +150,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
   }, [farm.lpTotalQuote, bnbPrice, cakePrice, farm.tokenPriceVsQuote, farm.quoteTokenSymbol, farm.isTokenOnly, farm.lpTotalSupply, farm.lpTotalInQuoteToken])
 
   const tokenSymbol = farm.isTokenOnly ? farm.tokenSymbol : farm.lpSymbol
+  const tokenAddress = farm.isTokenOnly ? farm.tokenAddresses[56] : farm.lpAddresses[56]
   // const lpLabel = farm.lpSymbol
   const earnLabel = 'SISHI'
   // const farmAPY =
@@ -190,13 +191,13 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
           stakedBalance,
           tokenBalance,
           tokenSymbol,
+          tokenAddress,
           tokenDecimal: farm.tokenDecimal ?? 16,
           yieldFarmRoi: Number(farm.apy) / 365,
           yieldFarmAPR: Number(farm.apy),
           yieldFarmAPY: (Number(farm.apy) / 365 + 1) ** 365 - 1,
           account,
           allowance: Number(allowance) > 1e25,
-          tokenAddress: farm.tokenAddresses[56],
           tokenPriceUSD: Number(tokenPriceInUSD) * 1e18,
         }} />
       }
