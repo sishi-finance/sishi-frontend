@@ -3,7 +3,6 @@ import styled from "styled-components"
 import { Flex, Text, Skeleton, Image, Tag, Button, LinkExternal } from '@pancakeswap-libs/uikit'
 import { getBalanceNumber, prettyNumberByPostfix } from 'utils/formatBalance'
 
-
 const VaultRowStyled = styled.tr`
   cursor:pointer;
   &:hover {
@@ -23,9 +22,10 @@ type VaultFarmItemInfo = {
   stakedUSD,
   tokenBalance, 
   stakedBalance,
+  apyButton,
 }
 
-const VaultFarmItem: React.FC<VaultFarmItemInfo> = ({ farmImage, tokenSymbol, onExpandClick, expand, depositFee, roiDay, apy, yieldTVLUSD, walletBalanceUSD, stakedUSD }) => {
+const VaultFarmItem: React.FC<VaultFarmItemInfo> = ({ farmImage, tokenSymbol, onExpandClick, expand, depositFee, roiDay, apy, yieldTVLUSD, walletBalanceUSD, stakedUSD, apyButton }) => {
   const iconSize = String(tokenSymbol).endsWith(" LP") ? 30 : 25
   const iconMarginY = String(tokenSymbol).endsWith(" LP") ? "-9px" : "0px"
   const iconMarginX = String(tokenSymbol).endsWith(" LP") ? "3.5px" : "6px"
@@ -36,14 +36,15 @@ const VaultFarmItem: React.FC<VaultFarmItemInfo> = ({ farmImage, tokenSymbol, on
         <span >{tokenSymbol}</span>
       </Flex>
     </td>
-    {/* <td>
+    <td>
       {(depositFee * 100).toFixed(2)}%
+    </td>
+    {/* <td>
+      {(roiDay * 100).toFixed(2)}%
     </td> */}
     <td>
-      {(roiDay * 100).toFixed(2)}%
-    </td>
-    <td>
       {(apy * 100).toFixed(2)}%
+      {apyButton}
     </td>
     <td>
       $ {prettyNumberByPostfix(getBalanceNumber(yieldTVLUSD))}

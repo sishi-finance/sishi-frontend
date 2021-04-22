@@ -12,6 +12,7 @@ export interface Farm extends FarmConfig {
   poolWeight?: number
   depositFeeBP?: number
   eggPerBlock?: number
+  eggPerBlockMultiplier?: number
   userData?: {
     allowance: BigNumber
     tokenBalance: BigNumber

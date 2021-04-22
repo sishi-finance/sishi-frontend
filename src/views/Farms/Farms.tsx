@@ -35,7 +35,7 @@ const TableContainer = styled.div`
 const Table = styled.table`
   width: 100%;
   vertical-align: middle;
-  line-height: 1.5;
+  line-height: 1.7;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.text};
   // background: ${(props) => props.theme.card.background};
@@ -134,8 +134,8 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
             <thead>
               <tr>
                 <th> </th>
-                {/* <th> Deposit Fee </th> */}
-                <th> Daily</th>
+                <th> Deposit Fee </th>
+                {/* <th> Daily</th> */}
                 <th> APY </th>
                 <th> TVL</th>
                 <th> Staked</th>

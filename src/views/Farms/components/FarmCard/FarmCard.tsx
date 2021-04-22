@@ -9,6 +9,8 @@ import useI18n from 'hooks/useI18n'
 import ExpandableSectionButton from 'components/ExpandableSectionButton'
 import { QuoteToken } from 'config/constants/types'
 import { useFarmUser } from 'state/hooks'
+import { BLOCKS_PER_DAY } from 'config'
+import getLiquidityUrlPathParts from 'utils/getLiquidityUrlPathParts'
 import DetailsSection from './DetailsSection'
 import CardHeading from './CardHeading'
 import ApyButton from './ApyButton'
@@ -160,9 +162,17 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
   //     maximumFractionDigits: 2,
   //   })
 
-  const { quoteTokenAdresses, quoteTokenSymbol, tokenAddresses, risk } = farm
+  const { quoteTokenAdresses, quoteTokenSymbol, tokenAddresses, eggPerBlockMultiplier} = farm
+
+  const eggPerBlockMultiplierDay = eggPerBlockMultiplier * Number(BLOCKS_PER_DAY)
 
 
+  const apyButton = <ApyButton
+    tokenAddresses={farm.tokenAddresses}
+    apy={farm.apy} cakePrice={cakePrice} lpLabel={tokenSymbol}
+    quoteTokenAdresses={farm.quoteTokenAdresses} quoteTokenSymbol={farm.quoteTokenSymbol}
+  />
+  const liquidityUrlPathParts = getLiquidityUrlPathParts({ quoteTokenAdresses, quoteTokenSymbol, tokenAddresses })
   return (
     <div style={{ display: "contents" }}>
       <FarmRowItem {...{
@@ -178,6 +188,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
         stakedUSD: Number(stakedBalance) * Number(tokenPriceInUSD),
         tokenBalance,
         stakedBalance,
+        apyButton,
       }} />
       {
         showExpandableSection && <FarmRowItemExpand {...{
@@ -199,6 +210,8 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
           account,
           allowance: Number(allowance) > 1e25,
           tokenPriceUSD: Number(tokenPriceInUSD) * 1e18,
+          liquidityUrlPathParts,
+          eggPerBlockMultiplierDay,
         }} />
       }
     </div>

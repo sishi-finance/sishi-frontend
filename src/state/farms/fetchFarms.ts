@@ -107,6 +107,7 @@ const fetchFarms = async () => {
         multiplier: `${allocPoint.div(100).toString()}X`,
         depositFeeBP: info.depositFeeBP,
         eggPerBlock: new BigNumber(eggPerBlock).toNumber(),
+        eggPerBlockMultiplier: new BigNumber(eggPerBlock).multipliedBy(poolWeight).toNumber(),
       }
     }),
   )
