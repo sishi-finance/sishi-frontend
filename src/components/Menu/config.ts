@@ -13,12 +13,12 @@ const config: MenuEntry[] = [
       {
         label: 'Exchange',
         href: 'https://exchange.sishi.finance/#/swap?inputCurrency=BNB&outputCurrency=0x8e8538c75f273ab2df6adeecd3622a9c314fccf3',
-        newTab: true,
+        // newTab: true,
       },
       {
         label: 'Liquidity',
         href: 'https://exchange.sishi.finance/#/add/0xe9e7cea3dedca5984780bafc599bd69add087d56/0x8E8538c75f273aB2dF6AdEEcD3622A9c314fcCf3',
-        newTab: true,
+        // newTab: true,
       },
     ],
   },
@@ -78,27 +78,27 @@ const config: MenuEntry[] = [
       {
         label: 'DappRadar',
         href: 'https://dappradar.com/binance-smart-chain/defi/sishi-finance',
-        newTab: true,
+        // newTab: true,
       },
       // {
       //   label: 'PancakeSwap',
       //   href: 'https://exchange.pancakeswap.finance/#/swap?inputCurrency=BNB&outputCurrency=0x8e8538c75f273ab2df6adeecd3622a9c314fccf3',
-      //   newTab: true,
+      
       // },
       // {
       //   label: 'Resfinex',
       //   href: 'https://trade.resfinex.com/trade/SISHI_USDT',
-      //   newTab: true,
+      
       // },
       {
         label: 'CoinGecko',
         href: 'https://www.coingecko.com/en/coins/sishi-finance',
-        newTab: true,
+        // newTab: true,
       },
       {
         label: 'Coinpaprika',
         href: 'https://coinpaprika.com/coin/sishi-sishi-token/',
-        newTab: true,
+        // newTab: true,
       },
     ],
   },
@@ -121,22 +121,22 @@ const config: MenuEntry[] = [
       {
         label: 'Github',
         href: 'https://github.com/sishi-finance/',
-        newTab: true,
+        // newTab: true,
       },
       {
         label: 'Docs',
         href: 'https://docs.sishi.finance',
-        newTab: true,
+        // newTab: true,
       },
       {
         label: 'Medium',
         href: 'https://0xsishi.medium.com/',
-        newTab: true,
+        // newTab: true,
       },
       {
         label: 'Publish0x',
         href: 'https://www.publish0x.com/sishi-finance',
-        newTab: true,
+        // newTab: true,
       },
     ],
   },
