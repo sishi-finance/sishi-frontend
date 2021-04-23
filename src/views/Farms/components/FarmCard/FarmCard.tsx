@@ -162,7 +162,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
   //     maximumFractionDigits: 2,
   //   })
 
-  const { quoteTokenAdresses, quoteTokenSymbol, tokenAddresses, eggPerBlockMultiplier} = farm
+  const { quoteTokenAdresses, quoteTokenSymbol, tokenAddresses, eggPerBlockMultiplier, tokenDecimal} = farm
 
   const eggPerBlockMultiplierDay = eggPerBlockMultiplier * Number(BLOCKS_PER_DAY)
 
@@ -183,7 +183,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
         tokenSymbol,
         apy: Number(farm.apy),
         roiDay: Number(farm.apy) / 365,
-        walletBalanceUSD: Number(tokenBalance) * Number(tokenPriceInUSD),
+        walletBalanceUSD: Number(tokenBalance) * Number(tokenPriceInUSD) * (10 ** (18 - tokenDecimal)),
         yieldTVLUSD: Number(totalValue) * 1e18,
         stakedUSD: Number(stakedBalance) * Number(tokenPriceInUSD),
         tokenBalance,

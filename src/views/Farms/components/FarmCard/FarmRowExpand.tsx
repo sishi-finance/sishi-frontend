@@ -62,7 +62,7 @@ const FarmRowItemExpand: React.FC<FarmRowItemExpandParam> = ({
   liquidityUrlPathParts,
   eggPerBlockMultiplierDay,
 }) => {
-
+  // console.log({tokenDecimal})
   return <VaultRowStyled style={{ borderBottom: `solid 2px #8884` }}>
     <td colSpan={6}>
       <Row style={{ justifyContent: "stretch", alignItems: "flex-start", padding: "0em 0.5em" }}>
@@ -92,7 +92,7 @@ const FarmRowItemExpand: React.FC<FarmRowItemExpandParam> = ({
         <div style={{ flex: 3, margin: "0.5em 1em" }}>
           <Row>
             <div style={{ width: "5em", textAlign: "left" }}>Staked:</div>
-            <div>{getBalanceNumber(stakedBalance).toFixed(4)} {tokenSymbol}</div>
+            <div>{getBalanceNumber(stakedBalance, tokenDecimal).toFixed(4)} {tokenSymbol}</div>
           </Row>
           <Row>
             <div style={{ width: "5em", textAlign: "left" }}>Earned:</div>
