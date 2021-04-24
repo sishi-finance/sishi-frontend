@@ -99,20 +99,21 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, earnedBala
       <Button size="sm" marginLeft="auto" onClick={onPresentDeposit}>{TranslateString(999, 'Stake')}</Button>
     ) : (
       <IconButtonWrapper>
+        {
+          tokenName === rewardToken && <Button size="sm" variant="primary" onClick={onCompound} disabled={requestedCompound}>
+            Compound
+          </Button>
+        }
         <IconButton size="sm" variant="tertiary" onClick={onPresentWithdraw}>
           <MinusIcon color="primary" />
         </IconButton>
         <IconButton size="sm" variant="tertiary" onClick={onPresentDeposit}>
           <AddIcon color="primary" />
         </IconButton>
-        <Button size="sm" variant="tertiary" onClick={onHarvest} disabled={requestedHarvest} px="20.5px">
+        {/* <Button size="sm" variant="tertiary" onClick={onHarvest} disabled={requestedHarvest} px="20.5px">
           Harvest
-        </Button>
-        {
-          tokenName === rewardToken && <Button size="sm" variant="tertiary" onClick={onCompound} disabled={requestedCompound}>
-            Compound
-          </Button>
-        }
+        </Button> */}
+
       </IconButtonWrapper>
     )
   }

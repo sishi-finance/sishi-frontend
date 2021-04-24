@@ -144,9 +144,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
 
   return (
     <Page>
-      <Heading as="h1" size="lg" color="primary" mb="50px" style={{ textAlign: 'center' }}>
-        Stake tokens/LP tokens to earn SISHI
-      </Heading>
+
       <Fieldset>
         <legend>
           Yield Portfolio
@@ -160,8 +158,10 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
         <legend>
           Sishi Pools
         </legend>
+        <Heading as="h1" size="md" color="primary" mb="15px" style={{ textAlign: 'center' }}>
+          Stake tokens/LP tokens to earn SISHI
+        </Heading>
         <TableContainer>
-
           <Table>
             <thead>
               <tr>
@@ -193,13 +193,10 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
       </div>
       <br />
       <br />
-      <br />
-      <br />
-      <br />
-      <StyledCountdown />
+      {/* <StyledCountdown /> */}
       <CountdownUpdateTimelock />
 
-      <Heading as="h2" color="secondary" mb="50px" style={{ textAlign: 'center' }}>
+      <Heading as="h2" color="primary" mb="50px" style={{ textAlign: 'center' }}>
         {TranslateString(10000, 'Deposit Fee will be used to yield optimization and  buyback SISHI')}
       </Heading>
       {/* <Image src="/images/egg/8.png" alt="illustration" width={1352} height={587} responsive /> */}

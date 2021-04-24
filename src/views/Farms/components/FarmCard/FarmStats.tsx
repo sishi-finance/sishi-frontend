@@ -41,7 +41,7 @@ const Table = styled('table')`
   color: ${({ theme }) => theme.colors.text};
   th, td {
     padding 0.5em 0.3em;
-    text-align right;
+    text-align left;
     white-space nowrap;
     font-family monospace;
     font-weight bold;
@@ -100,6 +100,25 @@ const PALETTE = [
 ].reverse()
 
 
+const CompoundButton: React.FC<{ pid, earnedBalance, tokenDecimal } & ButtonProps> = ({ pid, earnedBalance, tokenDecimal, children, ...rest }) => {
+  const { onStake } = useStake(pid)
+  const [requestedHarvest, setRequestedHarvest] = useState(false)
+  const rawEarnedBalance = getBalanceNumber(earnedBalance, tokenDecimal)
+
+  const onHarvest = useCallback(async () => {
+    try {
+      setRequestedHarvest(true)
+      await onStake(rawEarnedBalance.toString())
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setRequestedHarvest(false)
+    }
+  }, [onStake, rawEarnedBalance, setRequestedHarvest])
+
+  return <Button {...rest} disabled={requestedHarvest} onClick={onHarvest}>{children}</Button>
+}
+
 const HarvestButton: React.FC<{ pid } & ButtonProps> = ({ pid, children, ...rest }) => {
   const { onStake } = useStake(pid)
   const [requestedHarvest, setRequestedHarvest] = useState(false)
@@ -118,7 +137,7 @@ const HarvestButton: React.FC<{ pid } & ButtonProps> = ({ pid, children, ...rest
   return <Button {...rest} disabled={requestedHarvest} onClick={onHarvest}>{children}</Button>
 }
 
-const HarvestAllButton: React.FC<{ pids : number[] } & ButtonProps> = ({ pids, children, ...rest }) => {
+const HarvestAllButton: React.FC<{ pids: number[] } & ButtonProps> = ({ pids, children, ...rest }) => {
   const { onReward } = useAllHarvest(pids)
   const [requestedHarvest, setRequestedHarvest] = useState(false)
 
@@ -241,8 +260,8 @@ const FarmStats: React.FC<StatCardProps> = ({ ethereum, account }) => {
               <th>Total	</th>
               {/* <th>Total Pool	</th> */}
               <th>Pool Share	</th>
-              <th>SISHI Earned</th>
-              <th>Action</th>
+              <th>Earned</th>
+              <th style={{textAlign:"left"}}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -257,8 +276,14 @@ const FarmStats: React.FC<StatCardProps> = ({ ethereum, account }) => {
                 <th>{(100 * farm.stakedBalanceUSD / farm.lpTotalInUSD).toFixed(2)}%</th>
                 {/* <th>{(farm.earningPerDay / 1e18).toFixed(4)} SISHI/Day</th> */}
                 <th>{(Number(farm.earnings) / 1e18).toFixed(3)}</th>
-                <th>
+                <th style={{textAlign:"left"}}>
                   <HarvestButton size="sm" pid={farm.pid}>Harvest</HarvestButton>
+
+                  {/* {
+                    farm.isTokenOnly && farm.tokenSymbol === "SISHI" 
+                      && <CompoundButton size="sm" pid={farm.pid} earnedBalance={farm.earnings} tokenDecimal={farm.tokenDecimal} ml="2">Compound</CompoundButton>
+                  } */}
+                  
                 </th>
               </tr>)
             }

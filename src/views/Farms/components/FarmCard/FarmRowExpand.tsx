@@ -75,29 +75,33 @@ const FarmRowItemExpand: React.FC<FarmRowItemExpandParam> = ({
             <div style={{ width: "7em", textAlign: "left" }}>Allocate:</div>
             <div>{getBalanceNumber(eggPerBlockMultiplierDay).toFixed(2)} SISHI/Day</div>
           </Row>
-          <Row>
+          {/* <Row>
             <div style={{ width: "7em", textAlign: "left" }}>{String(tokenSymbol).endsWith(" LP") ? "LP Price" : tokenSymbol}: </div>
             <div>${getBalanceNumber(tokenPriceUSD).toFixed(4)}</div>
-          </Row>
+          </Row> */}
           <Row>
             <LinkExternal marginTop="0.7em"
-              href={ String(tokenSymbol).endsWith(" LP")
-                  ? `https://exchange.sishi.finance/#/add/${liquidityUrlPathParts}`
-                  : `https://exchange.sishi.finance/#/swap?inputCurrency=BNB&outputCurrency=${tokenAddress}`
+              href={String(tokenSymbol).endsWith(" LP")
+                ? `https://exchange.sishi.finance/#/add/${liquidityUrlPathParts}`
+                : `https://exchange.sishi.finance/#/swap?inputCurrency=BNB&outputCurrency=${tokenAddress}`
               }>
-                Get {tokenSymbol}
+              Get {tokenSymbol}
             </LinkExternal>
           </Row>
         </div>
         <div style={{ flex: 3, margin: "0.5em 1em" }}>
+          {/* <Row>
+            <div style={{ width: "7em", textAlign: "left" }}>Allocate:</div>
+            <div>{getBalanceNumber(eggPerBlockMultiplierDay).toFixed(2)} SISHI/Day</div>
+          </Row> */}
           <Row>
             <div style={{ width: "5em", textAlign: "left" }}>Staked:</div>
             <div>{getBalanceNumber(stakedBalance, tokenDecimal).toFixed(4)} {tokenSymbol}</div>
           </Row>
-          <Row>
+          {/* <Row>
             <div style={{ width: "5em", textAlign: "left" }}>Earned:</div>
             <div>{getBalanceNumber(pendingFarming).toFixed(4)} {rewardToken} ~ ${getBalanceNumber(pendingFarmingUSD).toFixed(2)}</div>
-          </Row>
+          </Row> */}
 
         </div>
         <div style={{ flex: 2, margin: "0.5em 1em" }}>
