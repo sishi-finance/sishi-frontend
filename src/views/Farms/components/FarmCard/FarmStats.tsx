@@ -164,10 +164,11 @@ const FarmStats: React.FC<StatCardProps> = ({ ethereum, account }) => {
   const filteredFarms = farms.filter(e => Number(e.stakedBalance) > 0 || e.tokenSymbol === "SISHI")
     .map(e => ({
       ...e,
+      stakedBalance: e.stakedBalance.multipliedBy((10 ** (18 - (e.isTokenOnly ? e.tokenDecimal : 18)))),
       tokenBalanceUSD: e.tokenBalanceUSD / 1e18,
       stakedBalanceUSD: e.stakedBalanceUSD / 1e18,
       balanceDecimal: e.isTokenOnly ? e.tokenDecimal : 18,
-      lpTotalInUSD: e.lpTotalInUSD / 1e18,
+      lpTotalInUSD: e.lpTotalInUSD * (10 ** (18 - (e.isTokenOnly ? e.tokenDecimal : 18))) / 1e18,
     }))
     .sort((e, f) => f.stakedBalanceUSD - e.stakedBalanceUSD)
 
