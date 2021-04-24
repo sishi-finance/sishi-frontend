@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js'
 import { useEffect, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
+import { BLOCKS_PER_DAY } from 'config'
 import { fetchFarmsPublicDataAsync, fetchPoolsPublicDataAsync, fetchPoolsUserDataAsync } from './actions'
 import { State, Farm, Pool } from './types'
 import { QuoteToken } from '../config/constants/types'
@@ -62,18 +63,33 @@ export const useFarmsUser = () => {
 
   return farms.map(farm => {
 
-    const tokenPrice = farm.tokenPriceVsQuote
-      ? Number(farm.tokenPriceVsQuote) * Number(getTokenQuotePrice(farm.quoteTokenSymbol))
+    const priceInQuoteToken = (!farm.isTokenOnly && farm.lpTotalSupply && farm.lpTotalInQuoteToken)
+      ? new BigNumber(farm.lpTotalQuote)
+        .multipliedBy(2)
+        .div(farm.lpTotalSupply)
+      : new BigNumber((farm.tokenPriceVsQuote ?? "0").toString())
+
+    const tokenPriceUSD = farm.tokenPriceVsQuote
+      ? Number(priceInQuoteToken) * Number(getTokenQuotePrice(farm.quoteTokenSymbol))
       : 0
 
+    const earningPerDay = Number(farm.eggPerBlockMultiplier) 
+      * Number(farm.userData?.stakedBalance ?? 0) / Number(farm.lpTokenBalanceMC ?? 0)
+      * Number(BLOCKS_PER_DAY)
+    
+    
     return {
       ...farm,
+      tokenPriceUSD,
       allowance: farm.userData ? new BigNumber(farm.userData.allowance) : new BigNumber(0),
       tokenBalance: farm.userData ? new BigNumber(farm.userData.tokenBalance) : new BigNumber(0),
       stakedBalance: farm.userData ? new BigNumber(farm.userData.stakedBalance) : new BigNumber(0),
-      tokenBalanceUSD: Number(farm.userData?.tokenBalance ?? 0) * tokenPrice,
-      stakedBalanceUSD: Number(farm.userData?.stakedBalance ?? 0) * tokenPrice,
+      tokenBalanceUSD: Number(farm.userData?.tokenBalance ?? 0) * tokenPriceUSD,
+      stakedBalanceUSD: Number(farm.userData?.stakedBalance ?? 0) * tokenPriceUSD,
       earnings: farm.userData ? new BigNumber(farm.userData.earnings) : new BigNumber(0),
+      lpTotalInUSD: Number(farm.lpTokenBalanceMC ?? 0) * tokenPriceUSD,
+      earningPerDay,
+      earningPerDayUSD: earningPerDay * Number(cakePrice) / 1e18,
     }
   })
 }

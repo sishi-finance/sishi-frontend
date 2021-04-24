@@ -19,7 +19,7 @@ import styled from 'styled-components'
 import FarmCard, { FarmWithStakedValue } from './components/FarmCard/FarmCard'
 import FarmTabButtons from './components/FarmTabButtons'
 // import Divider from './components/Divider'
-// import FarmStats from './components/FarmCard/FarmStats'
+import FarmStats from './components/FarmCard/FarmStats'
 
 export interface FarmsProps {
   tokenMode?: boolean
@@ -30,6 +30,29 @@ const TableContainer = styled.div`
   max-width: calc(100vw - 2em);
   overflow: auto;
   text-align: left;
+`
+
+const Fieldset = styled.fieldset`
+  display: block;
+  margin-inline-start: 2px;
+  margin-inline-end: 2px;
+  padding-block-start: 0.35em;
+  padding-inline-start: 0.75em;
+  padding-inline-end: 0.75em;
+  padding-block-end: 0.625em;
+  min-inline-size: min-content;
+  border-width: 2px;
+  border-style: groove;
+  border-color: ${({ theme }) => theme.colors.borderColor};
+  border-image: initial;
+  legend {
+    text-align: center;
+    padding: 0.5em;
+    border-color: ${({ theme }) => theme.colors.borderColor};
+    font-size: 18px;
+    color: ${({ theme }) => theme.colors.text};
+    font-weight: bold;
+  }
 `
 
 const Table = styled.table`
@@ -124,12 +147,21 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
       <Heading as="h1" size="lg" color="primary" mb="50px" style={{ textAlign: 'center' }}>
         Stake tokens/LP tokens to earn SISHI
       </Heading>
+      <Fieldset>
+        <legend>
+          Yield Portfolio
+        </legend>
+        <FarmStats account={account} ethereum={ethereum} />
+      </Fieldset>
+      <br />
+      <br />
 
-      {/* <FarmStats account={account} ethereum={ethereum } /> */}
-      <FarmTabButtons stakedOnly={stakedOnly} setStakedOnly={setStakedOnly} />
-      <div>
-        {/* <Divider /> */}
+      <Fieldset>
+        <legend>
+          Sishi Pools
+        </legend>
         <TableContainer>
+
           <Table>
             <thead>
               <tr>
@@ -138,7 +170,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
                 {/* <th> Daily</th> */}
                 <th> APY </th>
                 <th> TVL</th>
-                <th> Staked</th>
+                {/* <th> Staked</th> */}
                 <th> Balance</th>
                 {/* <th> </th> */}
               </tr>
@@ -153,12 +185,17 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
             </tbody>
           </Table>
         </TableContainer>
+      </Fieldset>
+      {/* <FarmTabButtons stakedOnly={stakedOnly} setStakedOnly={setStakedOnly} /> */}
+      <div>
+        {/* <Divider /> */}
+
       </div>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
       <StyledCountdown />
       <CountdownUpdateTimelock />
 
