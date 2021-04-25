@@ -27,7 +27,7 @@ export interface FarmsProps {
 
 const TableContainer = styled.div`
   width: 100%;
-  max-width: calc(100vw - 2em);
+  // max-width: calc(100vw - 2em);
   overflow: auto;
   text-align: left;
 `
