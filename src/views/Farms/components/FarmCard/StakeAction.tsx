@@ -35,6 +35,7 @@ const IconButtonWrapper = styled.div`
   flex-wrap: wrap;
   justify-content: flex-end;
   margin-left: auto;
+  min-width:180px;
   > * {
     margin-left: 6px;
     margin-top: 6px;
