@@ -71,76 +71,81 @@ const config: MenuEntry[] = [
   //     },
   //   ],
   // },
-
+  {
+    label: 'sVote',
+    icon: 'GroupsIcon',
+    href:'https://snapshot.org/#/sishi.eth',
+    newTab: true,
+  },
+  {
+    label: 'sDocs',
+    icon: 'GitbookIcon',
+    href:'https://docs.sishi.finance',
+    newTab: true,
+  },
   {
     label: 'Audit',
     icon: 'AuditIcon',
     href:'https://docs.sishi.finance/security/audit',
     newTab: true,
   },
-  {
-    label: 'Governance',
-    icon: 'GroupsIcon',
-    href:'https://snapshot.org/#/sishi.eth',
-    newTab: true,
-  },
-  {
-    label: 'Listing',
-    icon: 'LayerIcon',
-    items: [
-      {
-        label: 'DappRadar',
-        href: 'https://dappradar.com/binance-smart-chain/defi/sishi-finance',
-        newTab: true,
-      },
-      // {
-      //   label: 'PancakeSwap',
-      //   href: 'https://exchange.pancakeswap.finance/#/swap?inputCurrency=BNB&outputCurrency=0x8e8538c75f273ab2df6adeecd3622a9c314fccf3',
-      //   newTab: true,
-      // },
-      // {
-      //   label: 'Resfinex',
-      //   href: 'https://trade.resfinex.com/trade/SISHI_USDT',
-      //   newTab: true,
-      // },
-      {
-        label: 'CoinGecko',
-        href: 'https://www.coingecko.com/en/coins/sishi-finance',
-        newTab: true,
-      },
-      {
-        label: 'Coinpaprika',
-        href: 'https://coinpaprika.com/coin/sishi-sishi-token/',
-        newTab: true,
-      },
-    ],
-  },
-  {
-    label: 'More',
-    icon: 'MoreIcon',
-    items: [
-      {
-        label: 'Github',
-        href: 'https://github.com/sishi-finance/',
-        newTab: true,
-      },
-      {
-        label: 'Docs',
-        href: 'https://docs.sishi.finance',
-        newTab: true,
-      },
-      {
-        label: 'Medium',
-        href: 'https://0xsishi.medium.com/',
-        newTab: true,
-      },
-      {
-        label: 'Publish0x',
-        href: 'https://www.publish0x.com/sishi-finance',
-        newTab: true,
-      },
-    ],
-  },
+  // {
+  //   label: 'Listing',
+  //   icon: 'LayerIcon',
+  //   items: [
+  //     {
+  //       label: 'DappRadar',
+  //       href: 'https://dappradar.com/binance-smart-chain/defi/sishi-finance',
+  //       newTab: true,
+  //     },
+  //     // {
+  //     //   label: 'PancakeSwap',
+  //     //   href: 'https://exchange.pancakeswap.finance/#/swap?inputCurrency=BNB&outputCurrency=0x8e8538c75f273ab2df6adeecd3622a9c314fccf3',
+  //     //   newTab: true,
+  //     // },
+  //     // {
+  //     //   label: 'Resfinex',
+  //     //   href: 'https://trade.resfinex.com/trade/SISHI_USDT',
+  //     //   newTab: true,
+  //     // },
+  //     {
+  //       label: 'CoinGecko',
+  //       href: 'https://www.coingecko.com/en/coins/sishi-finance',
+  //       newTab: true,
+  //     },
+  //     {
+  //       label: 'Coinpaprika',
+  //       href: 'https://coinpaprika.com/coin/sishi-sishi-token/',
+  //       newTab: true,
+  //     },
+  //   ],
+  // },
+  // {
+  //   label: 'More',
+  //   icon: 'MoreIcon',
+  //   items: [
+  //     {
+  //       label: 'Github',
+  //       href: 'https://github.com/sishi-finance/',
+  //       newTab: true,
+  //     },
+  //     // {
+  //     //   label: 'Docs',
+  //     //   href: 'https://docs.sishi.finance',
+  //     //   newTab: true,
+  //     // },
+  //     {
+  //       label: 'Medium',
+  //       href: 'https://0xsishi.medium.com/',
+  //       newTab: true,
+  //     },
+  //     {
+  //       label: 'Publish0x',
+  //       href: 'https://www.publish0x.com/sishi-finance',
+  //       newTab: true,
+  //     },
+  //   ],
+  // },
 ]
 
 export default config

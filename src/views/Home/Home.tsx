@@ -13,6 +13,7 @@ import TwitterCard from './components/TwitterCard'
 import BurningStats from './components/BurningStats'
 import SishiFinanceStats from './components/SishiFinanceStats'
 import SishiProducts from './components/SishiProducts'
+import SishiCommunities from './components/SishiComunities'
 
 const Fieldset = styled.fieldset`
   display: block;
@@ -112,19 +113,16 @@ const Home: React.FC = () => {
         </legend>
         <SishiProducts/>
       </Fieldset>
-      <div>
-        <Cards>
-          <div>
-            {/* <FarmStakingCard /> */}
-            <br />
-            <br />
-            {/* <CakeStats /> */}
-          </div>
-          {/* <BurningStats /> */}
-          {/* <TotalValueLockedCard /> */}
-          {/* <TwitterCard /> */}
-        </Cards>
-      </div>
+
+
+      <br />
+      <br />
+      <Fieldset style={{padding:"2em"}}>
+        <legend>
+          s-HUB
+        </legend>
+        <SishiCommunities/>
+      </Fieldset>
 
     </Page>
   )
