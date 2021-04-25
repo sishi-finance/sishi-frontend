@@ -6,6 +6,16 @@ const config: MenuEntry[] = [
     icon: 'HomeIcon',
     href: '/',
   },
+  // {
+  //   label: 'Swap',
+  //   icon: 'TradeIcon',
+  //   href: 'https://exchange.sishi.finance/#/swap?inputCurrency=BNB&outputCurrency=0x8e8538c75f273ab2df6adeecd3622a9c314fccf3',
+  // },
+  // {
+  //   label: 'Liquid',
+  //   icon: 'TradeIcon',
+  //   href: 'https://exchange.sishi.finance/#/add/0xe9e7cea3dedca5984780bafc599bd69add087d56/0x8E8538c75f273aB2dF6AdEEcD3622A9c314fcCf3',
+  // },
   {
     label: 'Trade',
     icon: 'TradeIcon',
