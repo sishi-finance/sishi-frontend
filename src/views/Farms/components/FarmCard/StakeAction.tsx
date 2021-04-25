@@ -9,6 +9,8 @@ import { getBalanceNumber } from 'utils/formatBalance'
 import { useApprove } from 'hooks/useApprove'
 import { useERC20 } from 'hooks/useContract'
 import UnlockButton from 'components/UnlockButton'
+import { useFarmFromPid, useFarmUser } from 'state/hooks'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import DepositModal from '../DepositModal'
 import WithdrawModal from '../WithdrawModal'
 
@@ -24,6 +26,8 @@ interface FarmCardActionsProps {
   approved?: boolean,
   tokenAddress: string,
   rewardToken: string,
+  compact?: boolean
+
 }
 
 const IconButtonWrapper = styled.div`
@@ -40,7 +44,7 @@ const IconButtonWrapper = styled.div`
   }
 `
 
-const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, earnedBalance, tokenBalance, tokenName, tokenAddress, pid, depositFeeBP, account, approved, rewardToken, tokenDecimal = 18 }) => {
+const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, earnedBalance, tokenBalance, tokenName, tokenAddress, pid, depositFeeBP, account, approved, rewardToken, compact = false, tokenDecimal = 18 }) => {
   const TranslateString = useI18n()
   const { onStake } = useStake(pid)
   const { onUnstake } = useUnstake(pid)
@@ -95,24 +99,26 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, earnedBala
   )
 
   const renderStakingButtons = () => {
-    return rawStakedBalance === 0 ? (
+    return (rawStakedBalance === 0 && !compact) ? (
       <Button size="sm" marginLeft="auto" onClick={onPresentDeposit}>{TranslateString(999, 'Stake')}</Button>
     ) : (
       <IconButtonWrapper>
         {
-          tokenName === rewardToken && <Button size="sm" variant="primary" onClick={onCompound} disabled={requestedCompound}>
+          !compact && tokenName === rewardToken && <Button size="sm" variant="primary" onClick={onCompound} disabled={requestedCompound}>
             Compound
           </Button>
         }
-        <IconButton size="sm" variant="tertiary" onClick={onPresentWithdraw}>
-          <MinusIcon color="primary" />
+        <IconButton size="sm" variant="primary" disabled={stakedBalance.eq(0)} onClick={onPresentWithdraw}>
+          <MinusIcon color="tertiary" />
         </IconButton>
-        <IconButton size="sm" variant="tertiary" onClick={onPresentDeposit}>
-          <AddIcon color="primary" />
+        <IconButton size="sm" variant="primary" disabled={tokenBalance.eq(0)} onClick={onPresentDeposit}>
+          <AddIcon color="tertiary" />
         </IconButton>
-        {/* <Button size="sm" variant="tertiary" onClick={onHarvest} disabled={requestedHarvest} px="20.5px">
-          Harvest
-        </Button> */}
+        {
+          compact && <Button size="sm" variant="primary" onClick={onHarvest} disabled={requestedHarvest} px="20.5px">
+            Harvest
+          </Button>
+        }
 
       </IconButtonWrapper>
     )
@@ -133,4 +139,28 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, earnedBala
   )
 }
 
+const StakeActionWithPid: React.FC<{ pid }> = ({ pid }) => {
+
+  const { allowance, earnings, stakedBalance, tokenBalance, } = useFarmUser(pid)
+  const { tokenSymbol, lpSymbol, isTokenOnly, tokenAddresses, lpAddresses, depositFeeBP, tokenDecimal } = useFarmFromPid(pid)
+  const tokenName = isTokenOnly ? tokenSymbol : lpSymbol
+  const tokenAddress = isTokenOnly ? tokenAddresses[56] : lpAddresses[56]
+  const { account }: { account: string } = useWallet()
+  const approved = allowance.gt(new BigNumber(1e25))
+  const decimal = isTokenOnly ? tokenDecimal : 18
+
+  return <StakeAction
+    compact
+    rewardToken="SISHI"
+    {...{
+      stakedBalance,
+      tokenBalance, tokenName, tokenAddress,
+      pid, depositFeeBP, account, approved,
+      earnedBalance: earnings,
+      tokenDecimal: decimal
+    }}
+  />
+}
+
 export default StakeAction
+export { StakeActionWithPid }

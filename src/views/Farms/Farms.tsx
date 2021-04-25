@@ -168,7 +168,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
                 <th> </th>
                 <th> Deposit Fee </th>
                 {/* <th> Daily</th> */}
-                <th> APY </th>
+                <th> APR </th>
                 <th> TVL</th>
                 {/* <th> Staked</th> */}
                 <th> Balance</th>

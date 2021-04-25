@@ -8,6 +8,7 @@ import { getBalanceNumber, prettyNumberByPostfix } from 'utils/formatBalance';
 import CardValue from 'views/Home/components/CardValue';
 import useStake from 'hooks/useStake'
 import { useAllHarvest } from 'hooks/useHarvest';
+import { StakeActionWithPid } from './StakeAction';
 
 
 const Row = styled.div`
@@ -170,7 +171,9 @@ const FarmStats: React.FC<StatCardProps> = ({ ethereum, account }) => {
       balanceDecimal: e.isTokenOnly ? e.tokenDecimal : 18,
       lpTotalInUSD: e.lpTotalInUSD * (10 ** (18 - (e.isTokenOnly ? e.tokenDecimal : 18))) / 1e18,
     }))
+    .filter(e => e.stakedBalanceUSD > 0.00001 || e.tokenSymbol === "SISHI")
     .sort((e, f) => f.stakedBalanceUSD - e.stakedBalanceUSD)
+
 
 
   const totalStackedUSDT = filteredFarms.map(e => e.stakedBalanceUSD ?? 0).reduce((e, f) => e + f, 0)
@@ -262,7 +265,7 @@ const FarmStats: React.FC<StatCardProps> = ({ ethereum, account }) => {
               {/* <th>Total Pool	</th> */}
               <th>Pool Share	</th>
               <th>Earned</th>
-              <th style={{textAlign:"left"}}>Action</th>
+              <th style={{textAlign:"right"}}>   </th>
             </tr>
           </thead>
           <tbody>
@@ -278,7 +281,8 @@ const FarmStats: React.FC<StatCardProps> = ({ ethereum, account }) => {
                 {/* <th>{(farm.earningPerDay / 1e18).toFixed(4)} SISHI/Day</th> */}
                 <th>{(Number(farm.earnings) / 1e18).toFixed(3)}</th>
                 <th style={{textAlign:"left"}}>
-                  <HarvestButton size="sm" pid={farm.pid}>Harvest</HarvestButton>
+                  <StakeActionWithPid pid={farm.pid} />
+                  {/* <HarvestButton size="sm" pid={farm.pid}>Harvest</HarvestButton> */}
 
                   {/* {
                     farm.isTokenOnly && farm.tokenSymbol === "SISHI" 
