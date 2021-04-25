@@ -42,6 +42,7 @@ const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken, acco
   const [requestedApproval, setRequestedApproval] = useState(false)
   const tokenContract = useERC20(vault.tokenAddress)
   const { onApprove } = useVaultApprove(vault, reloadToken)
+  const { disableDeposit = false } = vault
   const handleApprove = useCallback(async () => {
     try {
       setRequestedApproval(true)
@@ -68,7 +69,7 @@ const VaultAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken, acco
       <IconButton size="sm" variant="tertiary" onClick={onPresentWithdraw} mr="6px" disabled={rawStakedBalance === 0}>
         <MinusIcon color="primary" />
       </IconButton>
-      <IconButton size="sm" variant="tertiary" onClick={onPresentDeposit} disabled={rawTokenBalance === 0}>
+      <IconButton size="sm" variant="tertiary" onClick={onPresentDeposit} disabled={disableDeposit || rawTokenBalance === 0}>
         <AddIcon color="primary" />
       </IconButton>
     </IconButtonWrapper> : <Button size="sm" ml="auto" disabled={requestedApproval} onClick={handleApprove}>

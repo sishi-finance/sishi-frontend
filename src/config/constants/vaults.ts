@@ -11,6 +11,7 @@ export interface Vault {
   strategy?: string,
   fromBlock?: number,
   harvestReward?: string,
+  disableDeposit?: boolean,
   lpToken?: {
     address:string,
     quoteAddress: string,
@@ -51,6 +52,7 @@ export const vaultLists: Vault[] = [
     strategy: "0xF81D859a4Ed3877F8e81a9090D5a6B1482c07181",
     fromBlock: 6531895,
     harvestReward: "XVS",
+    disableDeposit: true,
   },
   {
     tokenSymbol: "CAKE",
@@ -116,6 +118,24 @@ export const vaultLists: Vault[] = [
       quote: QuoteToken.BUSD,
     }
   },
+
+  // {
+  //   tokenSymbol: "BNB-BUSD LP",
+  //   isTokenOnly: false,
+  //   tokenAddress: "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16",
+  //   tag: ["Pancake"],
+  //   farmPid: -1,
+  //   vault: "0x698E8923a9acFA361E40e7Bd34d6F429f5910d59",
+  //   strategy: "0xE55271f2ee51Ca53dc6Ea9bA7D6c3dfacD34983d",
+  //   fromBlock: 6873636,
+  //   harvestReward: "CAKE",
+  //   lpToken: {
+  //     address:'0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16',
+  //     quoteAddress: contracts.busd[56],
+  //     quote: QuoteToken.BUSD,
+  //   }
+  // },
+
   // {
   //   tokenSymbol: "XVS",
   //   isTokenOnly: true,
@@ -135,6 +155,7 @@ export const vaultLists: Vault[] = [
     strategy: "0xf7C30769e700d3af6b3347b36Ac663797588b3fD",
     fromBlock: 6563549,
     harvestReward: "XVS",
+    disableDeposit: true,
     lpToken: {
       address:'0xff17ff314925dff772b71abdff2782bc913b3575',
       quoteAddress: contracts.busd[56],
@@ -151,6 +172,7 @@ export const vaultLists: Vault[] = [
     strategy: "0xAB9c148C08cAB3e56Bb8ca2Cd0B240384184E26d",
     fromBlock: 6563997,
     harvestReward: "XVS",
+    disableDeposit: true,
     lpToken: {
       address:'0x2f82286c2178e9144f2a7b8d27d5b3203253cba4',
       quoteAddress: contracts.busd[56],
