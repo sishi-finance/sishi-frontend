@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import styled from "styled-components"
 import { Flex, Text, Skeleton, Image, Tag, Button, LinkExternal } from '@pancakeswap-libs/uikit'
 import { getBalanceNumber } from 'utils/formatBalance'
+import getLiquidityUrlPathParts from 'utils/getLiquidityUrlPathParts'
 import StackAction from "./StackAction"
 import VaultAction from "./VaultAction"
 
@@ -59,6 +60,7 @@ const VaultRowItemExpand: React.FC<VaultRowItemExpand> = ({
   yieldFarmRoi,
   pendingFarmingUSD,
 }) => {
+  console.log(vaultData)
   return <VaultRowStyled style={{ borderBottom: `solid 2px #8884` }}>
     <td colSpan={6}>
       <Row style={{ justifyContent: "stretch", alignItems: "flex-start", padding: "0em 0.5em" }}>
@@ -143,6 +145,12 @@ const VaultRowItemExpand: React.FC<VaultRowItemExpand> = ({
       <Row style={{ justifyContent: "stretch", marginTop: "1em", padding: "0em 0.5em" }}>
         <LinkExternal href={`https://bscscan.com/address/${vaultData.vault}`} fontSize="12" marginRight="3">Vault contract</LinkExternal>
         <LinkExternal href={`https://bscscan.com/address/${vaultData.strategy}`} fontSize="12" marginRight="3">Strategy contract</LinkExternal>
+        <LinkExternal href={
+          String(tokenSymbol).endsWith("LP")
+            ? `https://exchange.sishi.finance/#/add/${vaultData.lpToken.quoteAddress}/${vaultData.lpToken.baseAddress}`
+            : `https://exchange.sishi.finance/#/swap?outputCurrency=${vaultData.tokenAddress}`
+        } fontSize="12" marginRight="3">Get {tokenSymbol}</LinkExternal>
+
       </Row>
     </td>
   </VaultRowStyled>

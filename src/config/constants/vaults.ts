@@ -13,6 +13,7 @@ export interface Vault {
   harvestReward?: string,
   disableDeposit?: boolean,
   lpToken?: {
+    baseAddress?: string,
     address:string,
     quoteAddress: string,
     quote: string,
@@ -131,6 +132,7 @@ export const vaultLists: Vault[] = [
     harvestReward: "CAKE",
     lpToken: {
       address:'0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16',
+      baseAddress: contracts.wbnb[56],
       quoteAddress: contracts.busd[56],
       quote: QuoteToken.BUSD,
     }
@@ -140,13 +142,14 @@ export const vaultLists: Vault[] = [
     isTokenOnly: false,
     tokenAddress: "0x2354ef4DF11afacb85a5C7f98B624072ECcddbB1",
     tag: ["Pancake","PCS v2"],
-    farmPid: -1,
+    farmPid: 14,
     vault: "0x17AFF78AE776a67d3560f60E0b045Ae755D47581",
     strategy: "0x16bb754AbB883F89D4F731628f8A43AB66453963",
     fromBlock: 6894768,
     harvestReward: "CAKE",
     lpToken: {
       address:'0x2354ef4DF11afacb85a5C7f98B624072ECcddbB1',
+      baseAddress: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
       quoteAddress: contracts.busd[56],
       quote: QuoteToken.BUSD,
     }
