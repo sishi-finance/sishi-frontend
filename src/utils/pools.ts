@@ -80,7 +80,6 @@ class Pool {
 
   private async executePool() {
     // console.log("[Pool] executePool")
-
     const queue = this.queue
     const abi = this.abi
     const poolRunId = poolCount++
@@ -90,40 +89,55 @@ class Pool {
     this.processing += queue.length
     this.pending -= queue.length
 
-    // console.log("[Pool] ABI", { queue, abi })
-
     console.time(`[Pool] [count:${queue.length}] ${poolRunId}`);
 
 
     const exeMethod = this.enableArchiveMode ? multicallWithArchive : multicall
 
-    const allResult = await exeMethod(
-      abi,
-      queue.map(e => ({
-        address: e.address,
-        name: e.method,
-        params: e.params,
-      })),
-      ...this.callParams
-    )
 
-    console.timeEnd(`[Pool] [count:${queue.length}] ${poolRunId}`)
+    try {
+
+      // console.log("[Pool] ABI", { queue, abi })
 
 
-    queue.forEach((call, index) => {
-      try {
-        if (allResult[index] instanceof Error) {
-          call.reject(allResult[index])
-        } else {
-          call.resolve(allResult[index])
+      const allResult = await exeMethod(
+        abi,
+        queue.map(e => ({
+          address: e.address,
+          name: e.method,
+          params: e.params,
+        })),
+        ...this.callParams
+      )
+
+      console.timeEnd(`[Pool] [count:${queue.length}] ${poolRunId}`)
+
+
+      queue.forEach((call, index) => {
+        try {
+          if (allResult[index] instanceof Error) {
+            call.reject(allResult[index])
+          } else {
+            call.resolve(allResult[index])
+          }
+        } catch (error) {
+          console.error(error)
         }
-      } catch (error) {
-        console.error(error)
-      }
-    });
+      });
 
-    this.processing -= queue.length
-    this.success += queue.length
+      this.processing -= queue.length
+      this.success += queue.length
+    } catch (error) {
+      queue.forEach((call, index) => {
+        try {
+          call.reject(error)
+        } catch (e) {
+          console.error(e)
+        }
+      });
+
+    }
+
 
   }
 
