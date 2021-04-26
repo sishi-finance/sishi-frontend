@@ -121,16 +121,19 @@ export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock, bnbBusdRat
       const prevBlock = Math.max(vault.fromBlock, currentBlock - deltaBlock)
       const callMethodWithAgoPool = callMethodWithPoolFactory(prevBlock)
       const currentDelta = currentBlock - prevBlock
-      console.log("[deltaBlock] ", vault.tokenSymbol, currentDelta)
+      console.log("[deltaBlock] ", vault.tokenSymbol, currentDelta, prevBlock)
 
       const _q1 = callMethodWithPool(vault.vault, <any>sishivault, "balance", [])
       const _q2 = callMethodWithPool(vault.vault, <any>sishivault, "getPricePerFullShare", [])
         .catch(e => new BigNumber(1e18))
       const _q3 = currentDelta > 0
         ? callMethodWithAgoPool(vault.vault, <any>sishivault, "getPricePerFullShare", [])
-          .catch(e => _q2)
+          .catch(e => {
+            console.log("[error]", e, vault.tokenSymbol)
+            return _q2
+          })
         : _q2
-        
+
       const _q4 = vault.lpToken ? fetchPancakeRate({
         baseAddress: vault.tokenAddress,
         lpAdress: vault.lpToken.address,
@@ -180,7 +183,7 @@ export const fetchVaultsAPY = async (vaults: Vault[], { currentBlock, bnbBusdRat
       }
     } catch (error) {
 
-      // console.error(vault.tokenSymbol)
+      console.error("[error]", vault.tokenSymbol, error)
       return {
         roiLoaded: 0,
         tokenBUSDRate: 0,
@@ -299,7 +302,7 @@ export const fetchVaultFarmUsers = async (vaults: Vault[], { account }: { accoun
     console.log("[debug] vaultAndFarmBalance", Number(new BigNumber(String(vaultAndFarmBalance)),) / 1e18)
 
     return {
-      calc : {
+      calc: {
         vaultStackApproved: Number(farmingAllowance) / (10 ** 18) >= 100000000,
         vaultAndFarmBalance: new BigNumber(String(vaultAndFarmBalance)),
         pendingFarming: new BigNumber(pendingFarming),
