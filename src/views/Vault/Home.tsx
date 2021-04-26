@@ -7,6 +7,7 @@ import { useVaults, useVaultsData, useVaultsUserData, useYSISHIPrice } from 'hoo
 import { usePriceBnbBusd, usePriceCakeBusd } from 'state/hooks'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { provider } from 'web3-core'
+import { Vault } from 'config/constants/vaults'
 import useBlock from 'hooks/useBlock'
 import BigNumber from 'bignumber.js'
 import VaultCard from "./components/VaultCard/VaultCard"
@@ -52,7 +53,7 @@ const Table = styled.table`
 `
 
 
-const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, ySishiPrice, currentBlock }> = ({ account, ethereum, allVaults, cakePrice, bnbPrice, ySishiPrice, currentBlock, }) => {
+const VaultHome: React.FC<{ account, ethereum, allVaults : Vault[], cakePrice, bnbPrice, ySishiPrice, currentBlock }> = ({ account, ethereum, allVaults, cakePrice, bnbPrice, ySishiPrice, currentBlock, }) => {
 
   // console.log("[Rerender]", {
   //   cakePrice: String(cakePrice),
@@ -84,11 +85,22 @@ const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, y
     [allVaults, vaultDatas, vaultDataUsers, reloadToken]
   )
 
-  const allVaultRender = useMemo(() => {
+  const allVaultV1Render = useMemo(() => {
+    return allVaults
+      .map((vault, index) => (<VaultCard
+        key={vault.tokenSymbol}
+        {...{ vault, vaultData: allMergeVaults[index], account, bnbPrice, cakePrice, ethereum, ySishiPrice }}
+      />))
+      .filter(v => v.props.vault.version !== 2)
+  }, [allVaults, allMergeVaults, account, bnbPrice, cakePrice, ethereum, ySishiPrice])
+
+  const allVaultV2Render = useMemo(() => {
     return allVaults.map((vault, index) => (<VaultCard
       key={vault.tokenSymbol}
       {...{ vault, vaultData: allMergeVaults[index], account, bnbPrice, cakePrice, ethereum, ySishiPrice }}
     />))
+    .filter(v => v.props.vault.version === 2)
+
   }, [allVaults, allMergeVaults, account, bnbPrice, cakePrice, ethereum, ySishiPrice])
 
 
@@ -102,20 +114,16 @@ const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, y
           Yield Optimization on Binance Smart Chain
         </Heading>
         <br />
-        <br />
-        <br />
-        <Text color="red" fontSize="12px">
-          Risk Warning: Sishi Vault is in beta testing, it is unaudited and smart contracts were forked from
-          <a href="https://yearn.finance/" target="_blank" rel="noreferrer"> Yearn Finance</a>.
-          <br />
-          ySISHI is a test token, it has no value.
-        </Text>
-        <br />
-        <Text color="red" fontSize="12px" bold>
-          Action Required: Withdraw all your asset from Venus vault.
-        </Text>
+
 
         <br />
+        <br />
+        <br />
+        <Heading as="h3" color="secondary">
+          Sishi Vault Version 2 - In Auditing
+        </Heading>
+        <br />
+
         <TableContainer>
           <Table>
             <thead>
@@ -130,10 +138,46 @@ const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, y
               </tr>
             </thead>
             <tbody>
-              {allVaultRender}
+              {allVaultV2Render}
             </tbody>
           </Table>
+        </TableContainer>
+        <br/>
+        <br/>
+        <br />
+        <br/>
+        <Heading as="h3" color="secondary">
+          Sishi Vault Version 1
+        </Heading>
+        <br />
+        <Text color="red" fontSize="12px">
+          Risk Warning: Sishi Vault is in beta testing, it is unaudited and smart contracts were forked from
+          <a href="https://yearn.finance/" target="_blank" rel="noreferrer"> Yearn Finance</a>.
+          <br />
+          ySISHI is a test token, it has no value.
+        </Text>
 
+        <br />
+        <Text color="red" fontSize="12px" bold>
+          Action Required: Withdraw all your asset from version 1.
+        </Text>
+        <TableContainer>
+          <Table>
+            <thead>
+              <tr>
+                <th> </th>
+                <th style={{ textAlign: "left" }}> Farm </th>
+                <th> Daily</th>
+                <th> APY </th>
+                <th> TVL</th>
+                <th> Balance</th>
+                {/* <th> </th> */}
+              </tr>
+            </thead>
+            <tbody>
+              {allVaultV1Render}
+            </tbody>
+          </Table>
         </TableContainer>
       </Hero>
     </Page>

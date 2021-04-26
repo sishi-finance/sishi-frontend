@@ -1,6 +1,7 @@
 
 const tagMapping = {
   "deprecated" : "#ffc107",
+  "action required" : "#ff5555",
 }
 
 
