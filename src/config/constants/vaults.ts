@@ -66,6 +66,7 @@ export const vaultLists: Vault[] = [
     strategy: "0x4581bdb0c086bDC5AFE17D27F50Fc011a144Deac",
     fromBlock: 6533850,
     harvestReward: "CAKE",
+    disableDeposit: true,
     lpToken: {
       address:'0x0Ed8E0A2D99643e1e65CCA22Ed4424090B8B7458',
       quoteAddress: contracts.busd[56],
@@ -213,6 +214,7 @@ export const vaultLists: Vault[] = [
     strategy: "0xEA2BFb782DB37EbcBc1E16C87CCCB2b9656477dA",
     fromBlock: 6668865,
     harvestReward: "ZEFI",
+    disableDeposit: true,
     lpToken: {
       address:'0x24B87c29e907D6329ED8fD6d7B2ecb074089093E',
       quoteAddress: contracts.busd[56],
@@ -229,6 +231,7 @@ export const vaultLists: Vault[] = [
     strategy: "0x79EAaA9Bf7Fd41Ed7f0c76BCe02B7491A9704d01",
     fromBlock: 6707356,
     harvestReward: "ZEFI",
+    disableDeposit: true,
     lpToken: {
       address:'0x24b87c29e907d6329ed8fd6d7b2ecb074089093e',
       quoteAddress: contracts.busd[56],
@@ -245,6 +248,7 @@ export const vaultLists: Vault[] = [
     strategy: "0x1A6383342530cDFd1479c6Ee9cBfd1e8B29493fC",
     fromBlock: 6670700,
     harvestReward: "KEBAB",
+    disableDeposit: true,
     lpToken: {
       address:'0xd51bee2e0a3886289f6d229b6f30c0c2b34fc0ec',
       quoteAddress: contracts.busd[56],
@@ -261,6 +265,7 @@ export const vaultLists: Vault[] = [
     strategy: "0x7f9Ef40dF13D7D1497024cD5Dc9F3A66870F3cF8",
     fromBlock: 6671953,
     harvestReward: "CUB",
+    disableDeposit: true,
     lpToken: {
       address:'0x0EF564D4F8D6C0ffE13348A32e21EFd55e508e84',
       quoteAddress: contracts.busd[56],

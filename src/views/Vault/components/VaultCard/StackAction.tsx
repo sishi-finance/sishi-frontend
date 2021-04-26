@@ -83,7 +83,7 @@ const VaultStackAction: React.FC<VaultCardActionsProps> = ({ vault, reloadToken,
       <IconButton size="sm" variant="tertiary" onClick={onPresentWithdraw} mr="6px" disabled={rawStakedBalance === 0}>
         <MinusIcon color="primary" />
       </IconButton>
-      <IconButton size="sm" variant="tertiary" onClick={onPresentDeposit} disabled={rawTokenBalance === 0}>
+      <IconButton size="sm" variant="tertiary" onClick={onPresentDeposit} disabled={true || rawTokenBalance === 0}>
         <AddIcon color="primary" />
       </IconButton>
     </IconButtonWrapper> : <Button size="sm" ml="auto" disabled={requestedApproval} onClick={handleApprove}>
