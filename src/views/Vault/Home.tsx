@@ -110,13 +110,11 @@ const VaultHome: React.FC<{ account, ethereum, allVaults, cakePrice, bnbPrice, y
           <br />
           ySISHI is a test token, it has no value.
         </Text>
-
-        <Text color="red" fontSize="12px">
-          Action Required: Unstack All Vault Share Token to earn ySISHI from Venus Farm.
+        <br />
+        <Text color="red" fontSize="12px" bold>
+          Action Required: Withdraw all your asset from Venus vault.
         </Text>
 
-        <br />
-        <br />
         <br />
         <TableContainer>
           <Table>

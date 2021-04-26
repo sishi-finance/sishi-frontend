@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import styled from "styled-components"
 import { Flex, Text, Skeleton, Image, Tag, Button, LinkExternal } from '@pancakeswap-libs/uikit'
 import { getBalanceNumber, prettyNumberByPostfix } from 'utils/formatBalance'
+import getColorFromTag from 'utils/tagToColor'
 
 
 const VaultRowStyled = styled.tr`
@@ -17,6 +18,8 @@ type VaultRowItemInfo = {
   tokenSymbol, yieldTVLUSD, walletBalanceUSD
 }
 
+
+
 const VaultRowItem: React.FC<VaultRowItemInfo> = ({ expand, onExpandClick, tag, roiDay, apy, farmImage, tokenSymbol, yieldTVLUSD, walletBalanceUSD }) => {
   const iconSize = String(tokenSymbol).endsWith(" LP") ? 30 : 25
   const iconMarginY = String(tokenSymbol).endsWith(" LP") ? "-9px" : "0px"
@@ -31,8 +34,7 @@ const VaultRowItem: React.FC<VaultRowItemInfo> = ({ expand, onExpandClick, tag, 
     </td>
     <td style={{ textAlign: "left" }}>
       {tag.map(e => <>
-        <Tag >{e}</Tag>
-        {" "}
+        <Tag color={getColorFromTag(e)}>{e}</Tag>
       </>)}
     </td>
     <td>
