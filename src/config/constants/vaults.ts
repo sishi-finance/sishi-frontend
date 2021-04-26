@@ -102,39 +102,39 @@ export const vaultLists: Vault[] = [
       quote: QuoteToken.BNB,
     }
   },
-  {
-    tokenSymbol: "BNB-BUSD LP",
-    isTokenOnly: false,
-    tokenAddress: "0x1B96B92314C44b159149f7E0303511fB2Fc4774f",
-    tag: ["Pancake"],
-    farmPid: 12,
-    vault: "0xbbc7f3ee742a4a2fda8313350eb132bce4cc528e",
-    strategy: "0x8D20701B35C611A36720F0De40c2c8BeFCaD5968",
-    fromBlock: 6735000,
-    harvestReward: "CAKE",
-    lpToken: {
-      address:'0x1B96B92314C44b159149f7E0303511fB2Fc4774f',
-      quoteAddress: contracts.busd[56],
-      quote: QuoteToken.BUSD,
-    }
-  },
-
   // {
   //   tokenSymbol: "BNB-BUSD LP",
   //   isTokenOnly: false,
-  //   tokenAddress: "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16",
+  //   tokenAddress: "0x1B96B92314C44b159149f7E0303511fB2Fc4774f",
   //   tag: ["Pancake"],
-  //   farmPid: -1,
-  //   vault: "0x698E8923a9acFA361E40e7Bd34d6F429f5910d59",
-  //   strategy: "0xE55271f2ee51Ca53dc6Ea9bA7D6c3dfacD34983d",
-  //   fromBlock: 6873636,
+  //   farmPid: 12,
+  //   vault: "0xbbc7f3ee742a4a2fda8313350eb132bce4cc528e",
+  //   strategy: "0x8D20701B35C611A36720F0De40c2c8BeFCaD5968",
+  //   fromBlock: 6735000,
   //   harvestReward: "CAKE",
   //   lpToken: {
-  //     address:'0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16',
+  //     address:'0x1B96B92314C44b159149f7E0303511fB2Fc4774f',
   //     quoteAddress: contracts.busd[56],
   //     quote: QuoteToken.BUSD,
   //   }
   // },
+
+  {
+    tokenSymbol: "BNB-BUSD LP",
+    isTokenOnly: false,
+    tokenAddress: "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16",
+    tag: ["Pancake"],
+    farmPid: -1,
+    vault: "0x698E8923a9acFA361E40e7Bd34d6F429f5910d59",
+    strategy: "0xe79e12092F82B36C118bB1CcC821793711095aDe",
+    fromBlock: 6873636,
+    harvestReward: "CAKE",
+    lpToken: {
+      address:'0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16',
+      quoteAddress: contracts.busd[56],
+      quote: QuoteToken.BUSD,
+    }
+  },
 
   // {
   //   tokenSymbol: "XVS",
