@@ -163,14 +163,17 @@ const FarmStats: React.FC<StatCardProps> = ({ ethereum, account }) => {
   const sishiPriceUSD = usePriceCakeBusd()
 
   const filteredFarms = farms.filter(e => Number(e.stakedBalance) > 0 || e.tokenSymbol === "SISHI")
-    .map(e => ({
-      ...e,
-      stakedBalance: e.stakedBalance.multipliedBy((10 ** (18 - (e.isTokenOnly ? e.tokenDecimal : 18)))),
-      tokenBalanceUSD: e.tokenBalanceUSD / 1e18,
-      stakedBalanceUSD: e.stakedBalanceUSD / 1e18,
-      balanceDecimal: e.isTokenOnly ? e.tokenDecimal : 18,
-      lpTotalInUSD: e.lpTotalInUSD * (10 ** (18 - (e.isTokenOnly ? e.tokenDecimal : 18))) / 1e18,
-    }))
+    .map(e => {
+      const decimalAdjust = (10 ** (18 - (e.isTokenOnly ? e.tokenDecimal : 18)));
+      return {
+        ...e,
+        stakedBalance: e.stakedBalance.multipliedBy(decimalAdjust),
+        tokenBalanceUSD: e.tokenBalanceUSD * decimalAdjust / 1e18,
+        stakedBalanceUSD: e.stakedBalanceUSD * decimalAdjust / 1e18,
+        balanceDecimal: e.isTokenOnly ? e.tokenDecimal : 18,
+        lpTotalInUSD: e.lpTotalInUSD * decimalAdjust / 1e18,
+      }
+    })
     .filter(e => e.stakedBalanceUSD > 0.00001 || e.tokenSymbol === "SISHI")
     .sort((e, f) => f.stakedBalanceUSD - e.stakedBalanceUSD)
 
